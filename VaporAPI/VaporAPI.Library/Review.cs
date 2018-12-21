@@ -6,5 +6,12 @@ namespace VaporAPI.Library
 {
     public class Review
     {
+        public string username { get; set; }
+
+        public string text { get; set; }
+
+        public int score { get; set; }
+
+
     }
 }
