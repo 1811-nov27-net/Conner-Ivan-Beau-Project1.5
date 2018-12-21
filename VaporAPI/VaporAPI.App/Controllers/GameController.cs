@@ -10,23 +10,23 @@ namespace VaporAPI.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class GameController : ControllerBase
     {
 
         public IRepository Repo;
 
-        public UserController(IRepository repo)
+        public GameController(IRepository repo)
         {
             Repo = repo;
         }
 
-        // GET: api/User
+        // GET: api/Game
         [HttpGet]
-        public ActionResult<IEnumerable<User>> Get()
+        public ActionResult<IEnumerable<Game>> Get()
         {
             try
             {
-                return Repo.GetUsers().ToList();
+                return Repo.GetGames().ToList();
             }
             catch (Exception)
             {
@@ -35,37 +35,37 @@ namespace VaporAPI.App.Controllers
             }
         }
 
-        // GET: api/User/5
-        [HttpGet("{UserName}", Name = "Get")]
-        public ActionResult<User> Get(string UserName)
+        // GET: api/Game/5
+        [HttpGet("{id}", Name = "Get")]
+        public ActionResult<Game> Get(int id)
         {
-            User user;
+            Game game;
             try
             {
-                user = Repo.GetUser(UserName);
-                
+                game = Repo.GetGame(id);
+
             }
             catch (Exception)
             {
 
                 return StatusCode(500);
             }
-            if (user == null)
+            if (game == null)
             {
                 return NotFound();
             }
-            return user;
+            return game;
         }
 
-        // POST: api/User
+        // POST: api/Game
         [HttpPost]
-        public ActionResult Post([FromBody] User user)
+        public ActionResult Post([FromBody] Game game)
         {
             try
             {
-                bool check = Repo.AddUser(user);
+                bool check = Repo.AddGame(game);
                 //check is for checking if the username already exists, and if it does return status code 409
-                if(!check)
+                if (!check)
                 {
                     return StatusCode(409);
                 }
@@ -76,34 +76,33 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("Get", new { UserName= user.UserName }, user);
-
+            return CreatedAtRoute("Get", new { id = game.GameId }, game);
         }
 
-        // PUT: api/User/5
+        // PUT: api/Game/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] User value)
+        public ActionResult Put(int id, [FromBody] Game value)
         {
-            User user;
+            Game game;
             try
             {
-                user = Repo.GetUser(value.UserName);
+                game = Repo.GetGame(value.GameId);
             }
             catch (Exception ex)
             {
                 return StatusCode(500);
             }
-            if (user == null)
+            if (game == null)
             {
                 return NotFound();
             }
-            if (user.UserName != value.UserName)
+            if (game.GameId != value.GameId)
             {
                 return BadRequest("cannot change ID");
             }
             try
             {
-                Repo.UpdateUser(value);
+                Repo.UpdateGame(value);
             }
             catch (Exception ex)
             {
@@ -116,17 +115,17 @@ namespace VaporAPI.App.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(string UserName)
+        public ActionResult Delete(int id)
         {
             try
             {
-                var user = Repo.GetUser(UserName);
-                //for user doesnt exist
-                if (user == null)
+                var game = Repo.GetGame(id);
+                //for game doesnt exist
+                if (game == null)
                 {
                     return NotFound();
                 }
-                Repo.DeleteUser(user.UserName);
+                Repo.DeleteGame(game.GameId);
             }
             catch (Exception ex)
             {
