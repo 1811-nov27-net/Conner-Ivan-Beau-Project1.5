@@ -12,8 +12,8 @@ namespace VaporAPI.DataAccess
         public Repository(VaporDBContext db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
-
-
         }
+
+        
     }
 }
