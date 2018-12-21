@@ -12,10 +12,10 @@ namespace VaporAPI.Library
         bool DeleteReview(Review review);
         Review GetReviewbyGame(int id);
         Review GetReviewbyUser(string username);
-        ICollection<Review> GetReviewsbyUser(string username, params[] sort);
-        ICollection<Review> GetReviewsByGame(int id, params[] sort);
+        ICollection<Review> GetReviewsbyUser(string username, params int[] sort);
+        ICollection<Review> GetReviewsByGame(int id, params int[] sort);
 
-        bool CreateUser(User user);
+        bool AddUser(User user);
         bool DeleteUser(string username);
         bool UpdateUser(User user);
         ICollection<User> GetUsers();
@@ -24,13 +24,13 @@ namespace VaporAPI.Library
 
         ICollection<Dlc> GetDlcbyGame(int id);
         bool CreateDlc(Dlc dlc);
-        bool 
+       // bool 
 
 
-        bool CreateUser(User user);
-        bool DeleteUser(User user);
+        //bool CreateUser(User user);
+        //bool DeleteUser(User user);
 
-        void addgame
+        //void addgame
         
 
         
