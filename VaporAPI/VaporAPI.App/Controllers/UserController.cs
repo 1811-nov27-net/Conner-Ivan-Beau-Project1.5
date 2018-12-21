@@ -26,7 +26,7 @@ namespace VaporAPI.App.Controllers
         {
             try
             {
-                return Repo.GetUsers();
+                return Repo.GetUsers().ToList();
             }
             catch (Exception)
             {
@@ -126,7 +126,7 @@ namespace VaporAPI.App.Controllers
                 {
                     return NotFound();
                 }
-                Repo.DeleteUser(user);
+                Repo.DeleteUser(user.UserName);
             }
             catch (Exception ex)
             {
