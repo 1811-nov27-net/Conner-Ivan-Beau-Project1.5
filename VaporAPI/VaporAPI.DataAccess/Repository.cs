@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using VaporAPI.Library;
 
@@ -29,7 +30,7 @@ namespace VaporAPI.DataAccess
                 success = false;
                 return success;
             }
-            
+
         }
 
         public bool AddDlc(Library.Dlc dlc)
@@ -68,7 +69,22 @@ namespace VaporAPI.DataAccess
 
         public bool AddReview(Review review)
         {
-            throw new NotImplementedException();
+            bool success = true;
+            try
+            {
+                User user = _db.User.Find(review.username);
+                UserGame usergame = user.UserGame.Where(g => g.GameId == review.GameId).First();
+                usergame.Score = review.score;
+                usergame.Review = review.text;
+                _db.Update(user);
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }
+            
         }
 
         public bool AddTag(Library.Tag tag)
@@ -107,17 +123,50 @@ namespace VaporAPI.DataAccess
 
         public bool DeleteDeveloper(int id)
         {
-            throw new NotImplementedException();
+            bool success = true;
+            try
+            {
+                _db.Remove(_db.Developer.Where(d => d.DeveloperId == id).First());
+                _db.SaveChanges();
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }   
         }
 
         public bool DeleteDlc(int id)
         {
-            throw new NotImplementedException();
+            bool success = true;
+            try
+            {
+                _db.Remove(_db.Dlc.Where(d => d.Dlcid == id).First());
+                _db.SaveChanges();
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }
         }
 
         public bool DeleteGame(int id)
         {
-            throw new NotImplementedException();
+            bool success = true;
+            try
+            {
+                _db.Remove(_db.Game.Where(d => d.GameId == id).First());
+                _db.SaveChanges();
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }
         }
 
         public bool DeleteReview(Review review)
@@ -127,12 +176,34 @@ namespace VaporAPI.DataAccess
 
         public bool DeleteTag(string genrename)
         {
-            throw new NotImplementedException();
+            bool success = true;
+            try
+            {
+                _db.Remove(_db.Tag.Where(d => d.GenreName == genrename).First());
+                _db.SaveChanges();
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }
         }
 
         public bool DeleteUser(string username)
         {
-            throw new NotImplementedException();
+            bool success = true;
+            try
+            {
+                _db.Remove(_db.User.Where(d => d.UserName == username).First());
+                _db.SaveChanges();
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }
         }
 
         public Library.Game GetGame(int id)
