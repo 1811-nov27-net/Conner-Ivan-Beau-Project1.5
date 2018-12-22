@@ -206,7 +206,17 @@ namespace VaporAPI.DataAccess
             }
         }
 
+        public Library.Dlc GetDlc(int dlcid)
+        {
+            throw new NotImplementedException();
+        }
+
         public Library.Game GetGame(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.Dlc> GetGameDlcs(int gameid)
         {
             throw new NotImplementedException();
         }
@@ -236,6 +246,16 @@ namespace VaporAPI.DataAccess
             throw new NotImplementedException();
         }
 
+        public Library.Tag GetTag(int tagid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.Tag> GetTags()
+        {
+            throw new NotImplementedException();
+        }
+
         public Library.User GetUser(string username)
         {
             throw new NotImplementedException();
@@ -257,6 +277,11 @@ namespace VaporAPI.DataAccess
         }
 
         public Library.Game SuggestGamebyuser(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateDlc(Library.Dlc dlc)
         {
             throw new NotImplementedException();
         }
