@@ -55,7 +55,11 @@ namespace VaporAPI.Library
         ICollection<Tag> GetTags();
 
         Game SuggestGamebyuser(string username);
-       //ame SuggestGamebyDevel
-        
+
+        Dlc GetDlc(int dlcid);
+        ICollection<Dlc> GetGameDlcs(int gameid);
+        bool UpdateDlc(Dlc dlc);
+        //ame SuggestGamebyDevel
+
     }
 }

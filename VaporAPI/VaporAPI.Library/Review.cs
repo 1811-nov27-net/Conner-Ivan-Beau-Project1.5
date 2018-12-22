@@ -12,6 +12,8 @@ namespace VaporAPI.Library
 
         public int score { get; set; }
 
+        public int GameId { get; set; }
+
 
     }
 }

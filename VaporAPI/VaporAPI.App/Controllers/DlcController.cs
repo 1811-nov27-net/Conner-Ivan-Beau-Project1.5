@@ -61,7 +61,7 @@ namespace VaporAPI.App.Controllers
             List<Dlc> dlcs;
             try
             {
-                dlcs = Repo.GetGameDlcs(gameid);
+                dlcs = Repo.GetGameDlcs(gameid).ToList();
 
             }
             catch (Exception)
@@ -144,7 +144,7 @@ namespace VaporAPI.App.Controllers
                 {
                     return NotFound();
                 }
-                Repo.DeleteGame(dlc.GameId);
+                Repo.DeleteDlc(dlc.Dlcid);
             }
             catch (Exception ex)
             {
