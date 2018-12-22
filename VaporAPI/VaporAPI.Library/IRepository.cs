@@ -10,7 +10,7 @@ namespace VaporAPI.Library
         bool AddReview(Review review);
         bool UpdateReviewbyScore(Review review);
         bool DeleteReview(Review review);
-        
+
         //grab reviews from table UserGame by some parameters
         ICollection<Review> GetReviewbyGame(int id);
         Review GetReviewbyUser(string username);
@@ -24,7 +24,7 @@ namespace VaporAPI.Library
         //grab users by some parameters
         ICollection<User> GetUsers(params int[] sort);
         ICollection<User> GetUsersbyGame(int id);
-        ICollection<User> GetUsersbyDlc(int id);        
+        ICollection<User> GetUsersbyDlc(int id);
         User GetUser(string username);
 
         //CRUD for games
