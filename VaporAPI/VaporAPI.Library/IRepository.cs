@@ -12,8 +12,8 @@ namespace VaporAPI.Library
         bool DeleteReview(Review review);
 
         //grab reviews from table UserGame by some parameters
-        ICollection<Review> GetReviewbyGame(int id);
-        Review GetReviewbyUser(string username);
+        ICollection<Review> GetReviewsbyGame(int id);
+        ICollection<Review> GetReviewsbyUser(string username);
         ICollection<Review> GetReviewsbyUser(string username, params int[] sort);
         ICollection<Review> GetReviewsByGame(int id, params int[] sort);
 

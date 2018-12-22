@@ -208,25 +208,50 @@ namespace VaporAPI.DataAccess
 
         public Library.Game GetGame(int id)
         {
-            throw new NotImplementedException();
+
+                Game game = _db.Game.Where(g => g.GameId == id).FirstOrDefault();
+                Library.Game gameLib = Mapper.Map(game);
+                return gameLib;
         }
 
         public ICollection<Library.Game> GetGames(params int[] sort)
         {
             throw new NotImplementedException();
-        }
+            // no parameters passes represents a sort of gameId
+            //if (sort.Length == 0)
+            //{
+            //    ICollection<Game> games = (ICollection<Game>) _db.Game.OrderBy(g => g.GameId);
+            //    var gamesLib = Mapper.Map(games);
+            //    return games;
+            //}
+            //else
+            //{
+            //    // a value of 1 represent a sort by GameName 
+            //    if (sort[1] == 1)
+            //    {
+            //        IEnumerable<Game> games = (IEnumerable<Game>)_db.Game.OrderBy(g => g.Name);
+            //    }
 
-        public ICollection<Review> GetReviewbyGame(int id)
-        {
-            throw new NotImplementedException();
-        }
+            //    // a value of 2 represent a sort by price (cheapest first)
+            //    else if (sort[1] == 2)
+            //    {
+            //        IEnumerable<Game> games = (IEnumerable<Game>)_db.Game.OrderBy(g => g.Price);
+            //    }
 
-        public Review GetReviewbyUser(string username)
-        {
-            throw new NotImplementedException();
+            //    // a value of 3 represent a sort by price (most expensive first)
+            //    else if (sort[1] == 3)
+            //    {
+            //        IEnumerable<Game> games = (IEnumerable<Game>)_db.Game.OrderByDescending(g => g.Price);
+            //    }
+            //}
         }
 
         public ICollection<Review> GetReviewsByGame(int id, params int[] sort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Review> GetReviewsbyGame(int id)
         {
             throw new NotImplementedException();
         }
@@ -236,9 +261,16 @@ namespace VaporAPI.DataAccess
             throw new NotImplementedException();
         }
 
-        public Library.User GetUser(string username)
+        public ICollection<Review> GetReviewsbyUser(string username)
         {
             throw new NotImplementedException();
+        }
+
+        public Library.User GetUser(string username)
+        {
+            var user = _db.User.Where(u => u.UserName == username).FirstOrDefault();
+            var userLib = Mapper.Map(user);
+            return userLib;
         }
 
         public ICollection<Library.User> GetUsers(params int[] sort)
@@ -268,7 +300,19 @@ namespace VaporAPI.DataAccess
 
         public bool UpdateGame(Library.Game game)
         {
-            throw new NotImplementedException();
+            bool success = true;
+            try
+            {
+                Game gameDB = Mapper.Map(game);
+                _db.Update(gameDB);
+                _db.SaveChanges();
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }  
         }
 
         public bool UpdateReviewbyScore(Review review)
@@ -278,7 +322,19 @@ namespace VaporAPI.DataAccess
 
         public bool UpdateUser(Library.User user)
         {
-            throw new NotImplementedException();
+            bool success = true;
+            try
+            {
+                User userDB = Mapper.Map(user);
+                _db.Update(userDB);
+                _db.SaveChanges();
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }
         }
     }
 }
