@@ -51,6 +51,8 @@ namespace VaporAPI.Library
 
         bool AddTag(Tag tag);
         bool DeleteTag(string genrename);
+        Tag GetTag(int tagid);
+        ICollection<Tag> GetTags();
 
         Game SuggestGamebyuser(string username);
        //ame SuggestGamebyDevel
