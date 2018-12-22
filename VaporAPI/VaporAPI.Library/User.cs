@@ -22,7 +22,7 @@ namespace VaporAPI.Library
 
         public bool SuggestTags(List<Game> game)
         {
-
+            return false;
 
         }
     }

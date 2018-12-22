@@ -14,7 +14,27 @@ namespace VaporAPI.DataAccess
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
+        public bool AddDeveloper(Library.Developer developer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool AddDlc(Library.Dlc dlc)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool AddGame(Library.Game game)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool AddReview(Review review)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool AddTag(Library.Tag tag)
         {
             throw new NotImplementedException();
         }
@@ -29,7 +49,27 @@ namespace VaporAPI.DataAccess
             throw new NotImplementedException();
         }
 
+        public bool DeleteDeveloper(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteDlc(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteGame(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool DeleteReview(Review review)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteTag(string genrename)
         {
             throw new NotImplementedException();
         }
@@ -44,7 +84,17 @@ namespace VaporAPI.DataAccess
             throw new NotImplementedException();
         }
 
-        public Review GetReviewbyGame(int id)
+        public Library.Game GetGame(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.Game> GetGames(params int[] sort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Review> GetReviewbyGame(int id)
         {
             throw new NotImplementedException();
         }
@@ -74,7 +124,42 @@ namespace VaporAPI.DataAccess
             throw new NotImplementedException();
         }
 
+        public ICollection<Library.User> GetUsers(params int[] sort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.User> GetUsersbyDlc(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.User> GetUsersbyGame(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Library.Game SuggestGamebyuser(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateDlcbyPrice(int id, decimal price)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateGame(Library.Game game)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool UpdateReview(Review review)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateReviewbyScore(Review review)
         {
             throw new NotImplementedException();
         }

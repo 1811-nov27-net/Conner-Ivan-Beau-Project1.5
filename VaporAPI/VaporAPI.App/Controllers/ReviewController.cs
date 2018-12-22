@@ -10,61 +10,76 @@ namespace VaporAPI.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GameController : ControllerBase
+    public class ReviewController : ControllerBase
     {
 
         public IRepository Repo;
 
-        public GameController(IRepository repo)
+        public ReviewController(IRepository repo)
         {
             Repo = repo;
         }
 
-        // GET: api/Game
-        [HttpGet]
-        public ActionResult<IEnumerable<Game>> Get()
+        // GET: api/Review
+        //[HttpGet]
+        //public IEnumerable<string> Get()
+        //{
+        //    return new string[] { "value1", "value2" };
+        //}
+
+        // GET: api/Review/5
+        [HttpGet("User/{UserName}", Name = "Get")]
+        public ActionResult<Review> GetUser(string username)
         {
+            Review review;
             try
             {
-                return Repo.GetGames().ToList();
-            }
-            catch (Exception)
-            {
-
-                return StatusCode(500);
-            }
-        }
-
-        // GET: api/Game/5
-        [HttpGet("{id}", Name = "Get")]
-        public ActionResult<Game> Get(int id)
-        {
-            Game game;
-            try
-            {
-                game = Repo.GetGame(id);
+                review = Repo.GetReviewbyUser(username);
 
             }
             catch (Exception)
             {
-
+                //internal server exception
                 return StatusCode(500);
             }
-            if (game == null)
+            if (review == null)
             {
                 return NotFound();
             }
-            return game;
+            return review;
         }
 
-        // POST: api/Game
+        // GET: api/Review/5
+        [HttpGet("Game/{id}", Name = "Get")]
+        public ActionResult<ICollection<Review>> GetGame(int id)
+        {
+            ICollection<Review> reviews;
+            try
+            {
+                reviews = Repo.GetReviewbyGame(id);
+
+            }
+            catch (Exception)
+            {
+                //internal server exception
+                return StatusCode(500);
+            }
+            if (reviews == null)
+            {
+                return NotFound();
+            }
+            return reviews.ToList();
+        }
+
+        // POST: api/Review
         [HttpPost]
-        public ActionResult Post([FromBody] Game game)
+        public ActionResult Post([FromBody] Review review)
         {
             try
             {
-                bool check = Repo.AddGame(game);
-                //check is for checking if the username already exists, and if it does return status code 409
+                bool check = Repo.AddReview(review);
+                //check is for checking if a review already exists, ideally this will never be the case
+                //and if it does return status code 409
                 if (!check)
                 {
                     return StatusCode(409);
@@ -72,37 +87,37 @@ namespace VaporAPI.App.Controllers
             }
             catch (Exception)
             {
-
+                //internal server serror
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("Get", new { id = game.GameId }, game);
+            return CreatedAtRoute("Get", new { UserName = review.username }, review);
         }
 
-        // PUT: api/Game/5
+        // PUT: api/Review/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] Game value)
+        public ActionResult Put(string username, [FromBody] Review value)
         {
-            Game game;
+            Review review;
             try
             {
-                game = Repo.GetGame(id);
+                review = Repo.GetReviewbyUser(username);
             }
             catch (Exception ex)
             {
                 return StatusCode(500);
             }
-            if (game == null)
+            if (review == null)
             {
                 return NotFound();
             }
-            if (game.GameId != value.GameId)
+            if (review.username != value.username)
             {
                 return BadRequest("cannot change ID");
             }
             try
             {
-                Repo.UpdateGame(value);
+                Repo.UpdateReviewbyScore(value);
             }
             catch (Exception ex)
             {
@@ -115,17 +130,17 @@ namespace VaporAPI.App.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string username)
         {
             try
             {
-                var game = Repo.GetGame(id);
+                var review = Repo.GetReviewbyUser(username);
                 //for game doesnt exist
-                if (game == null)
+                if (review == null)
                 {
                     return NotFound();
                 }
-                Repo.DeleteGame(game.GameId);
+                Repo.DeleteReview(review);
             }
             catch (Exception ex)
             {

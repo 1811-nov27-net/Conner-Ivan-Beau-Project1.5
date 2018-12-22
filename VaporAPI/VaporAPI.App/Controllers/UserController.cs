@@ -81,13 +81,13 @@ namespace VaporAPI.App.Controllers
         }
 
         // PUT: api/User/5
-        [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] User value)
+        [HttpPut("{UserName}")]
+        public ActionResult Put(string UserName, [FromBody] User value)
         {
             User user;
             try
             {
-                user = Repo.GetUser(value.UserName);
+                user = Repo.GetUser(UserName);
             }
             catch (Exception ex)
             {
@@ -115,7 +115,7 @@ namespace VaporAPI.App.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{UserName}")]
         public ActionResult Delete(string UserName)
         {
             try
