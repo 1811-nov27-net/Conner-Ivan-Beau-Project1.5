@@ -14,6 +14,200 @@ namespace VaporAPI.DataAccess
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
-        
+        public bool AddDeveloper(Library.Developer developer)
+        {
+            bool success = true;
+            try
+            {
+                Developer developerDB = Mapper.Map(developer);
+                _db.Add(developerDB);
+                _db.SaveChanges();
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }
+            
+        }
+
+        public bool AddDlc(Library.Dlc dlc)
+        {
+            bool success = true;
+            try
+            {
+                var dlcDB = Mapper.Map(dlc);
+                _db.Add(dlcDB);
+                _db.SaveChanges();
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }
+        }
+
+        public bool AddGame(Library.Game game)
+        {
+            bool success = true;
+            try
+            {
+                var gameDB = Mapper.Map(game);
+                _db.Add(gameDB);
+                _db.SaveChanges();
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }
+        }
+
+        public bool AddReview(Review review)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool AddTag(Library.Tag tag)
+        {
+            bool success = true;
+            try
+            {
+                var tagDB = Mapper.Map(tag);
+                _db.Add(tagDB);
+                _db.SaveChanges();
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }
+        }
+
+        public bool AddUser(Library.User user)
+        {
+            bool success = true;
+            try
+            {
+                var userDB = Mapper.Map(user);
+                _db.Add(user);
+                _db.SaveChanges();
+                return success;
+            }
+            catch
+            {
+                success = false;
+                return success;
+            }
+        }
+
+        public bool DeleteDeveloper(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteDlc(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteGame(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteReview(Review review)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteTag(string genrename)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteUser(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Library.Game GetGame(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.Game> GetGames(params int[] sort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Review> GetReviewbyGame(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Review GetReviewbyUser(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Review> GetReviewsByGame(int id, params int[] sort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Review> GetReviewsbyUser(string username, params int[] sort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Library.User GetUser(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.User> GetUsers(params int[] sort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.User> GetUsersbyDlc(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.User> GetUsersbyGame(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Library.Game SuggestGamebyuser(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateDlcbyPrice(int id, decimal price)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateGame(Library.Game game)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateReviewbyScore(Review review)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateUser(Library.User user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
