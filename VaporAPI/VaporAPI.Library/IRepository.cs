@@ -7,15 +7,15 @@ namespace VaporAPI.Library
     public interface IRepository
     {
         //CRUD for review and score for table UserGame
-        bool AddReview(Review review);
-        bool UpdateReviewbyScore(Review review);
-        bool DeleteReview(Review review);
+        bool AddReview(UserGame review);
+        bool UpdateReviewbyScore(UserGame review);
+        bool DeleteReview(UserGame review);
 
         //grab reviews from table UserGame by some parameters
-        ICollection<Review> GetReviewbyGame(int id);
-        Review GetReviewbyUser(string username);
-        ICollection<Review> GetReviewsbyUser(string username, params int[] sort);
-        ICollection<Review> GetReviewsByGame(int id, params int[] sort);
+        ICollection<UserGame> GetReviewbyGame(int id);
+        UserGame GetReviewbyUser(string username);
+        ICollection<UserGame> GetReviewsbyUser(string username, params int[] sort);
+        ICollection<UserGame> GetReviewsByGame(int id, params int[] sort);
 
         //crud for users
         bool AddUser(User user);
@@ -64,6 +64,10 @@ namespace VaporAPI.Library
         Developer GetDeveloper(int developerid);
         bool UpdateDeveloper(Developer developer);
         //ame SuggestGamebyDevel
+
+        ICollection<UserGame> GetUserGames(string username);
+        UserGame GetUserGame(string username, int gameid);
+        bool AddUserGame(UserGame review);
 
     }
 }

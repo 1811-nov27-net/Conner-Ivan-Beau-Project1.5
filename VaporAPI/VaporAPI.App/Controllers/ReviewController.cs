@@ -29,9 +29,9 @@ namespace VaporAPI.App.Controllers
 
         // GET: api/Review/5
         [HttpGet("User/{UserName}", Name = "Get")]
-        public ActionResult<Review> GetUser(string username)
+        public ActionResult<UserGame> GetUser(string username)
         {
-            Review review;
+            UserGame review;
             try
             {
                 review = Repo.GetReviewbyUser(username);
@@ -51,9 +51,9 @@ namespace VaporAPI.App.Controllers
 
         // GET: api/Review/5
         [HttpGet("Game/{id}", Name = "Get")]
-        public ActionResult<ICollection<Review>> GetGame(int id)
+        public ActionResult<ICollection<UserGame>> GetGame(int id)
         {
-            ICollection<Review> reviews;
+            ICollection<UserGame> reviews;
             try
             {
                 reviews = Repo.GetReviewbyGame(id);
@@ -73,7 +73,7 @@ namespace VaporAPI.App.Controllers
 
         // POST: api/Review
         [HttpPost]
-        public ActionResult Post([FromBody] Review review)
+        public ActionResult Post([FromBody] UserGame review)
         {
             try
             {
@@ -91,14 +91,14 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("Get", new { UserName = review.username }, review);
+            return CreatedAtRoute("Get", new { UserName = review.User.UserName }, review);
         }
 
         // PUT: api/Review/5
         [HttpPut("{id}")]
-        public ActionResult Put(string username, [FromBody] Review value)
+        public ActionResult Put(string username, [FromBody] UserGame value)
         {
-            Review review;
+            UserGame review;
             try
             {
                 review = Repo.GetReviewbyUser(username);
@@ -111,7 +111,7 @@ namespace VaporAPI.App.Controllers
             {
                 return NotFound();
             }
-            if (review.username != value.username)
+            if (review.User.UserName != value.User.UserName)
             {
                 return BadRequest("cannot change ID");
             }

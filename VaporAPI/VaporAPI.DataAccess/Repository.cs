@@ -67,15 +67,15 @@ namespace VaporAPI.DataAccess
             }
         }
 
-        public bool AddReview(Review review)
+        public bool AddReview(Library.UserGame review)
         {
             bool success = true;
             try
             {
-                User user = _db.User.Find(review.username);
-                UserGame usergame = user.UserGame.Where(g => g.GameId == review.GameId).First();
-                usergame.Score = review.score;
-                usergame.Review = review.text;
+                User user = _db.User.Find(review.User.UserName);
+                UserGame usergame = user.UserGame.Where(g => g.GameId == review.Game.GameId).First();
+                usergame.Score = review.Score;
+                usergame.Review = review.Text;
                 _db.Update(user);
                 return success;
             }
@@ -119,6 +119,11 @@ namespace VaporAPI.DataAccess
                 success = false;
                 return success;
             }
+        }
+
+        public bool AddUserGame(Library.UserGame review)
+        {
+            throw new NotImplementedException();
         }
 
         public bool DeleteDeveloper(int id)
@@ -169,7 +174,7 @@ namespace VaporAPI.DataAccess
             }
         }
 
-        public bool DeleteReview(Review review)
+        public bool DeleteReview(Library.UserGame review)
         {
             throw new NotImplementedException();
         }
@@ -236,22 +241,22 @@ namespace VaporAPI.DataAccess
             throw new NotImplementedException();
         }
 
-        public ICollection<Review> GetReviewbyGame(int id)
+        public ICollection<Library.UserGame> GetReviewbyGame(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Review GetReviewbyUser(string username)
+        public Library.UserGame GetReviewbyUser(string username)
         {
             throw new NotImplementedException();
         }
 
-        public ICollection<Review> GetReviewsByGame(int id, params int[] sort)
+        public ICollection<Library.UserGame> GetReviewsByGame(int id, params int[] sort)
         {
             throw new NotImplementedException();
         }
 
-        public ICollection<Review> GetReviewsbyUser(string username, params int[] sort)
+        public ICollection<Library.UserGame> GetReviewsbyUser(string username, params int[] sort)
         {
             throw new NotImplementedException();
         }
@@ -267,6 +272,16 @@ namespace VaporAPI.DataAccess
         }
 
         public Library.User GetUser(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Library.UserGame GetUserGame(string username, int gameid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.UserGame> GetUserGames(string username)
         {
             throw new NotImplementedException();
         }
@@ -311,7 +326,7 @@ namespace VaporAPI.DataAccess
             throw new NotImplementedException();
         }
 
-        public bool UpdateReviewbyScore(Review review)
+        public bool UpdateReviewbyScore(Library.UserGame review)
         {
             throw new NotImplementedException();
         }

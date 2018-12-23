@@ -39,7 +39,7 @@ namespace VaporAPI.App.Controllers
         // GET: api/User/5/Library
         //getting all the users games
         [HttpGet("{UserName}/Library", Name = "GetLibrary")]
-        public ActionResult<IEnumerable<Game>> GetGames(string username)
+        public ActionResult<IEnumerable<UserGame>> GetGames(string username)
         {
             try
             {
@@ -77,9 +77,9 @@ namespace VaporAPI.App.Controllers
 
         // GET: api/User/5/Library/5
         [HttpGet("{UserName}/Library/{id}", Name = "GetGame")]
-        public ActionResult<Game> GetGame(string UserName, int id)
+        public ActionResult<UserGame> GetGame(string UserName, int id)
         {
-            Game game;
+            UserGame game;
             try
             {
                 game = Repo.GetUserGame(UserName,id);
@@ -123,11 +123,11 @@ namespace VaporAPI.App.Controllers
 
         // POST: api/User/5/Library
         [HttpPost("{UserName}/Library", Name = "Post")]
-        public ActionResult PostGame(string UserName,[FromBody] Game game)
+        public ActionResult PostGame(string UserName,[FromBody] UserGame game)
         {
             try
             {
-                bool check = Repo.AddUserGame(UserName,game);
+                bool check = Repo.AddUserGame(game);
                 //check is for checking if the username already exists, and if it does return status code 409
                 if (!check)
                 {
@@ -140,7 +140,7 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("GetLibrary", new { Game = game.GameId }, game);
+            return CreatedAtRoute("GetLibrary", new { Game = game.Game.GameId }, game);
         }
 
 
