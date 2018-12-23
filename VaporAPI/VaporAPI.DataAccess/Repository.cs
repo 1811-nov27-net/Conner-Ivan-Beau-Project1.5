@@ -206,6 +206,16 @@ namespace VaporAPI.DataAccess
             }
         }
 
+        public Library.Developer GetDeveloper(int developerid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.Developer> GetDevelopers()
+        {
+            throw new NotImplementedException();
+        }
+
         public Library.Dlc GetDlc(int dlcid)
         {
             throw new NotImplementedException();
@@ -277,6 +287,11 @@ namespace VaporAPI.DataAccess
         }
 
         public Library.Game SuggestGamebyuser(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateDeveloper(Library.Developer developer)
         {
             throw new NotImplementedException();
         }

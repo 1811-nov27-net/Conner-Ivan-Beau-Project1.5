@@ -59,6 +59,10 @@ namespace VaporAPI.Library
         Dlc GetDlc(int dlcid);
         ICollection<Dlc> GetGameDlcs(int gameid);
         bool UpdateDlc(Dlc dlc);
+
+        ICollection<Developer> GetDevelopers();
+        Developer GetDeveloper(int developerid);
+        bool UpdateDeveloper(Developer developer);
         //ame SuggestGamebyDevel
 
     }

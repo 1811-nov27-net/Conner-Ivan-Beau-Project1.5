@@ -21,6 +21,7 @@ namespace VaporAPI.App.Controllers
         }
 
         // GET: api/User
+        //getting all the users
         [HttpGet]
         public ActionResult<IEnumerable<User>> Get()
         {
@@ -35,7 +36,24 @@ namespace VaporAPI.App.Controllers
             }
         }
 
+        // GET: api/User/5/Library
+        //getting all the users games
+        [HttpGet("{UserName}/Library", Name = "GetLibrary")]
+        public ActionResult<IEnumerable<Game>> GetGames(string username)
+        {
+            try
+            {
+                return Repo.GetUserGames(username).ToList();
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500);
+            }
+        }
+
         // GET: api/User/5
+        //getting the user with username
         [HttpGet("{UserName}", Name = "Get")]
         public ActionResult<User> Get(string UserName)
         {
@@ -57,6 +75,29 @@ namespace VaporAPI.App.Controllers
             return user;
         }
 
+        // GET: api/User/5/Library/5
+        [HttpGet("{UserName}/Library/{id}", Name = "GetGame")]
+        public ActionResult<Game> GetGame(string UserName, int id)
+        {
+            Game game;
+            try
+            {
+                game = Repo.GetUserGame(UserName,id);
+
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500);
+            }
+            if (game == null)
+            {
+                return NotFound();
+            }
+            return game;
+        }
+
+
         // POST: api/User
         [HttpPost]
         public ActionResult Post([FromBody] User user)
@@ -77,8 +118,37 @@ namespace VaporAPI.App.Controllers
             }
 
             return CreatedAtRoute("Get", new { UserName= user.UserName }, user);
-
         }
+
+
+        // POST: api/User/5/Library
+        [HttpPost("{UserName}/Library", Name = "Post")]
+        public ActionResult PostGame(string UserName,[FromBody] Game game)
+        {
+            try
+            {
+                bool check = Repo.AddUserGame(UserName,game);
+                //check is for checking if the username already exists, and if it does return status code 409
+                if (!check)
+                {
+                    return StatusCode(409);
+                }
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500);
+            }
+
+            return CreatedAtRoute("GetLibrary", new { Game = game.GameId }, game);
+        }
+
+
+
+
+
+
+
 
         // PUT: api/User/5
         [HttpPut("{UserName}")]
