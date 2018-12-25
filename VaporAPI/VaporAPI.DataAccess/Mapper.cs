@@ -121,6 +121,36 @@ namespace VaporAPI.DataAccess
             CreditCard = user.CreditCard,
             Admin = user.Admin
         };
+
+        public static DataAccess.UserGame Map(Library.UserGame userGame) => new DataAccess.UserGame
+        {
+            //GameId = userGame.Game.GameId,
+            //UserName = userGame.User.UserName,
+            Game = Mapper.Map(userGame.Game),
+            UserNameNavigation = Mapper.Map(userGame.User),
+            Review = userGame.Review,
+            Score = userGame.Score,
+            DatePurchased = userGame.PurchaseDate,
+
+        };
+
+        public static Library.UserGame Map(DataAccess.UserGame userGame) => new Library.UserGame
+        {
+            Game = Mapper.Map(userGame.Game),
+            //dont know why the name is so weird here
+            User = Mapper.Map(userGame.UserNameNavigation),
+            Review = userGame.Review,
+            //if score is null then set score as -1?
+            //TODO: decide what this case should be
+            Score = userGame.Score ?? -1,
+            PurchaseDate = userGame.DatePurchased,
+        };
+
+        public static IEnumerable<Library.UserGame> Map(IEnumerable<DataAccess.UserGame> userGames) => userGames.Select(Map);
+
+        public static IEnumerable<DataAccess.UserGame> Map(IEnumerable<Library.UserGame> userGames) => userGames.Select(Map);
+
+
         public static IEnumerable<DataAccess.User> Map(IEnumerable<Library.User> user) => user.Select(Map);
     }
 }

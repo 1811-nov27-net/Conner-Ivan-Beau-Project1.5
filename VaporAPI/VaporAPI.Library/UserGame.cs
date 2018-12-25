@@ -12,7 +12,7 @@ namespace VaporAPI.Library
 
         public DateTime PurchaseDate { get; set; }
 
-        public string Text { get; set; }
+        public string Review { get; set; }
 
         public int Score { get; set; }
 

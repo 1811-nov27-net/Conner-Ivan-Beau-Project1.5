@@ -8,7 +8,7 @@ namespace VaporAPI.Library
     {
         //CRUD for review and score for table UserGame
         bool AddReview(UserGame review);
-        bool UpdateReviewbyScore(UserGame review);
+        //bool UpdateReviewbyScore(UserGame review);
         bool DeleteReview(UserGame review);
 
         //grab reviews from table UserGame by some parameters
@@ -68,6 +68,8 @@ namespace VaporAPI.Library
         ICollection<UserGame> GetUserGames(string username);
         UserGame GetUserGame(string username, int gameid);
         bool AddUserGame(UserGame review);
+        bool DeleteUserGame(string username, int gameid);
+        bool UpdateUserGame(Library.UserGame userGame);
 
     }
 }
