@@ -67,15 +67,15 @@ namespace VaporAPI.DataAccess
             }
         }
 
-        public bool AddReview(Review review)
+        public bool AddReview(Library.UserGame review)
         {
             bool success = true;
             try
             {
-                User user = _db.User.Find(review.username);
-                UserGame usergame = user.UserGame.Where(g => g.GameId == review.GameId).First();
-                usergame.Score = review.score;
-                usergame.Review = review.text;
+                User user = _db.User.Find(review.User.UserName);
+                UserGame usergame = user.UserGame.Where(g => g.GameId == review.Game.GameId).First();
+                usergame.Score = review.Score;
+                usergame.Review = review.Text;
                 _db.Update(user);
                 return success;
             }
@@ -119,6 +119,11 @@ namespace VaporAPI.DataAccess
                 success = false;
                 return success;
             }
+        }
+
+        public bool AddUserGame(Library.UserGame review)
+        {
+            throw new NotImplementedException();
         }
 
         public bool DeleteDeveloper(int id)
@@ -169,7 +174,7 @@ namespace VaporAPI.DataAccess
             }
         }
 
-        public bool DeleteReview(Review review)
+        public bool DeleteReview(Library.UserGame review)
         {
             throw new NotImplementedException();
         }
@@ -206,12 +211,32 @@ namespace VaporAPI.DataAccess
             }
         }
 
+        public Library.Developer GetDeveloper(int developerid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.Developer> GetDevelopers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Library.Dlc GetDlc(int dlcid)
+        {
+            throw new NotImplementedException();
+        }
+
         public Library.Game GetGame(int id)
         {
 
                 Game game = _db.Game.Where(g => g.GameId == id).FirstOrDefault();
                 Library.Game gameLib = Mapper.Map(game);
                 return gameLib;
+        }
+
+        public ICollection<Library.Dlc> GetGameDlcs(int gameid)
+        {
+            throw new NotImplementedException();
         }
 
         public ICollection<Library.Game> GetGames(params int[] sort)
@@ -246,12 +271,17 @@ namespace VaporAPI.DataAccess
             //}
         }
 
-        public ICollection<Review> GetReviewsByGame(int id, params int[] sort)
+        public ICollection<Review> GetReviewbyGame(int id)
         {
             throw new NotImplementedException();
         }
 
-        public ICollection<Review> GetReviewsbyGame(int id)
+        public Review GetReviewbyUser(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Review> GetReviewsByGame(int id, params int[] sort)
         {
             throw new NotImplementedException();
         }
@@ -261,16 +291,21 @@ namespace VaporAPI.DataAccess
             throw new NotImplementedException();
         }
 
-        public ICollection<Review> GetReviewsbyUser(string username)
-        {
-            throw new NotImplementedException();
-        }
-
         public Library.User GetUser(string username)
         {
             var user = _db.User.Where(u => u.UserName == username).FirstOrDefault();
             var userLib = Mapper.Map(user);
             return userLib;
+        }
+
+        public Library.UserGame GetUserGame(string username, int gameid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<Library.UserGame> GetUserGames(string username)
+        {
+            throw new NotImplementedException();
         }
 
         public ICollection<Library.User> GetUsers(params int[] sort)
@@ -289,6 +324,16 @@ namespace VaporAPI.DataAccess
         }
 
         public Library.Game SuggestGamebyuser(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateDeveloper(Library.Developer developer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateDlc(Library.Dlc dlc)
         {
             throw new NotImplementedException();
         }
@@ -315,7 +360,7 @@ namespace VaporAPI.DataAccess
             }  
         }
 
-        public bool UpdateReviewbyScore(Review review)
+        public bool UpdateReviewbyScore(Library.UserGame review)
         {
             throw new NotImplementedException();
         }

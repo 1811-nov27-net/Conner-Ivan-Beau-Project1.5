@@ -21,12 +21,29 @@ namespace VaporAPI.App.Controllers
         }
 
         // GET: api/User
+        //getting all the users
         [HttpGet]
         public ActionResult<IEnumerable<User>> Get()
         {
             try
             {
-                return Repo.GetUsers();
+                return Repo.GetUsers().ToList();
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500);
+            }
+        }
+
+        // GET: api/User/5/Library
+        //getting all the users games
+        [HttpGet("{UserName}/Library", Name = "GetLibrary")]
+        public ActionResult<IEnumerable<UserGame>> GetGames(string username)
+        {
+            try
+            {
+                return Repo.GetUserGames(username).ToList();
             }
             catch (Exception)
             {
@@ -36,6 +53,7 @@ namespace VaporAPI.App.Controllers
         }
 
         // GET: api/User/5
+        //getting the user with username
         [HttpGet("{UserName}", Name = "Get")]
         public ActionResult<User> Get(string UserName)
         {
@@ -57,6 +75,29 @@ namespace VaporAPI.App.Controllers
             return user;
         }
 
+        // GET: api/User/5/Library/5
+        [HttpGet("{UserName}/Library/{id}", Name = "GetGame")]
+        public ActionResult<UserGame> GetGame(string UserName, int id)
+        {
+            UserGame game;
+            try
+            {
+                game = Repo.GetUserGame(UserName,id);
+
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500);
+            }
+            if (game == null)
+            {
+                return NotFound();
+            }
+            return game;
+        }
+
+
         // POST: api/User
         [HttpPost]
         public ActionResult Post([FromBody] User user)
@@ -77,17 +118,46 @@ namespace VaporAPI.App.Controllers
             }
 
             return CreatedAtRoute("Get", new { UserName= user.UserName }, user);
-
         }
 
+
+        // POST: api/User/5/Library
+        [HttpPost("{UserName}/Library", Name = "Post")]
+        public ActionResult PostGame(string UserName,[FromBody] UserGame game)
+        {
+            try
+            {
+                bool check = Repo.AddUserGame(game);
+                //check is for checking if the username already exists, and if it does return status code 409
+                if (!check)
+                {
+                    return StatusCode(409);
+                }
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500);
+            }
+
+            return CreatedAtRoute("GetLibrary", new { Game = game.Game.GameId }, game);
+        }
+
+
+
+
+
+
+
+
         // PUT: api/User/5
-        [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] User value)
+        [HttpPut("{UserName}")]
+        public ActionResult Put(string UserName, [FromBody] User value)
         {
             User user;
             try
             {
-                user = Repo.GetUser(value.UserName);
+                user = Repo.GetUser(UserName);
             }
             catch (Exception ex)
             {
@@ -115,7 +185,7 @@ namespace VaporAPI.App.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{UserName}")]
         public ActionResult Delete(string UserName)
         {
             try
@@ -126,11 +196,11 @@ namespace VaporAPI.App.Controllers
                 {
                     return NotFound();
                 }
-                Repo.DeleteUser(user);
+                Repo.DeleteUser(user.UserName);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex);
+                return StatusCode(500);
             }
             return NoContent();
         }

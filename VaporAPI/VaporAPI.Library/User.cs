@@ -20,6 +20,10 @@ namespace VaporAPI.Library
 
         public bool Admin { get; set; }
 
-        public List<Review> Reviews { get; set; }
+        public bool SuggestTags(List<Game> game)
+        {
+            return false;
+
+        }
     }
 }
