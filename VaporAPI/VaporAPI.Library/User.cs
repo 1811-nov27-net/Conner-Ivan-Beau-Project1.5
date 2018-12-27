@@ -24,7 +24,8 @@ namespace VaporAPI.Library
         public string LastName { get; set; }
 
         [Required]
-        
+        [RegularExpression(@"^[a-zA-Z0-9''-'\s]{1,100}$",
+         ErrorMessage = "Characters are not allowed.")]
         public string Password { get; set; }
 
         public decimal? Wallet { get; set; }

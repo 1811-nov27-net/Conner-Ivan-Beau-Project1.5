@@ -12,8 +12,10 @@ namespace VaporAPI.Library
         [Required]
         public string Name { get; set; }
 
+        [Required]
         public DateTime FoundingDate { get; set; }
 
+        [Required]
         public string Website { get; set; }
     }
 }

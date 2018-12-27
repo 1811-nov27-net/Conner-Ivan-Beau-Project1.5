@@ -288,7 +288,7 @@ namespace VaporAPI.DataAccess
             return dlcs == null ? null : Mapper.Map(dlcs).ToList();
         }
 
-        public ICollection<Library.Game> GetGames(params int[] sort)
+        public ICollection<Library.Game> GetGames(int sort = 0)
         {
             throw new NotImplementedException();
             // no parameters passes represents a sort of gameId
@@ -331,19 +331,15 @@ namespace VaporAPI.DataAccess
             throw new NotImplementedException();
         }
 
-        public ICollection<Library.UserGame> GetReviewsByGame(int id, params int[] sort)
+        public ICollection<Library.UserGame> GetReviewsbyUser(string username, int sort = 0)
         {
             throw new NotImplementedException();
         }
 
-        public ICollection<Library.UserGame> GetReviewsbyUser(string username, params int[] sort)
+        public ICollection<Library.UserGame> GetReviewsByGame(int id, int sort = 0)
         {
             throw new NotImplementedException();
         }
-
-
-
-
 
         public Library.Tag GetTag(int tagid)
         {
@@ -377,7 +373,7 @@ namespace VaporAPI.DataAccess
             return ugs == null ? null : Mapper.Map(ugs).ToList();
         }
 
-        public ICollection<Library.User> GetUsers(params int[] sort)
+        public ICollection<Library.User> GetUsers(int sort = 0)
         {
             //sort not  implemented yet
             List<DataAccess.User> users = _db.User.AsNoTracking().ToList();
@@ -477,5 +473,9 @@ namespace VaporAPI.DataAccess
                 return success;
             }
         }
+
+
+
+
     }
 }

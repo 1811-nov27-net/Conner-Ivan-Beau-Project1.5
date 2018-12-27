@@ -13,6 +13,7 @@ namespace VaporAPI.Library
         public string Name { get; set; }
 
         [Range(0, 1000)]
+        
         public decimal Price { get; set; }
 
         [Required]
