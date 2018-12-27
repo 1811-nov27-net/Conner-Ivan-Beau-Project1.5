@@ -33,6 +33,9 @@ namespace VaporAPI.Library
         bool UpdateGame(Game game);
         Game GetGame(int id);
         ICollection<Game> GetGames(int sort = 0);
+        ICollection<Game> GetBetweenPriceGames(decimal lowPrice, decimal highPrice);
+        ICollection<Library.Game> GetBetweenRatingsGames(int lowRating, int highRating);
+        ICollection<Library.Game> GetGamesHelper(ICollection<Game> oldGames, int sort = 0);
 
         //CRUD for develpoer
         bool AddDeveloper(Developer developer);

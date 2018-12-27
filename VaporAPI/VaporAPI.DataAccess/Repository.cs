@@ -288,43 +288,69 @@ namespace VaporAPI.DataAccess
             return dlcs == null ? null : Mapper.Map(dlcs).ToList();
         }
 
+        public ICollection<Library.Game> GetBetweenPriceGames(decimal lowPrice, decimal highPrice)
+        {
+            ICollection<Game> games = _db.Game.Where(a => a.Price >= lowPrice && a.Price <= highPrice).ToList();
+            return GetGamesHelper(games, 2);
+        }
+
+        // A little awkward, but I wrote it like this because I had to search by a column in UserGames
+        // but I wanted to return a collection of Games... 
+        // If you know a better way, let me know and we can fix
+        public ICollection<Library.Game> GetBetweenRatingsGames(int lowRating, int highRating)
+        {
+            List<UserGame> userGames = _db.UserGame.Where(ug => ug.Score >= lowRating && ug.Score <= highRating).ToList();
+            var gameIds = new int[userGames.Count];
+            ICollection<Game> games = new List<Game>();
+            for (int i = 0; i < userGames.Count; i++)
+            {
+                gameIds[i] = userGames[i].GameId;
+                Game gameToAdd = _db.Game.Where(g => g.GameId == gameIds[i]).FirstOrDefault();
+                if (!(games.Contains(gameToAdd)))
+                {
+                    games.Add(gameToAdd);
+                }
+                
+            }
+            return GetGamesHelper(games, 2);
+        }
+
         public ICollection<Library.Game> GetGames(int sort = 0)
         {
-            if (sort == 0)
-            {
-                // Default sort is by GameId
-                ICollection<Game> games =  _db.Game.OrderBy(g => g.GameId).AsNoTracking().ToList();
-                return games == null ? null : Mapper.Map(games).ToList();
-            }
-            else
-            {
-                // a value of 1 represent a sort by GameName 
-                if (sort == 1)
-                {
-                    ICollection<Game> games = _db.Game.OrderBy(g => g.Name).AsNoTracking().ToList();
-                    return games == null ? null : Mapper.Map(games).ToList();
-                }
+            return GetGamesHelper(_db.Game.ToList(), sort);
+        }
 
-                // a value of 2 represent a sort by price (cheapest first)
-                else if (sort == 2)
-                {
-                    ICollection<Game> games = _db.Game.OrderBy(g => g.Price).AsNoTracking().ToList();
-                    return games == null ? null : Mapper.Map(games).ToList();
-                }
 
-                // a value of 3 represent a sort by price (most expensive first)
-                else if (sort == 3)
-                {
-                    ICollection<Game> games = _db.Game.OrderByDescending(g => g.Price).AsNoTracking().ToList();
-                    return games == null ? null : Mapper.Map(games).ToList();
-                }
-                else
-                {
-                    // To ensure that all paths retur a value, the else here
-                    // returns the default sort, which is by GameId
-                    ICollection<Game> games = _db.Game.OrderBy(g => g.GameId).AsNoTracking().ToList();
-                    return games == null ? null : Mapper.Map(games).ToList();
-                }
+        // 
+        public ICollection<Library.Game> GetGamesHelper(ICollection<Library.Game> oldGames, int sort = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        // Note that this method is not in the repository interface because
+        // because the interface does not reference this DataAccess folder...
+        // Similarly, the above method is not implemented because it takes
+        // a collection of Library games...
+        public ICollection<Library.Game> GetGamesHelper(ICollection<DataAccess.Game> oldGames, int sort = 0)
+        {
+            switch (sort)
+            {
+                case 0:
+                    ICollection<Game> games0 = oldGames.OrderBy(g => g.GameId).ToList();
+                    return games0 == null ? null : Mapper.Map(games0).ToList();
+                case 1:
+                    ICollection<Game> games1 = oldGames.OrderBy(g => g.Name).ToList();
+                    return games1 == null ? null : Mapper.Map(games1).ToList();
+                case 2:
+                    ICollection<Game> games2 = oldGames.OrderBy(g => g.Price).ToList();
+                    return games2 == null ? null : Mapper.Map(games2).ToList();
+
+                case 3:
+                    ICollection<Game> games3 = oldGames.OrderByDescending(g => g.Price).ToList();
+                    return games3 == null ? null : Mapper.Map(games3).ToList();
+                default:
+                    ICollection<Game> gamesD = oldGames.OrderBy(g => g.GameId).ToList();
+                    return gamesD == null ? null : Mapper.Map(gamesD).ToList();
             }
         }
 
@@ -481,9 +507,5 @@ namespace VaporAPI.DataAccess
                 return success;
             }
         }
-
-
-
-
     }
 }
