@@ -290,43 +290,51 @@ namespace VaporAPI.DataAccess
 
         public ICollection<Library.Game> GetGames(int sort = 0)
         {
-            throw new NotImplementedException();
-            // no parameters passes represents a sort of gameId
-            //if (sort.Length == 0)
-            //{
-            //    ICollection<Game> games = (ICollection<Game>) _db.Game.OrderBy(g => g.GameId);
-            //    var gamesLib = Mapper.Map(games);
-            //    return games;
-            //}
-            //else
-            //{
-            //    // a value of 1 represent a sort by GameName 
-            //    if (sort[1] == 1)
-            //    {
-            //        IEnumerable<Game> games = (IEnumerable<Game>)_db.Game.OrderBy(g => g.Name);
-            //    }
+            if (sort == 0)
+            {
+                // Default sort is by GameId
+                ICollection<Game> games =  _db.Game.OrderBy(g => g.GameId).AsNoTracking().ToList();
+                return games == null ? null : Mapper.Map(games).ToList();
+            }
+            else
+            {
+                // a value of 1 represent a sort by GameName 
+                if (sort == 1)
+                {
+                    ICollection<Game> games = _db.Game.OrderBy(g => g.Name).AsNoTracking().ToList();
+                    return games == null ? null : Mapper.Map(games).ToList();
+                }
 
-            //    // a value of 2 represent a sort by price (cheapest first)
-            //    else if (sort[1] == 2)
-            //    {
-            //        IEnumerable<Game> games = (IEnumerable<Game>)_db.Game.OrderBy(g => g.Price);
-            //    }
+                // a value of 2 represent a sort by price (cheapest first)
+                else if (sort == 2)
+                {
+                    ICollection<Game> games = _db.Game.OrderBy(g => g.Price).AsNoTracking().ToList();
+                    return games == null ? null : Mapper.Map(games).ToList();
+                }
 
-            //    // a value of 3 represent a sort by price (most expensive first)
-            //    else if (sort[1] == 3)
-            //    {
-            //        IEnumerable<Game> games = (IEnumerable<Game>)_db.Game.OrderByDescending(g => g.Price);
-            //    }
-            //}
+                // a value of 3 represent a sort by price (most expensive first)
+                else if (sort == 3)
+                {
+                    ICollection<Game> games = _db.Game.OrderByDescending(g => g.Price).AsNoTracking().ToList();
+                    return games == null ? null : Mapper.Map(games).ToList();
+                }
+                else
+                {
+                    // To ensure that all paths retur a value, the else here
+                    // returns the default sort, which is by GameId
+                    ICollection<Game> games = _db.Game.OrderBy(g => g.GameId).AsNoTracking().ToList();
+                    return games == null ? null : Mapper.Map(games).ToList();
+                }
+            }
         }
 
         //wait to implement these Review functions
-        public ICollection<Library.UserGame> GetReviewbyGame(int id)
+        public ICollection<Library.UserGame> GetReviewsbyGame(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Library.UserGame GetReviewbyUser(string username)
+        public ICollection<Library.UserGame> GetReviewsbyUser(string username)
         {
             throw new NotImplementedException();
         }
