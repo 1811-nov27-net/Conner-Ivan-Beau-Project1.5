@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace VaporAPI.Library
@@ -8,6 +9,7 @@ namespace VaporAPI.Library
     {
         public int DeveloperId { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         public DateTime FoundingDate { get; set; }

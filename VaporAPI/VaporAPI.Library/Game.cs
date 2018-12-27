@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace VaporAPI.Library
@@ -8,8 +9,10 @@ namespace VaporAPI.Library
     {
         public int GameId { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
+        [Range(0, 1000)]
         public decimal Price { get; set; }
 
         public string Description { get; set; }
