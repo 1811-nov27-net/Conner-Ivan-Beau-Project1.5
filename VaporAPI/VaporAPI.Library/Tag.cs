@@ -10,6 +10,8 @@ namespace VaporAPI.Library
         public int TagId { get; set; }
 
         [Required]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,100}$",
+            ErrorMessage = "Only letters are allowed")]
         public string GenreName { get; set; }
     }
 }
