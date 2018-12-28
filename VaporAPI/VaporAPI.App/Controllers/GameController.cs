@@ -36,7 +36,7 @@ namespace VaporAPI.App.Controllers
         }
 
         // GET: api/Game/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "GetGame")]
         public ActionResult<Game> Get(int id)
         {
             Game game;
@@ -76,7 +76,7 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("Get", new { id = game.GameId }, game);
+            return CreatedAtRoute("GetGame", new { id = game.GameId }, game);
         }
 
         // PUT: api/Game/5

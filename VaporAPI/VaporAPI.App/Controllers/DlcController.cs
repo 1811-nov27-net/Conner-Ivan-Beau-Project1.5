@@ -34,7 +34,7 @@ namespace VaporAPI.App.Controllers
         }
 
         // GET: api/Dlc/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "GetDlc")]
         public ActionResult<Dlc> Get(int id)
         {
             Dlc dlc;
@@ -55,7 +55,7 @@ namespace VaporAPI.App.Controllers
             return dlc;
         }
 
-        [HttpGet("Game/{gameid}", Name = "Get")]
+        [HttpGet("Game/{gameid}", Name = "GetGameDlc")]
         public ActionResult<ICollection<Dlc>> Get(int gameid,int id)
         {
             List<Dlc> dlcs;
@@ -95,7 +95,7 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("Get", new { id = dlc.Dlcid }, dlc);
+            return CreatedAtRoute("GetDlc", new { id = dlc.Dlcid }, dlc);
         }
 
         // PUT: api/Dlc/5

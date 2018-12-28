@@ -54,7 +54,7 @@ namespace VaporAPI.App.Controllers
 
         // GET: api/User/5
         //getting the user with username
-        [HttpGet("{UserName}", Name = "Get")]
+        [HttpGet("{UserName}", Name = "GetUser")]
         public ActionResult<User> Get(string UserName)
         {
             User user;
@@ -76,7 +76,7 @@ namespace VaporAPI.App.Controllers
         }
 
         // GET: api/User/5/Library/5
-        [HttpGet("{UserName}/Library/{id}", Name = "GetGame")]
+        [HttpGet("{UserName}/Library/{id}", Name = "GetUserGame")]
         public ActionResult<UserGame> GetGame(string UserName, int id)
         {
             UserGame game;
@@ -117,7 +117,7 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("Get", new { UserName= user.UserName }, user);
+            return CreatedAtRoute("GetUser", new { UserName= user.UserName }, user);
         }
 
 
