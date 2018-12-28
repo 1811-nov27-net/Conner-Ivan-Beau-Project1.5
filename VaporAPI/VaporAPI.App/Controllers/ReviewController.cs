@@ -56,7 +56,7 @@ namespace VaporAPI.App.Controllers
             ICollection<UserGame> reviews;
             try
             {
-                reviews = Repo.GetReviewsbyGame(id);
+                reviews = Repo.GetReviewsByGame(id);
 
             }
             catch (Exception)
