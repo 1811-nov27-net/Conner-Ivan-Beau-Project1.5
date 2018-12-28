@@ -459,15 +459,32 @@ namespace VaporAPI.DataAccess
         }
 
         //not sure we will need these
-
+        // returns all users that have downloaded the given DLC
         public ICollection<Library.User> GetUsersbyDlc(int id)
         {
-            throw new NotImplementedException();
+            List<string> userNames = _db.UserDlc.Where(u => u.Dlcid == id).Select(u => u.UserName).ToList();
+            List<Library.User> usersDB = new List<Library.User>();
+            foreach (var item in userNames)
+            {
+                var userToAddDB = _db.User.Where(u => u.UserName == item).FirstOrDefault();
+                var userToAddLib = Mapper.Map(userToAddDB);
+                usersDB.Add(userToAddLib);
+            }
+            return usersDB;
         }
 
+        // returns all users that have purchased the given game
         public ICollection<Library.User> GetUsersbyGame(int id)
         {
-            throw new NotImplementedException();
+            List<string> userNames = _db.UserGame.Where(u => u.GameId == id).Select(u => u.UserName).ToList();
+            List<Library.User> usersDB = new List<Library.User>();
+            foreach (var item in userNames)
+            {
+                var userToAddDB = _db.User.Where(u => u.UserName == item).FirstOrDefault();
+                var userToAddLib = Mapper.Map(userToAddDB);
+                usersDB.Add(userToAddLib);
+            }
+            return usersDB;
         }
 
         //idea: get a dictionary of all the tags for the games the user owns, find the most popular tags
