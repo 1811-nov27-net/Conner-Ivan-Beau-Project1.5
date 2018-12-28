@@ -150,7 +150,6 @@ namespace VaporAPI.DataAccess
 
         public static IEnumerable<DataAccess.UserGame> Map(IEnumerable<Library.UserGame> userGames) => userGames.Select(Map);
 
-
         public static IEnumerable<DataAccess.User> Map(IEnumerable<Library.User> user) => user.Select(Map);
     }
 }

@@ -319,14 +319,12 @@ namespace VaporAPI.DataAccess
             return (sum / scores.Length);
         }
 
-        // A little awkward, but I wrote it like this because I had to search by a column in UserGames
-        // but I wanted to return a collection of Games... 
         // If you know a better way, let me know and we can fix
         public ICollection<Library.Game> GetBetweenRatingsGames(int lowRating, int highRating)
         {
             throw new NotImplementedException();
             //var gamesToReturn = _db.Game.Where()
-            //var userGames = _db.UserGame.GroupBy(ug => ug.GameId).Where(ug => ug.(Sum(x => x.Score / GameId.Count))).ToList();
+            //var userGames = _db.UserGame.GroupBy(ug => ug.GameId).Where(ug => ug.(Sum(x => x.Score) / GameId.Count)).ToList();
             //var gameIds = new int[userGames.Count];
             //ICollection<Game> games = new List<Game>();
             //for (int i = 0; i < userGames.Count; i++)
@@ -342,6 +340,7 @@ namespace VaporAPI.DataAccess
             //return GetGamesHelper(gamesLib, 2);
         }
 
+        // retrievs all games, sorted as given
         public ICollection<Library.Game> GetGames(int sort = 0)
         {
             return GetGamesHelper(Mapper.Map(_db.Game).ToList(), sort);
@@ -368,6 +367,62 @@ namespace VaporAPI.DataAccess
                 default:
                     ICollection<Game> gamesD = oldGames.OrderBy(g => g.GameId).ToList();
                     return gamesD == null ? null : Mapper.Map(gamesD).ToList();
+            }
+        }
+        //retrieves all UserGames, sorted as given
+        public ICollection<Library.UserGame> GetReviews(int sort = 0)
+        {
+            return GetReviewsHelper(Mapper.Map(_db.UserGame).ToList(), sort);
+        }
+
+        public ICollection<Library.UserGame> GetReviewsbyUser(string username, int sort = 0)
+        {
+            IEnumerable<UserGame> userGames = _db.UserGame.Where(ug => ug.UserName == username).ToList();
+            var listUG = Mapper.Map(userGames).ToList();
+            return GetReviewsHelper(listUG, sort);
+        }
+
+        public ICollection<Library.UserGame> GetReviewsByGame(int id, int sort = 0)
+        {
+            IEnumerable<UserGame> userGames = _db.UserGame.Where(ug => ug.GameId == id).ToList();
+            var listUG = Mapper.Map(userGames).ToList();
+            return GetReviewsHelper(listUG, sort);
+        }
+
+        public ICollection<Library.UserGame> GetReviewsHelper(ICollection<Library.UserGame> oldUserGamesLib, int sort = 0)
+        {
+            ICollection<UserGame> oldUserGames = (ICollection<UserGame>) Mapper.Map(oldUserGamesLib);
+            switch (sort)
+            {
+                // case 0 sorts by gameID
+                case 0:
+                    ICollection<UserGame> userGames0 = oldUserGames.OrderBy(ug => ug.GameId).ToList();
+                    return userGames0 == null ? null : Mapper.Map(userGames0).ToList();
+                
+                // case 1 sorts by username
+                case 1:
+                    ICollection<UserGame> userGames1 = oldUserGames.OrderBy(ug => ug.UserName).ToList();
+                    return userGames1 == null ? null : Mapper.Map(userGames1).ToList();
+               
+                // case 2 sprts by username descending
+                case 2:
+                    ICollection<UserGame> userGames2 = oldUserGames.OrderByDescending(ug => ug.UserName).ToList();
+                    return userGames2 == null ? null : Mapper.Map(userGames2).ToList();
+                
+                // case 3 sorts by score
+                case 3:
+                    ICollection<UserGame> userGames3 = oldUserGames.OrderBy(ug => ug.Score).ToList();
+                    return userGames3 == null ? null : Mapper.Map(userGames3).ToList();
+
+                // case 4 sorts by score descending
+                case 4:
+                    ICollection<UserGame> userGame4 = oldUserGames.OrderByDescending(ug => ug.Score).ToList();
+                    return userGame4 == null ? null : Mapper.Map(userGame4).ToList();
+
+                // default case is sort by gameID
+                default:
+                    ICollection<UserGame> userGamesD = oldUserGames.OrderBy(ug => ug.GameId).ToList();
+                    return userGamesD == null ? null : Mapper.Map(userGamesD).ToList();
             }
         }
 
@@ -397,27 +452,6 @@ namespace VaporAPI.DataAccess
         //            return gamesD == null ? null : Mapper.Map(gamesD).ToList();
         //    }
         //}
-
-        //wait to implement these Review functions
-        public ICollection<Library.UserGame> GetReviewsbyGame(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ICollection<Library.UserGame> GetReviewsbyUser(string username)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ICollection<Library.UserGame> GetReviewsbyUser(string username, int sort = 0)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ICollection<Library.UserGame> GetReviewsByGame(int id, int sort = 0)
-        {
-            throw new NotImplementedException();
-        }
 
         public Library.Tag GetTag(int tagid)
         {
@@ -568,7 +602,5 @@ namespace VaporAPI.DataAccess
                 return success;
             }
         }
-
-        
     }
 }
