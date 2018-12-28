@@ -36,7 +36,7 @@ namespace VaporAPI.App.Controllers
         }
 
         // GET: api/Developer/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "GetDeveloper")]
         public ActionResult<Developer> Get(int id)
         {
             Developer developer;
@@ -77,7 +77,7 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("Get", new { id = developer.DeveloperId}, developer);
+            return CreatedAtRoute("GetDeveloper", new { id = developer.DeveloperId}, developer);
         }
 
         // PUT: api/Developer/5

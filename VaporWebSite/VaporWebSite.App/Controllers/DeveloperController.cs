@@ -18,7 +18,7 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: Developer
-        public async Task<ActionResult> IndexAsync()
+        public async Task<ActionResult> Index()
         {
             HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Developer");
             HttpResponseMessage response = await Client.SendAsync(request);
@@ -44,19 +44,27 @@ namespace VaporWebSite.App.Controllers
         // GET: Developer/Create
         public ActionResult Create()
         {
-            return View();
+            //might want some logic for security here
+            return View(new Developer());
         }
 
         // POST: Developer/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(Developer developer)
         {
             try
             {
                 // TODO: Add insert logic here
+                HttpRequestMessage request = CreateRequest(HttpMethod.Post, "api/Developer", developer);
+                HttpResponseMessage response = await Client.SendAsync(request);
 
-                return RedirectToAction(nameof(IndexAsync));
+                if (!response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
@@ -65,21 +73,30 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: Developer/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            //Client.GetStringAsync()
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Developer/{id}");
+            HttpResponseMessage response = await Client.SendAsync(request);
+            string resString = await response.Content.ReadAsStringAsync();
+            return View(JsonConvert.DeserializeObject<Developer>(resString));
         }
 
         // POST: Developer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, Developer developer)
         {
             try
             {
-                // TODO: Add update logic here
+                HttpRequestMessage request = CreateRequest(HttpMethod.Put, $"api/Developer/{id}", developer);
+                HttpResponseMessage response = await Client.SendAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+                    return View();
+                }
 
-                return RedirectToAction(nameof(IndexAsync));
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
@@ -102,7 +119,7 @@ namespace VaporWebSite.App.Controllers
             {
                 // TODO: Add delete logic here
 
-                return RedirectToAction(nameof(IndexAsync));
+                return RedirectToAction(nameof(Index));
             }
             catch
             {

@@ -28,7 +28,7 @@ namespace VaporAPI.App.Controllers
         //}
 
         // GET: api/Review/5
-        [HttpGet("User/{UserName}", Name = "Get")]
+        [HttpGet("User/{UserName}", Name = "GetReview")]
         public ActionResult<ICollection<UserGame>> GetUser(string username)
         {
             ICollection<UserGame> review;
@@ -91,7 +91,7 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("Get", new { UserName = review.User.UserName }, review);
+            return CreatedAtRoute("GetReview", new { UserName = review.User.UserName }, review);
         }
 
         // PUT: api/Review/5

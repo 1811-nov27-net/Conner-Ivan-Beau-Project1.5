@@ -36,7 +36,7 @@ namespace VaporAPI.App.Controllers
         }
 
         // GET: api/Tag/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "GetTag")]
         public ActionResult<Tag> Get(int id)
         {
             Tag tag;
@@ -76,7 +76,7 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("Get", new { TagId = tag.TagId }, tag);
+            return CreatedAtRoute("GetTag", new { TagId = tag.TagId }, tag);
         }
 
         //// PUT: api/Tag/5
