@@ -18,20 +18,20 @@ namespace VaporAPI.App.Controllers
         {
             Repo = repo;
         }
-        // GET: api/Dlc
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    try
-        //    {
-        //        return Repo.GetDlcs().ToList();
-        //    }
-        //    catch (Exception)
-        //    {
+        //GET: api/Dlc
+        [HttpGet]
+        public ActionResult<string> Get()
+        {
+            try
+            {
+                return "nothing";//Repo.GetDlcs().ToList();
+            }
+            catch (Exception)
+            {
 
-        //        return StatusCode(500);
-        //    }
-        //}
+                return StatusCode(500);
+            }
+        }
 
         // GET: api/Dlc/5
         [HttpGet("{id}", Name = "Get")]
