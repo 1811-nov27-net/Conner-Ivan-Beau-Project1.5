@@ -29,12 +29,12 @@ namespace VaporAPI.App.Controllers
 
         // GET: api/Review/5
         [HttpGet("User/{UserName}", Name = "Get")]
-        public ActionResult<UserGame> GetUser(string username)
+        public ActionResult<ICollection<UserGame>> GetUser(string username)
         {
-            UserGame review;
+            ICollection<UserGame> review;
             try
             {
-                review = Repo.GetReviewbyUser(username);
+                review = Repo.GetReviewsbyUser(username);
 
             }
             catch (Exception)
@@ -46,7 +46,7 @@ namespace VaporAPI.App.Controllers
             {
                 return NotFound();
             }
-            return review;
+            return Ok(review);
         }
 
         // GET: api/Review/5
@@ -56,7 +56,7 @@ namespace VaporAPI.App.Controllers
             ICollection<UserGame> reviews;
             try
             {
-                reviews = Repo.GetReviewbyGame(id);
+                reviews = Repo.GetReviewsbyGame(id);
 
             }
             catch (Exception)
@@ -95,13 +95,13 @@ namespace VaporAPI.App.Controllers
         }
 
         // PUT: api/Review/5
-        [HttpPut("{id}")]
-        public ActionResult Put(string username, [FromBody] UserGame value)
+        [HttpPut("{username}/{id}")]
+        public ActionResult Put(string username, int id, [FromBody] UserGame value)
         {
             UserGame review;
             try
             {
-                review = Repo.GetReviewbyUser(username);
+                review = Repo.GetUserGame(username, id);
             }
             catch (Exception ex)
             {
@@ -117,7 +117,7 @@ namespace VaporAPI.App.Controllers
             }
             try
             {
-                Repo.UpdateReviewbyScore(value);
+                Repo.UpdateUserGame(value);
             }
             catch (Exception ex)
             {
@@ -129,12 +129,12 @@ namespace VaporAPI.App.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public ActionResult Delete(string username)
+        [HttpDelete("{username}/{id}")]
+        public ActionResult Delete(string username, int id)
         {
             try
             {
-                var review = Repo.GetReviewbyUser(username);
+                var review = Repo.GetUserGame(username, id);
                 //for game doesnt exist
                 if (review == null)
                 {
