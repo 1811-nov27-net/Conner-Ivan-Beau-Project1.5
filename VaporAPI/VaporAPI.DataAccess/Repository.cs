@@ -85,7 +85,7 @@ namespace VaporAPI.DataAccess
                 success = false;
                 return success;
             }
-            
+
         }
 
         public bool AddTag(Library.Tag tag)
@@ -130,7 +130,7 @@ namespace VaporAPI.DataAccess
                 _db.SaveChanges();
                 return true;
             }
-            catch 
+            catch
             {
 
                 return false;
@@ -139,7 +139,8 @@ namespace VaporAPI.DataAccess
 
         public bool UpdateUserGame(Library.UserGame userGame)
         {
-            try { 
+            try
+            {
                 //_db.UserGame.First(a => a.UserName == userGame.User.UserName && a.GameId == userGame.Game.GameId);
                 _db.UserGame.Update(Mapper.Map(userGame));
                 return true;
@@ -148,7 +149,7 @@ namespace VaporAPI.DataAccess
             {
                 return false;
             }
-            
+
         }
 
         public bool DeleteUserGame(string username, int gameid)
@@ -178,7 +179,7 @@ namespace VaporAPI.DataAccess
             {
                 success = false;
                 return success;
-            }   
+            }
         }
 
         public bool DeleteDlc(int id)
@@ -291,7 +292,31 @@ namespace VaporAPI.DataAccess
         public ICollection<Library.Game> GetBetweenPriceGames(decimal lowPrice, decimal highPrice)
         {
             ICollection<Game> games = _db.Game.Where(a => a.Price >= lowPrice && a.Price <= highPrice).ToList();
-            return GetGamesHelper(games, 2);
+            ICollection<Library.Game> gamesLib = (ICollection<Library.Game>)Mapper.Map(games);
+            return GetGamesHelper(gamesLib, 2);
+        }
+
+        public decimal AverageScoreGame(Library.Game game)
+        {
+            List<UserGame> gameScores = _db.UserGame.Where(g => g.GameId == game.GameId).ToList();
+            List<int> gameInts = new List<int>();
+            foreach (var item in gameScores)
+            {
+                if (item.Score != null)
+                {
+                    // had to explicitly cast from int? to int to avoid compile error
+                    var score = (int)item.Score;
+                    gameInts.Add(score);
+                }
+            }
+            var scores = gameInts.ToArray();
+
+            int sum = 0;
+            foreach (var item in scores)
+            {
+                sum += item;
+            }
+            return (sum / scores.Length);
         }
 
         // A little awkward, but I wrote it like this because I had to search by a column in UserGames
@@ -299,40 +324,32 @@ namespace VaporAPI.DataAccess
         // If you know a better way, let me know and we can fix
         public ICollection<Library.Game> GetBetweenRatingsGames(int lowRating, int highRating)
         {
-            List<UserGame> userGames = _db.UserGame.Where(ug => ug.Score >= lowRating && ug.Score <= highRating).ToList();
-            var gameIds = new int[userGames.Count];
-            ICollection<Game> games = new List<Game>();
-            for (int i = 0; i < userGames.Count; i++)
-            {
-                gameIds[i] = userGames[i].GameId;
-                Game gameToAdd = _db.Game.Where(g => g.GameId == gameIds[i]).FirstOrDefault();
-                if (!(games.Contains(gameToAdd)))
-                {
-                    games.Add(gameToAdd);
-                }
-                
-            }
-            return GetGamesHelper(games, 2);
+            throw new NotImplementedException();
+            //var gamesToReturn = _db.Game.Where()
+            //var userGames = _db.UserGame.GroupBy(ug => ug.GameId).Where(ug => ug.(Sum(x => x.Score / GameId.Count))).ToList();
+            //var gameIds = new int[userGames.Count];
+            //ICollection<Game> games = new List<Game>();
+            //for (int i = 0; i < userGames.Count; i++)
+            //{
+            //    gameIds[i] = userGames[i].GameId;
+            //    Game gameToAdd = _db.Game.Where(g => g.GameId == gameIds[i]).FirstOrDefault();
+            //    if (!(games.Contains(gameToAdd)))
+            //    {
+            //        games.Add(gameToAdd);
+            //    }
+            //}
+            //ICollection<Library.Game> gamesLib = (ICollection<Library.Game>)Mapper.Map(games);
+            //return GetGamesHelper(gamesLib, 2);
         }
 
         public ICollection<Library.Game> GetGames(int sort = 0)
         {
-            return GetGamesHelper(_db.Game.ToList(), sort);
+            return GetGamesHelper(Mapper.Map(_db.Game).ToList(), sort);
         }
 
-
-        // 
-        public ICollection<Library.Game> GetGamesHelper(ICollection<Library.Game> oldGames, int sort = 0)
+        public ICollection<Library.Game> GetGamesHelper(ICollection<Library.Game> oldGamesLib, int sort = 0)
         {
-            throw new NotImplementedException();
-        }
-
-        // Note that this method is not in the repository interface because
-        // because the interface does not reference this DataAccess folder...
-        // Similarly, the above method is not implemented because it takes
-        // a collection of Library games...
-        public ICollection<Library.Game> GetGamesHelper(ICollection<DataAccess.Game> oldGames, int sort = 0)
-        {
+            ICollection<Game> oldGames = (ICollection<Game>)Mapper.Map(oldGamesLib);
             switch (sort)
             {
                 case 0:
@@ -353,6 +370,33 @@ namespace VaporAPI.DataAccess
                     return gamesD == null ? null : Mapper.Map(gamesD).ToList();
             }
         }
+
+        // Note that this method is not in the repository interface because
+        // because the interface does not reference this DataAccess folder...
+        // Similarly, the above method is not implemented because it takes
+        // a collection of Library games...
+        //public ICollection<Library.Game> GetGamesHelper(ICollection<DataAccess.Game> oldGames, int sort = 0)
+        //{
+        //    switch (sort)
+        //    {
+        //        case 0:
+        //            ICollection<Game> games0 = oldGames.OrderBy(g => g.GameId).ToList();
+        //            return games0 == null ? null : Mapper.Map(games0).ToList();
+        //        case 1:
+        //            ICollection<Game> games1 = oldGames.OrderBy(g => g.Name).ToList();
+        //            return games1 == null ? null : Mapper.Map(games1).ToList();
+        //        case 2:
+        //            ICollection<Game> games2 = oldGames.OrderBy(g => g.Price).ToList();
+        //            return games2 == null ? null : Mapper.Map(games2).ToList();
+
+        //        case 3:
+        //            ICollection<Game> games3 = oldGames.OrderByDescending(g => g.Price).ToList();
+        //            return games3 == null ? null : Mapper.Map(games3).ToList();
+        //        default:
+        //            ICollection<Game> gamesD = oldGames.OrderBy(g => g.GameId).ToList();
+        //            return gamesD == null ? null : Mapper.Map(gamesD).ToList();
+        //    }
+        //}
 
         //wait to implement these Review functions
         public ICollection<Library.UserGame> GetReviewsbyGame(int id)
@@ -444,7 +488,7 @@ namespace VaporAPI.DataAccess
                 return true;
             }
             return false;
-            
+
         }
 
         public bool UpdateDlc(Library.Dlc dlc)
@@ -480,7 +524,7 @@ namespace VaporAPI.DataAccess
             {
                 success = false;
                 return success;
-            }  
+            }
         }
 
         /*
@@ -507,5 +551,7 @@ namespace VaporAPI.DataAccess
                 return success;
             }
         }
+
+        
     }
 }
