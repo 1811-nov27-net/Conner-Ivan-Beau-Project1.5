@@ -42,7 +42,6 @@ namespace VaporAPI.Library
             }
         }
 
-
         public string Description { get; set; }
 
         public int? DeveloperId { get; set; }
