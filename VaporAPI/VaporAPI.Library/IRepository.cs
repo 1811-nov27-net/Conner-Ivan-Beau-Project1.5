@@ -12,17 +12,17 @@ namespace VaporAPI.Library
         bool DeleteReview(UserGame review);
 
         //grab reviews from table UserGame by some parameters
-        ICollection<UserGame> GetReviewbyGame(int id);
-        UserGame GetReviewbyUser(string username);
-        ICollection<UserGame> GetReviewsbyUser(string username, params int[] sort);
-        ICollection<UserGame> GetReviewsByGame(int id, params int[] sort);
+        ICollection<UserGame> GetReviewsbyGame(int id);
+        ICollection<UserGame> GetReviewsbyUser(string username);
+        ICollection<UserGame> GetReviewsbyUser(string username, int sort = 0);
+        ICollection<UserGame> GetReviewsByGame(int id, int sort = 0);
 
         //crud for users
         bool AddUser(User user);
         bool DeleteUser(string username);
         bool UpdateUser(User user);
         //grab users by some parameters
-        ICollection<User> GetUsers(params int[] sort);
+        ICollection<User> GetUsers(int sort = 0);
         ICollection<User> GetUsersbyGame(int id);
         ICollection<User> GetUsersbyDlc(int id);
         User GetUser(string username);
@@ -32,9 +32,13 @@ namespace VaporAPI.Library
         bool DeleteGame(int id);
         bool UpdateGame(Game game);
         Game GetGame(int id);
-        ICollection<Game> GetGames(params int[] sort);
+        ICollection<Game> GetGames(int sort = 0);
+        ICollection<Game> GetBetweenPriceGames(decimal lowPrice, decimal highPrice);
+        ICollection<Library.Game> GetBetweenRatingsGames(int lowRating, int highRating);
+        ICollection<Library.Game> GetGamesHelper(ICollection<Game> oldGames, int sort = 0);
+        decimal AverageScoreGame(Library.Game game);
 
-        //CRUD for develpoer
+        //CRUD for developer
         bool AddDeveloper(Developer developer);
         bool DeleteDeveloper(int id);
         //bool

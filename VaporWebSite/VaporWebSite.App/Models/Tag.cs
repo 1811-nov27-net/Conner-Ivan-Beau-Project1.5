@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace VaporAPI.Library
+namespace VaporWebSite.App.Models
 {
     public class Tag
     {

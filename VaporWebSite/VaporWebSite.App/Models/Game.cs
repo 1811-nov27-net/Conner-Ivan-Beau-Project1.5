@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace VaporAPI.Library
+namespace VaporWebSite.App.Models
 {
     public class Game
     {
@@ -41,6 +41,7 @@ namespace VaporAPI.Library
 
             }
         }
+
 
         public string Description { get; set; }
 
