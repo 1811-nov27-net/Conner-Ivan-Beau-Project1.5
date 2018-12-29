@@ -73,11 +73,13 @@ namespace VaporAPI.DataAccess
             bool success = true;
             try
             {
-                User user = _db.User.Find(review.User.UserName);
-                UserGame usergame = user.UserGame.Where(g => g.GameId == review.Game.GameId).First();
+                //this wouldn't work unless we .Include the UserGame along with the user
+                //User user = _db.User.Find(review.User.UserName);
+                UserGame usergame = _db.UserGame.First(g => g.GameId == review.Game.GameId && g.UserName == review.User.UserName);
                 usergame.Score = review.Score;
                 usergame.Review = review.Review;
-                _db.Update(user);
+                _db.UserGame.Update(usergame);
+                _db.SaveChanges();
                 return success;
             }
             catch
@@ -214,13 +216,21 @@ namespace VaporAPI.DataAccess
             }
         }
 
+        /// <summary>
+        /// deletes the review by setting it's values equal to null for the given UserGame
+        /// </summary>
+        /// <param name="review"></param>
+        /// <returns></returns>
+         
         public bool DeleteReview(Library.UserGame review)
         {
             DataAccess.UserGame ug = _db.UserGame.Where(a => a.UserName == review.User.UserName && a.GameId == review.Game.GameId).First();
             if (ug != null)
             {
-                ug.Score = review.Score;
-                ug.Review = review.Review;
+                ug.Score = null;//review.Score;
+                ug.Review = null;//review.Review;
+                _db.UserGame.Update(ug);
+                _db.SaveChanges();
                 return true;
             }
             return false;
@@ -601,6 +611,11 @@ namespace VaporAPI.DataAccess
                 success = false;
                 return success;
             }
+        }
+
+        public bool UpdateReview(Library.UserGame review)
+        {
+            return this.AddReview(review);
         }
     }
 }

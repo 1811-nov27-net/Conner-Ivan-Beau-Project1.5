@@ -56,7 +56,7 @@ namespace VaporAPI.App.Controllers
         }
 
         [HttpGet("Game/{gameid}", Name = "GetGameDlc")]
-        public ActionResult<ICollection<Dlc>> Get(int gameid,int id)
+        public ActionResult<ICollection<Dlc>> GetGameDlc(int gameid)
         {
             List<Dlc> dlcs;
             try

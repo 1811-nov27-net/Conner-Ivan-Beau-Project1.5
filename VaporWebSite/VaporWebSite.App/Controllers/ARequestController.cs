@@ -12,7 +12,7 @@ namespace VaporWebSite.App.Controllers
 {
     public abstract class ARequestController : Controller
     {
-        private static readonly Uri requestUri = new Uri("");
+        private static readonly Uri requestUri = new Uri("https://localhost:44360/");
 
         public HttpClient Client { get; set; }
 
@@ -23,7 +23,7 @@ namespace VaporWebSite.App.Controllers
 
         public HttpRequestMessage CreateRequest(HttpMethod method, string uri, object body = null)
         {
-            HttpRequestMessage request = new HttpRequestMessage(method, uri);
+            HttpRequestMessage request = new HttpRequestMessage(method, new Uri(requestUri,uri));
 
             if(body != null)
             {

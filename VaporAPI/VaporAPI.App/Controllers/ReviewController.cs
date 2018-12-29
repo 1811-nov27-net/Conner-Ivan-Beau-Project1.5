@@ -28,7 +28,7 @@ namespace VaporAPI.App.Controllers
         //}
 
         // GET: api/Review/5
-        [HttpGet("User/{UserName}", Name = "GetReview")]
+        [HttpGet("User/{UserName}", Name = "GetReviews")]
         public ActionResult<ICollection<UserGame>> GetUser(string username)
         {
             ICollection<UserGame> review;
@@ -50,7 +50,7 @@ namespace VaporAPI.App.Controllers
         }
 
         // GET: api/Review/5
-        [HttpGet("Game/{id}", Name = "Get")]
+        [HttpGet("Game/{id}", Name = "GetGames")]
         public ActionResult<ICollection<UserGame>> GetGame(int id)
         {
             ICollection<UserGame> reviews;
@@ -117,7 +117,7 @@ namespace VaporAPI.App.Controllers
             }
             try
             {
-                Repo.UpdateUserGame(value);
+                Repo.UpdateReview(value);
             }
             catch (Exception ex)
             {

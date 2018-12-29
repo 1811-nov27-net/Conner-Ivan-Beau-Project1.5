@@ -8,7 +8,7 @@ namespace VaporAPI.Library
     {
         //CRUD for review and score for table UserGame
         bool AddReview(UserGame review);
-        //bool UpdateReviewbyScore(UserGame review);
+        bool UpdateReview(UserGame review);
         bool DeleteReview(UserGame review);
 
         //grab reviews from table UserGame by some parameters
