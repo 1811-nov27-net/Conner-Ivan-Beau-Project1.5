@@ -126,6 +126,10 @@ namespace VaporAPI.DataAccess
         {
             //GameId = userGame.Game.GameId,
             //UserName = userGame.User.UserName,
+
+            //there might be a problem here if the game and/or user already exist
+            //then the map tries to map it again
+            //the library.usergame might need to be changed aswell 
             Game = Mapper.Map(userGame.Game),
             UserNameNavigation = Mapper.Map(userGame.User),
             Review = userGame.Review,

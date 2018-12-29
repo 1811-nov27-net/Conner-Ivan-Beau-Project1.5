@@ -263,7 +263,10 @@ namespace VaporAPI.Testing
         {
             var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("change_devloper_test").Options;
             Data.Developer newdeveloper = new Data.Developer
-            { Name = "Bungie", FoundingDate = DateTime.Now, Website = "http://www.bungie.com/" };
+            { Name = "Bungie",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.bungie.com/",
+            };
             using (var db = new Data.VaporDBContext(options))
             {
                 db.Developer.Add(newdeveloper);
@@ -292,7 +295,9 @@ namespace VaporAPI.Testing
         {
             var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("get_dev_by_id_test").Options;
             Data.Developer newdeveloper = new Data.Developer
-            { Name = "Ubisoft", FoundingDate = DateTime.Now, Website = "http://www.ubisoft.com/" };
+            { Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/", };
             using (var db = new Data.VaporDBContext(options))
             {
                 db.Developer.Add(newdeveloper);
@@ -313,9 +318,15 @@ namespace VaporAPI.Testing
         {
             var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("get_all_devs_test").Options;
             Data.Developer newdeveloper = new Data.Developer
-            { Name = "Ubisoft", FoundingDate = DateTime.Now, Website = "http://www.ubisoft.com/" };
+            { Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/",
+            };
             Data.Developer newdeveloper2 = new Data.Developer
-            { Name = "Bungie", FoundingDate = DateTime.Now, Website = "http://www.bungie.com/" };
+            { Name = "Bungie",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.bungie.com/",
+            };
             using (var db = new Data.VaporDBContext(options))
             {
                 db.Developer.Add(newdeveloper);
@@ -346,7 +357,10 @@ namespace VaporAPI.Testing
         {
             var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("grab_game_by_id_test").Options;
             Data.Developer newdeveloper = new Data.Developer
-            { Name = "Ubisoft", FoundingDate = DateTime.Now, Website = "http://www.ubisoft.com/" };
+            { Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/",
+            };
             using (var db = new Data.VaporDBContext(options))
             {
                 db.Developer.Add(newdeveloper);
@@ -383,9 +397,15 @@ namespace VaporAPI.Testing
         {
             var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("grab_list_games_test").Options;
             Data.Developer newdeveloper = new Data.Developer
-            { Name = "Ubisoft", FoundingDate = DateTime.Now, Website = "http://www.ubisoft.com/" };
+            { Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/"
+            };
             Data.Developer newdeveloper2 = new Data.Developer
-            { Name = "Bungie", FoundingDate = DateTime.Now, Website = "http://www.bungie.com/" };
+            { Name = "Bungie",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.bungie.com/"
+            };
             using (var db = new Data.VaporDBContext(options))
             {
                 db.Developer.Add(newdeveloper);
@@ -422,39 +442,557 @@ namespace VaporAPI.Testing
                 var repo = new Data.Repository(db);
                 listgames = repo.GetGames(0).ToList();
             }
-
             Assert.Equal(newgame.GameId, listgames[0].GameId);
             Assert.Equal(newgame.Price, listgames[0].Price);
             Assert.Equal(newgame.Image, listgames[0].Image);
-            Assert.Equal(newgame.Trailer, listgames[1].Trailer);
-            Assert.Equal(newgame.Description, listgames[1].Description);
-            Assert.Equal(newgame.DeveloperId, listgames[1].DeveloperId);
-
+            Assert.Equal(newgame2.Trailer, listgames[1].Trailer);
+            Assert.Equal(newgame2.Description, listgames[1].Description);
+            Assert.Equal(newgame2.DeveloperId, listgames[1].DeveloperId);
         }
-        //[Fact]
-        //public void GrabUsersByDlcTest()
-        //{
-        //}
-        //[Fact]
-        //public void GrabUsersByGameTest() { }
-        //[Fact]
-        //public void AddDlcTest()
-        //{
-        //}
-        //[Fact]
-        //public void GrabDlcByIdTest() { }
-        //[Fact]
-        //public void UpdateDlcByPriceTest() { }
-        //[Fact]
-        //public void GrabDlcsByGameTest() { }
-        //[Fact]
-        //public void AddUserGameTest()
-        //{
-        //}
-        //[Fact]
-        //public void GrabUserGamesTest() { }
-        //[Fact]
-        //public void GrabOneUserGameTest() { }
+        [Fact]
+        public void GrabUsersByGameTest()
+        {
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("grab_users_by_games_test").Options;
+            Data.Developer newdeveloper = new Data.Developer
+            { Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/"
+            };
+            Data.Developer newdeveloper2 = new Data.Developer
+            { Name = "Bungie",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.bungie.com/"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Developer.Add(newdeveloper);
+                db.Developer.Add(newdeveloper2);
+                db.SaveChanges();
+            }
+            Data.Game newgame = new Data.Game
+            {
+                Name = "Doom",
+                DeveloperId = newdeveloper.DeveloperId,
+                Image = "Img",
+                Price = 49.99m,
+                Trailer = "Trlr",
+                Description = "Good Game"
+            };
+            Data.Game newgame2 = new Data.Game
+            {
+                Name = "Overwatch",
+                DeveloperId = newdeveloper2.DeveloperId,
+                Image = "Img2",
+                Price = 19.99m,
+                Trailer = "Trlr2",
+                Description = "Bad Game",
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Game.Add(newgame);
+                db.Game.Add(newgame2);
+                db.SaveChanges();
+            }
+            Data.User newuser = new Data.User
+            {
+                UserName = "User1",
+                FirstName = "Al",
+                LastName = "Berring",
+                Admin = false,
+                Password = "1234",
+                Wallet = 0m
+            };
+            Data.User newuser2 = new Data.User
+            {
+                UserName = "User2",
+                FirstName = "Zeek",
+                LastName = "Young",
+                Admin = false,
+                Password = "9876",
+                Wallet = 100m
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.User.Add(newuser);
+                db.User.Add(newuser2);
+                db.SaveChanges();
+            }
+            Data.UserGame newusergame = new Data.UserGame
+            {
+                GameId = newgame.GameId,
+                UserName = newuser.UserName,
+                DatePurchased = DateTime.Now,
+                Score = 8,
+                Review = "Good Game",
+                Game = newgame,
+                UserNameNavigation = newuser,
+            };
+            Data.UserGame newusergame2 = new Data.UserGame
+            {
+                GameId = newgame.GameId,
+                UserName = newuser2.UserName,
+                DatePurchased = DateTime.Now,
+                Score = 4,
+                Review = "Bad Game",
+                Game = newgame,
+                UserNameNavigation = newuser2,
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.UserGame.Add(newusergame);
+                db.UserGame.Add(newusergame2);
+                db.SaveChanges();
+            }
+            List<Libra.User> listusers = new List<Libra.User>();
+            using (var db = new Data.VaporDBContext(options))
+            {
+                var repo = new Data.Repository(db);
+                listusers = repo.GetUsersbyGame(newgame.GameId).ToList();
+            }
+
+            Assert.Equal(newuser.UserName, listusers[0].UserName);
+            Assert.Equal(newuser2.UserName, listusers[1].UserName);
+        }
+        [Fact]
+        public void AddUserGameTest()
+        {
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("add_usergame_test").Options;
+            Data.Developer newdeveloper = new Data.Developer
+            { Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Developer.Add(newdeveloper);
+                db.SaveChanges();
+            }
+            Libra.Game game = new Libra.Game
+            {
+                Name = "Doom",
+                DeveloperId = newdeveloper.DeveloperId,
+                Image = "Img",
+                Price = 49.99m,
+                Trailer = "Trlr",
+                Description = "Good Game"
+            };
+            //using (var db = new Data.VaporDBContext(options))
+            //{
+            //    db.Game.Add(newgame);
+            //    db.SaveChanges();
+            //}
+            Libra.User user = new Libra.User    ////////problem code
+            {
+                UserName = "User2",
+                FirstName = "Zeek",
+                LastName = "Young",
+                Admin = false,          
+                Password = "9876",
+                Wallet = 100m
+            };
+            //Libra.User user = new Libra.User();
+            //Libra.Game game = new Libra.Game();
+            //using (var db = new Data.VaporDBContext(options))
+            //{
+            //    db.User.Add(newuser);
+            //    db.SaveChanges();
+            //    var repo = new Data.Repository(db);
+            //    user = repo.GetUser(newuser.UserName);
+            //    game = repo.GetGame(newgame.GameId);
+            //}
+            Libra.UserGame newusergame = new Libra.UserGame
+            {
+                PurchaseDate = DateTime.Now,
+                Review ="Nothing like it",
+                Score = 10,
+                User = user,
+                Game = game,
+            };
+            bool isnull = false;
+            using (var db = new Data.VaporDBContext(options))
+            {
+                var repo = new Data.Repository(db);
+                isnull = repo.AddUserGame(newusergame);
+                db.SaveChanges();
+            }
+
+            Assert.True(isnull);
+        }
+        [Fact]
+        public void GrabUserGamesByUserTest()
+        {
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("grab_usergames_by_user_test").Options;
+            Data.Developer newdeveloper = new Data.Developer
+            { Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/"
+            };
+            Data.Developer newdeveloper2 = new Data.Developer
+            { Name = "Bungie",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.bungie.com/"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Developer.Add(newdeveloper);
+                db.Developer.Add(newdeveloper2);
+                db.SaveChanges();
+            }
+            Data.Game newgame = new Data.Game
+            {
+                Name = "Doom",
+                DeveloperId = newdeveloper.DeveloperId,
+                Image = "Img",
+                Price = 49.99m,
+                Trailer = "Trlr",
+                Description = "Good Game"
+            };
+            Data.Game newgame2 = new Data.Game
+            {
+                Name = "Overwatch",
+                DeveloperId = newdeveloper2.DeveloperId,
+                Image = "Img2",
+                Price = 19.99m,
+                Trailer = "Trlr2",
+                Description = "Bad Game",
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Game.Add(newgame);
+                db.Game.Add(newgame2);
+                db.SaveChanges();
+            }
+            Data.User newuser = new Data.User
+            {
+                UserName = "User1",
+                FirstName = "Al",
+                LastName = "Berring",
+                Admin = false,
+                Password = "1234",
+                Wallet = 0m
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.User.Add(newuser);
+                db.SaveChanges();
+            }
+            Data.UserGame newusergame = new Data.UserGame
+            {
+                GameId = newgame.GameId,
+                UserName = newuser.UserName,
+                DatePurchased = DateTime.Now,
+                Score = 8,
+                Review = "Good Game",
+                Game = newgame,
+                UserNameNavigation = newuser,
+            };
+            Data.UserGame newusergame2 = new Data.UserGame
+            {
+                GameId = newgame2.GameId,
+                UserName = newuser.UserName,
+                DatePurchased = DateTime.Now,
+                Score = 4,
+                Review = "Bad Game",
+                Game = newgame2,
+                UserNameNavigation = newuser,
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.UserGame.Add(newusergame);
+                db.UserGame.Add(newusergame2);
+                db.SaveChanges();
+            }
+            List<Libra.UserGame> usergamelist = new List<Libra.UserGame>();
+            using (var db = new Data.VaporDBContext(options))
+            {
+                var repo = new Data.Repository(db);
+                usergamelist = repo.GetUserGames(newuser.UserName).ToList();
+            }
+
+            Assert.Equal(newusergame.GameId, usergamelist[0].Game.GameId);
+            Assert.Equal(newusergame.Score, usergamelist[0].Score);
+            Assert.Equal(newusergame2.GameId, usergamelist[1].Game.GameId);
+            Assert.Equal(newusergame2.Review, usergamelist[1].Review);
+        }
+        [Fact]
+        public void GrabOneUserGameTest()
+        {
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("grab_one_usergame_test").Options;
+            Data.Developer newdeveloper = new Data.Developer
+            { Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Developer.Add(newdeveloper);
+                db.SaveChanges();
+            }
+            Data.Game newgame = new Data.Game
+            {
+                Name = "Doom",
+                DeveloperId = newdeveloper.DeveloperId,
+                Image = "Img",
+                Price = 49.99m,
+                Trailer = "Trlr",
+                Description = "Good Game"
+            };
+            //using (var db = new Data.VaporDBContext(options))
+            //{
+            //    db.Game.Add(newgame);
+            //    db.SaveChanges();
+            //}
+            Data.User newuser = new Data.User   /////////////problem code
+            {
+                UserName = "User1",
+                FirstName = "Al",
+                LastName = "Berring",
+                Admin = false,
+                Password = "1234",
+                Wallet = 0m
+            };
+            //using (var db = new Data.VaporDBContext(options))
+            //{
+            //    db.User.Add(newuser);
+            //    db.SaveChanges();
+            //}
+            Data.UserGame newusergame = new Data.UserGame
+            {
+                GameId = newgame.GameId,
+                UserName = newuser.UserName,
+                DatePurchased = DateTime.Now,
+                Score = 8,
+                Review = "Good Game",
+                Game = newgame,
+                UserNameNavigation = newuser,
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.UserGame.Add(newusergame);
+                db.SaveChanges();
+            }
+
+            Libra.UserGame oneusergame = new Libra.UserGame();
+            using (var db = new Data.VaporDBContext(options))
+            {
+                var repo = new Data.Repository(db);
+                oneusergame = repo.GetUserGame(newuser.UserName, newgame.GameId);
+            }
+
+            Assert.Equal(newusergame.Score, oneusergame.Score);
+            Assert.Equal(newusergame.GameId, oneusergame.Game.GameId);
+            Assert.Equal(newusergame.UserName, oneusergame.User.UserName);
+            Assert.Equal(newusergame.DatePurchased, oneusergame.PurchaseDate);
+        }
+        [Fact]
+        public void AddDlcTest()
+        {
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("add_dlc_test").Options;
+            Data.Developer newdeveloper = new Data.Developer
+            { Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Developer.Add(newdeveloper);
+                db.SaveChanges();
+            }
+            Data.Game newgame = new Data.Game
+            {
+                Name = "Doom",
+                DeveloperId = newdeveloper.DeveloperId,
+                Image = "Img",
+                Price = 49.99m,
+                Trailer = "Trlr",
+                Description = "Good Game"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Game.Add(newgame);
+                db.SaveChanges();
+            }
+            Libra.Dlc newdlc = new Libra.Dlc
+            {
+                Name = "Doom: Eternal",
+                GameId = newgame.GameId,
+                Price = 9.99m,
+            };
+            bool isnull = false;
+            using (var db = new Data.VaporDBContext(options))
+            {
+                var repo = new Data.Repository(db);
+                isnull = repo.AddDlc(newdlc);
+                db.SaveChanges();
+            }
+
+            Assert.True(isnull);
+        }
+        [Fact]
+        public void GrabDlcByIdTest()
+        {
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("add_dlc_test").Options;
+            Data.Developer newdeveloper = new Data.Developer
+            { Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Developer.Add(newdeveloper);
+                db.SaveChanges();
+            }
+            Data.Game newgame = new Data.Game
+            {
+                Name = "Doom",
+                DeveloperId = newdeveloper.DeveloperId,
+                Image = "Img",
+                Price = 49.99m,
+                Trailer = "Trlr",
+                Description = "Good Game"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Game.Add(newgame);
+                db.SaveChanges();
+            }
+            Data.Dlc newdlc = new Data.Dlc
+            {
+                Name = "Doom: Aerosal Arsenal",
+                Price = 5m,
+                GameId = newgame.GameId,
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Dlc.Add(newdlc);
+                db.SaveChanges();
+            }
+            Libra.Dlc getdlc = new Libra.Dlc();
+            using (var db = new Data.VaporDBContext(options))
+            {
+                var repo = new Data.Repository(db);
+                getdlc = repo.GetDlc(newdlc.Dlcid);
+            }
+
+            Assert.Equal(newdlc.Dlcid , getdlc.Dlcid);
+            Assert.Equal(newdlc.Name, getdlc.Name);
+        }
+        [Fact]
+        public void UpdateDlcByPriceTest()
+        {
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("update_dlc_price_test").Options;
+            Data.Developer newdeveloper = new Data.Developer
+            { Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Developer.Add(newdeveloper);
+                db.SaveChanges();
+            }
+            Data.Game newgame = new Data.Game
+            {
+                Name = "Doom",
+                DeveloperId = newdeveloper.DeveloperId,
+                Image = "Img",
+                Price = 49.99m,
+                Trailer = "Trlr",
+                Description = "Good Game"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Game.Add(newgame);
+                db.SaveChanges();
+            }
+            Data.Dlc newdlc = new Data.Dlc
+            {
+                Name = "Doom: Aerosal Arsenal",
+                Price = 5m,
+                GameId = newgame.GameId,
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Dlc.Add(newdlc);
+                db.SaveChanges();
+            }
+            Libra.Dlc changedlc = new Libra.Dlc
+            {
+                Dlcid = newdlc.Dlcid,
+                Name = newdlc.Name,
+                GameId = newdlc.GameId,
+                Price = 10m,
+            };
+            bool isnull = false;
+            using (var db = new Data.VaporDBContext(options))
+            {
+                var repo = new Data.Repository(db);
+                isnull = repo.UpdateDlc(changedlc);
+                db.SaveChanges();
+            }
+
+            Assert.True(isnull);
+        }
+        [Fact]
+        public void GrabDlcsByGameTest()
+        {
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("grab_dlc_by_game_test").Options;
+            Data.Developer newdeveloper = new Data.Developer
+            { Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Developer.Add(newdeveloper);
+                db.SaveChanges();
+            }
+            Data.Game newgame = new Data.Game
+            {
+                Name = "Doom",
+                DeveloperId = newdeveloper.DeveloperId,
+                Image = "Img",
+                Price = 49.99m,
+                Trailer = "Trlr",
+                Description = "Good Game"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Game.Add(newgame);
+                db.SaveChanges();
+            }
+            Data.Dlc newdlc = new Data.Dlc
+            {
+                Name = "Doom: Aerosal Arsenal",
+                Price = 5m,
+                GameId = newgame.GameId,
+            };
+            Data.Dlc newdlc2 = new Data.Dlc
+            {
+                Name = "Doom: Eternal",
+                GameId = newgame.GameId,
+                Price = 9.99m,
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Dlc.Add(newdlc);
+                db.Dlc.Add(newdlc2);
+                db.SaveChanges();
+            }
+
+            List<Libra.Dlc> dlclist = new List<Libra.Dlc>();
+            using (var db = new Data.VaporDBContext(options))
+            {
+                var repo = new Data.Repository(db);
+                dlclist = repo.GetGameDlcs(newdlc.GameId).ToList();
+            }
+
+            Assert.Equal(newdlc.Dlcid, dlclist[0].Dlcid);
+            Assert.Equal(newdlc.Name, dlclist[0].Name);
+            Assert.Equal(newdlc2.Dlcid, dlclist[1].Dlcid);
+            Assert.Equal(newdlc2.Price, dlclist[1].Price);
+        }
+
         //[Fact]
         //public void AddReviewTest() { }
         //[Fact]
@@ -463,5 +1001,9 @@ namespace VaporAPI.Testing
         //public void GrabReviewsByUserAndSortTest() { }
         //[Fact]
         //public void SuggestGameTest() { }
+        //[Fact]
+        //public void GrabUsersByDlcTest()
+        //{
+        //}
     }
 }

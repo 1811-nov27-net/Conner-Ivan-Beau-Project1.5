@@ -358,7 +358,7 @@ namespace VaporAPI.DataAccess
 
         public ICollection<Library.Game> GetGamesHelper(ICollection<Library.Game> oldGamesLib, int sort = 0)
         {
-            ICollection<Game> oldGames = (ICollection<Game>)Mapper.Map(oldGamesLib);
+            ICollection<Game> oldGames = Mapper.Map(oldGamesLib).ToList();
             switch (sort)
             {
                 case 0:
@@ -558,7 +558,7 @@ namespace VaporAPI.DataAccess
             DataAccess.Dlc newdlc = Mapper.Map(dlc);
             if (_db.Dlc.Find(dlc.Dlcid) != null)
             {
-                _db.Dlc.Update(newdlc);
+                _db.Entry(_db.Dlc.Find(newdlc.Dlcid)).CurrentValues.SetValues(newdlc);//(newdlc);
                 _db.SaveChanges();
                 return true;
             }
