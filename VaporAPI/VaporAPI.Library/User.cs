@@ -28,17 +28,19 @@ namespace VaporAPI.Library
          ErrorMessage = "Only alphanumeric characters are allowed.")]
         public string Password { get; set; }
 
+        private decimal? _wallet;
+
         [Range(0, 1000000)]
         public decimal? Wallet
         {
-            get => Wallet;
+            get { return _wallet; }
             set
             {
                 try
                 {
                     if (value >= 0)
                     {
-                        Wallet = value;
+                        _wallet = value;
                     }
                     else
                     {
