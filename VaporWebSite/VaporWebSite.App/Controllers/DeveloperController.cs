@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -25,6 +26,10 @@ namespace VaporWebSite.App.Controllers
 
             if(!response.IsSuccessStatusCode)
             {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
                 return RedirectToAction("Error", "Home");
             }
 
@@ -60,7 +65,12 @@ namespace VaporWebSite.App.Controllers
 
                 if (!response.IsSuccessStatusCode)
                 {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return RedirectToAction("Login", "Account");
+                    }
                     return RedirectToAction("Error", "Home");
+
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -92,6 +102,10 @@ namespace VaporWebSite.App.Controllers
                 HttpResponseMessage response = await Client.SendAsync(request);
                 if (!response.IsSuccessStatusCode)
                 {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return RedirectToAction("Login", "Account");
+                    }
                     return View();
                 }
 
@@ -124,6 +138,10 @@ namespace VaporWebSite.App.Controllers
                 HttpResponseMessage response = await Client.SendAsync(request);
                 if (!response.IsSuccessStatusCode)
                 {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return RedirectToAction("Login", "Account");
+                    }
                     return View();
                 }
 
