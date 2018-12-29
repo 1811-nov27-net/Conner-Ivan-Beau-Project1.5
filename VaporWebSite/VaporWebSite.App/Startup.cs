@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VaporWebSite.App.Filters;
 
 namespace VaporWebSite.App
 {
@@ -34,8 +35,14 @@ namespace VaporWebSite.App
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services
+                .AddMvc(options =>
+                {
+                    options.Filters.Add(typeof(LoggedInUserFilter));
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
