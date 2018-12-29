@@ -175,7 +175,7 @@ namespace VaporAPI.Testing
         [Fact]
         public void DeleteGameTest()
         {
-            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("delete_a_user_testing").Options;
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("delete_a_game_testing").Options;
             Data.Game newgame = new Data.Game
             {
                 Name = "Doom",
@@ -234,7 +234,7 @@ namespace VaporAPI.Testing
         [Fact]
         public void GrabAllTagsTest()
         {
-            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("delete_tag_test").Options;
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("get_all_tag_test").Options;
             Data.Tag tagone = new Data.Tag
             {
                 GenreName = "RPG",
@@ -306,7 +306,7 @@ namespace VaporAPI.Testing
                 getdev = repo.GetDeveloper(newdeveloper.DeveloperId);
             }
 
-            Assert.Equal(1, newdeveloper.DeveloperId);
+            Assert.Equal(getdev.DeveloperId, newdeveloper.DeveloperId);
         }
         [Fact]
         public void GrabAllDevelopersTest()
@@ -341,8 +341,8 @@ namespace VaporAPI.Testing
 
 
 
-        //[Fact]
-        //public void GrabGameByIdTest() { }
+        [Fact]
+        public void GrabGameByIdTest() { }
         //[Fact]
         //public void GrabListofGamesTest() { }
         //[Fact]

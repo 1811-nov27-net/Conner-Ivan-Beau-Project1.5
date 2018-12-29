@@ -113,7 +113,7 @@ namespace VaporAPI.DataAccess
             try
             {
                 var userDB = Mapper.Map(user);
-                _db.Add(user);
+                _db.Add(userDB);
                 _db.SaveChanges();
                 return success;
             }
@@ -544,7 +544,8 @@ namespace VaporAPI.DataAccess
             DataAccess.Developer dev = Mapper.Map(developer);
             if (_db.Developer.Find(developer.DeveloperId) != null)
             {
-                _db.Developer.Update(dev);
+                _db.Entry(_db.Developer.Find(developer.DeveloperId))
+                        .CurrentValues.SetValues(dev);
                 _db.SaveChanges();
                 return true;
             }
