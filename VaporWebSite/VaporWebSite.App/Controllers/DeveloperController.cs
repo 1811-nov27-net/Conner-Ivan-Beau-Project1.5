@@ -55,7 +55,6 @@ namespace VaporWebSite.App.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
                 HttpRequestMessage request = CreateRequest(HttpMethod.Post, "api/Developer", developer);
                 HttpResponseMessage response = await Client.SendAsync(request);
 
