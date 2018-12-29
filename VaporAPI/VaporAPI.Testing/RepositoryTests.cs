@@ -112,7 +112,7 @@ namespace VaporAPI.Testing
             using (var db = new Data.VaporDBContext(options))
             {
                 var repo = new Data.Repository(db);
-                var list = repo.GetUsers(1).ToList();
+                var list = repo.GetUsers(0).ToList();
                 allusers = list;
 
             }
@@ -342,9 +342,95 @@ namespace VaporAPI.Testing
 
 
         [Fact]
-        public void GrabGameByIdTest() { }
-        //[Fact]
-        //public void GrabListofGamesTest() { }
+        public void GrabGameByIdTest()
+        {
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("grab_game_by_id_test").Options;
+            Data.Developer newdeveloper = new Data.Developer
+            { Name = "Ubisoft", FoundingDate = DateTime.Now, Website = "http://www.ubisoft.com/" };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Developer.Add(newdeveloper);
+                db.SaveChanges();
+            }
+            Data.Game newgame = new Data.Game
+            {
+                Name = "Doom",
+                DeveloperId = newdeveloper.DeveloperId,
+                Image = "Img",
+                Price = 49.99m,
+                Trailer = "Trlr",
+                Description = "Good Game"
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Game.Add(newgame);
+                db.SaveChanges();
+            }
+            Libra.Game grabgame = new Libra.Game();
+            using (var db = new Data.VaporDBContext(options))
+            {
+                var repo = new Data.Repository(db);
+                grabgame = repo.GetGame(newgame.GameId);
+            }
+            Assert.Equal("Doom", grabgame.Name);
+            Assert.Equal("Good Game", grabgame.Description);
+            Assert.Equal(49.99m, grabgame.Price);
+            Assert.Equal(newgame.GameId, grabgame.GameId);
+            Assert.Equal("Img", grabgame.Image);
+        }
+        [Fact]
+        public void GrabListofGamesTest()
+        {
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("grab_list_games_test").Options;
+            Data.Developer newdeveloper = new Data.Developer
+            { Name = "Ubisoft", FoundingDate = DateTime.Now, Website = "http://www.ubisoft.com/" };
+            Data.Developer newdeveloper2 = new Data.Developer
+            { Name = "Bungie", FoundingDate = DateTime.Now, Website = "http://www.bungie.com/" };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Developer.Add(newdeveloper);
+                db.Developer.Add(newdeveloper2);
+                db.SaveChanges();
+            }
+            Data.Game newgame = new Data.Game
+            {
+                Name = "Doom",
+                DeveloperId = newdeveloper.DeveloperId,
+                Image = "Img",
+                Price = 49.99m,
+                Trailer = "Trlr",
+                Description = "Good Game"
+            };
+            Data.Game newgame2 = new Data.Game
+            {
+                Name = "Overwatch",
+                DeveloperId = newdeveloper2.DeveloperId,
+                Image = "Img2",
+                Price = 19.99m,
+                Trailer = "Trlr2",
+                Description = "Bad Game",
+            };
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Game.Add(newgame);
+                db.Game.Add(newgame2);
+                db.SaveChanges();
+            }
+            List<Libra.Game> listgames = new List<Libra.Game>();
+            using (var db = new Data.VaporDBContext(options))
+            {
+                var repo = new Data.Repository(db);
+                listgames = repo.GetGames(0).ToList();
+            }
+
+            Assert.Equal(newgame.GameId, listgames[0].GameId);
+            Assert.Equal(newgame.Price, listgames[0].Price);
+            Assert.Equal(newgame.Image, listgames[0].Image);
+            Assert.Equal(newgame.Trailer, listgames[1].Trailer);
+            Assert.Equal(newgame.Description, listgames[1].Description);
+            Assert.Equal(newgame.DeveloperId, listgames[1].DeveloperId);
+
+        }
         //[Fact]
         //public void GrabUsersByDlcTest()
         //{
