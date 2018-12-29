@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using VaporWebSite.App.Models;
 
 namespace VaporAPI.Library
 {

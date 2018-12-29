@@ -91,7 +91,7 @@ namespace VaporWebSite.App.Controllers
             {
                 HttpRequestMessage request = CreateRequest(HttpMethod.Put, $"api/Developer/{id}", developer);
                 HttpResponseMessage response = await Client.SendAsync(request);
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
                     return View();
                 }
@@ -105,19 +105,28 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: Developer/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Developer/{id}");
+            HttpResponseMessage response = await Client.SendAsync(request);
+            string resString = await response.Content.ReadAsStringAsync();
+            return View(JsonConvert.DeserializeObject<Developer>(resString));
+            //return View();
         }
 
         // POST: Developer/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
             try
             {
-                // TODO: Add delete logic here
+                HttpRequestMessage request = CreateRequest(HttpMethod.Delete, $"api/Developer/{id}");
+                HttpResponseMessage response = await Client.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return View();
+                }
 
                 return RedirectToAction(nameof(Index));
             }
