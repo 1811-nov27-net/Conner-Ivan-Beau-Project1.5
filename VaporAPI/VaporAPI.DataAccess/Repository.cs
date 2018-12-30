@@ -24,6 +24,7 @@ namespace VaporAPI.DataAccess
                 Developer developerDB = Mapper.Map(developer);
                 _db.Add(developerDB);
                 _db.SaveChanges();
+                developer.DeveloperId = developerDB.DeveloperId;
                 return success;
             }
             catch
@@ -42,6 +43,7 @@ namespace VaporAPI.DataAccess
                 var dlcDB = Mapper.Map(dlc);
                 _db.Add(dlcDB);
                 _db.SaveChanges();
+                dlc.Dlcid = dlcDB.Dlcid;
                 return success;
             }
             catch
@@ -60,6 +62,7 @@ namespace VaporAPI.DataAccess
                 var gameDB = Mapper.Map(game);
                 _db.Add(gameDB);                //shit
                 _db.SaveChanges();
+                game.GameId = gameDB.GameId;
 
                 return success;
             }
@@ -101,6 +104,7 @@ namespace VaporAPI.DataAccess
                 var tagDB = Mapper.Map(tag);
                 _db.Add(tagDB);
                 _db.SaveChanges();
+                tag.TagId = tagDB.TagId;
                 return success;
             }
             catch

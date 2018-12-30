@@ -117,7 +117,7 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("GetUser", new { UserName= user.UserName }, user);
+            return CreatedAtRoute("GetUser", new { user.UserName }, user);
         }
 
 
@@ -148,7 +148,7 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("GetUserGame", new { UserGame = userGame }, userGame);
+            return CreatedAtRoute("GetUserGame", new { username=userGame.User.UserName,id=userGame.Game.GameId }, userGame);
         }
 
 

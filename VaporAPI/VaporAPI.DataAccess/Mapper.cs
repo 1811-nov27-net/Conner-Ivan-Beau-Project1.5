@@ -122,7 +122,7 @@ namespace VaporAPI.DataAccess
         // mapping library class to DB entity
         public static DataAccess.Tag Map(Library.Tag tag) => new DataAccess.Tag
         {
-            TagId = tag.TagId,
+            //TagId = tag.TagId,
             GenreName = tag.GenreName
         };
         public static IEnumerable<DataAccess.Tag> Map(IEnumerable<Library.Tag> tag) => tag.Select(Map);

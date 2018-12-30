@@ -76,7 +76,7 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("GetTag", new { TagId = tag.TagId }, tag);
+            return CreatedAtRoute("GetTag", new { id = tag.TagId }, tag);
         }
 
         //// PUT: api/Tag/5
