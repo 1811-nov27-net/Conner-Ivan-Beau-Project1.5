@@ -11,18 +11,18 @@ using VaporWebSite.App.Models;
 
 namespace VaporWebSite.App.Controllers
 {
-    public class GameController : ARequestController
+    public class TagController : ARequestController
     {
 
-        public GameController(HttpClient client) : base(client)
+        public TagController(HttpClient client) : base(client)
         {
-            //nothing to do
+
         }
 
-        // GET: Game
+        // GET: Tag
         public async Task<ActionResult> Index()
         {
-            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game");
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Tag");
             HttpResponseMessage response = await Client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
@@ -36,32 +36,42 @@ namespace VaporWebSite.App.Controllers
 
             string responseBody = await response.Content.ReadAsStringAsync();
 
-            List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
+            List<Tag> tags = JsonConvert.DeserializeObject<List<Tag>>(responseBody);
 
-            return View(games);
+            return View(tags);
         }
 
-        // GET: Game/Details/5
+        // GET: Tag/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Game/Create
-        public ActionResult Create()
+        // GET: Tag/Create
+        public async Task<ActionResult> Create()
         {
-            //potentail logic for security
-            return View(new Game());
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Tag");
+            HttpResponseMessage response = await Client.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return View("Error");
+            }
+            return View();
         }
 
-        // POST: Game/Create
+        // POST: Tag/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Game game)
+        public async Task<ActionResult> Create(Tag tag)
         {
             try
             {
-                HttpRequestMessage request = CreateRequest(HttpMethod.Post, "api/Game", game);
+                HttpRequestMessage request = CreateRequest(HttpMethod.Post, "api/Tag", tag);
                 HttpResponseMessage response = await Client.SendAsync(request);
 
                 if (!response.IsSuccessStatusCode)
@@ -71,6 +81,7 @@ namespace VaporWebSite.App.Controllers
                         return RedirectToAction("Login", "Account");
                     }
                     return RedirectToAction("Error", "Home");
+
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -81,23 +92,23 @@ namespace VaporWebSite.App.Controllers
             }
         }
 
-        // GET: Game/Edit/5
+        // GET: Tag/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Game/{id}");
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Tag/{id}");
             HttpResponseMessage response = await Client.SendAsync(request);
             string resString = await response.Content.ReadAsStringAsync();
-            return View(JsonConvert.DeserializeObject<Game>(resString));
+            return View(JsonConvert.DeserializeObject<Developer>(resString));
         }
 
-        // POST: Game/Edit/5
+        // POST: Tag/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, Game game)
+        public async Task<ActionResult> Edit(int id, Tag tag)
         {
             try
             {
-                HttpRequestMessage request = CreateRequest(HttpMethod.Put, $"api/Game/{id}", game);
+                HttpRequestMessage request = CreateRequest(HttpMethod.Put, $"api/Tag/{id}", tag);
                 HttpResponseMessage response = await Client.SendAsync(request);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -116,23 +127,23 @@ namespace VaporWebSite.App.Controllers
             }
         }
 
-        // GET: Game/Delete/5
+        // GET: Tag/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Game/{id}");
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Tag/{id}");
             HttpResponseMessage response = await Client.SendAsync(request);
             string resString = await response.Content.ReadAsStringAsync();
-            return View(JsonConvert.DeserializeObject<Game>(resString));
+            return View(JsonConvert.DeserializeObject<Developer>(resString));
         }
 
-        // POST: Game/Delete/5
+        // POST: Tag/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
             try
             {
-                HttpRequestMessage request = CreateRequest(HttpMethod.Delete, $"api/Game/{id}");
+                HttpRequestMessage request = CreateRequest(HttpMethod.Delete, $"api/Tag/{id}");
                 HttpResponseMessage response = await Client.SendAsync(request);
                 if (!response.IsSuccessStatusCode)
                 {

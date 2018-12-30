@@ -47,9 +47,20 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: Developer/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
             //might want some logic for security here
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/developer");
+            HttpResponseMessage response = await Client.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return View("Error");
+            }
             return View(new Developer());
         }
 
