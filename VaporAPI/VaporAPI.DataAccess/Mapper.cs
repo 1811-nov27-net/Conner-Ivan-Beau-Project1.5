@@ -54,6 +54,19 @@ namespace VaporAPI.DataAccess
 
         // mappings for game objects
         // mapping DB entity to library class
+        public static Library.GameTag Map(DataAccess.GameTag gametag) => new Library.GameTag
+        {
+            GameId = gametag.GameId,
+            TagId = gametag.TagId,
+        };
+        public static IEnumerable<Library.GameTag> Map(IEnumerable<DataAccess.GameTag> game) => game.Select(Map);
+        public static IEnumerable<DataAccess.GameTag> Map(IEnumerable<Library.GameTag> game) => game.Select(Map);
+        public static DataAccess.GameTag Map(Library.GameTag gametag) => new DataAccess.GameTag
+        {
+            GameId = gametag.GameId,
+            TagId = gametag.TagId,
+        };
+
         public static Library.Game Map(DataAccess.Game game) => new Library.Game
         {
             GameId = game.GameId,
@@ -62,10 +75,26 @@ namespace VaporAPI.DataAccess
             Description = game.Description,
             DeveloperId = game.DeveloperId,
             Image = game.Image,
-            Trailer = game.Trailer
+            Trailer = game.Trailer,
+            
         };
         public static IEnumerable<Library.Game> Map(IEnumerable<DataAccess.Game> game) => game.Select(Map);
 
+        public static List<DataAccess.GameTag> MapTagstoGTs(List<Library.Tag> tags, int gameid)
+        {
+            List<DataAccess.GameTag> newlist = new List<DataAccess.GameTag>();
+            foreach(var item in tags)
+            {
+                DataAccess.GameTag tagitem = new GameTag
+                {
+                    GameId = gameid,
+                    TagId = item.TagId,
+                };
+                newlist.Add(tagitem);
+            }
+            return newlist;
+        }
+       
         // mapping library class to DB entity
         public static DataAccess.Game Map(Library.Game game) => new DataAccess.Game
         {
@@ -75,7 +104,9 @@ namespace VaporAPI.DataAccess
             Description = game.Description,
             DeveloperId = game.DeveloperId,
             Image = game.Image,
-            Trailer = game.Trailer
+            Trailer = game.Trailer,
+
+            GameTag = MapTagstoGTs(game.TagsList, game.GameId),
         };
         public static IEnumerable<DataAccess.Game> Map(IEnumerable<Library.Game> game) => game.Select(Map);
 
@@ -122,21 +153,21 @@ namespace VaporAPI.DataAccess
             Admin = user.Admin
         };
 
-        public static DataAccess.UserGame Map(Library.UserGame userGame) => new DataAccess.UserGame
-        {
-            //GameId = userGame.Game.GameId,
-            //UserName = userGame.User.UserName,
+        //public static DataAccess.UserGame Map(Library.UserGame userGame) => new DataAccess.UserGame
+        //{
+        //    //GameId = userGame.Game.GameId,
+        //    //UserName = userGame.User.UserName,
 
-            //there might be a problem here if the game and/or user already exist
-            //then the map tries to map it again
-            //the library.usergame might need to be changed aswell 
-            Game = Mapper.Map(userGame.Game),
-            UserNameNavigation = Mapper.Map(userGame.User),
-            Review = userGame.Review,
-            Score = userGame.Score,
-            DatePurchased = userGame.PurchaseDate,
+        //    //there might be a problem here if the game and/or user already exist
+        //    //then the map tries to map it again
+        //    //the library.usergame might need to be changed aswell 
+        //    Game = Mapper.Map(userGame.Game),
+        //    UserNameNavigation = Mapper.Map(userGame.User),
+        //    Review = userGame.Review,
+        //    Score = userGame.Score,
+        //    DatePurchased = userGame.PurchaseDate,
 
-        };
+        //};
 
         public static Library.UserGame Map(DataAccess.UserGame userGame) => new Library.UserGame
         {
@@ -151,9 +182,10 @@ namespace VaporAPI.DataAccess
         };
 
         public static IEnumerable<Library.UserGame> Map(IEnumerable<DataAccess.UserGame> userGames) => userGames.Select(Map);
-
-        public static IEnumerable<DataAccess.UserGame> Map(IEnumerable<Library.UserGame> userGames) => userGames.Select(Map);
+       
+        public static IEnumerable<DataAccess.UserGame> Map(IEnumerable<Library.UserGame> userGames) => userGames.Select(Repository.Map);
 
         public static IEnumerable<DataAccess.User> Map(IEnumerable<Library.User> user) => user.Select(Map);
+
     }
 }

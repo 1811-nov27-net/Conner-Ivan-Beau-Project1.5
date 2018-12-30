@@ -51,5 +51,8 @@ namespace VaporAPI.Library
         public string Image { get; set; }
 
         public string Trailer { get; set; }
+
+        public List<Tag> TagsList { get; set; }
+
     }
 }

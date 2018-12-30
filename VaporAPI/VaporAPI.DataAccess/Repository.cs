@@ -56,9 +56,11 @@ namespace VaporAPI.DataAccess
             bool success = true;
             try
             {
+                if (game.TagsList == null) { return false; }
                 var gameDB = Mapper.Map(game);
-                _db.Add(gameDB);
+                _db.Add(gameDB);                //shit
                 _db.SaveChanges();
+
                 return success;
             }
             catch
@@ -78,7 +80,8 @@ namespace VaporAPI.DataAccess
                 UserGame usergame = _db.UserGame.First(g => g.GameId == review.Game.GameId && g.UserName == review.User.UserName);
                 usergame.Score = review.Score;
                 usergame.Review = review.Review;
-                _db.UserGame.Update(usergame);
+                _db.Entry(_db.UserGame.Find(usergame.GameId, usergame.UserName)).CurrentValues.SetValues(usergame);
+               // _db.UserGame.Update(usergame);
                 _db.SaveChanges();
                 return success;
             }
@@ -128,7 +131,12 @@ namespace VaporAPI.DataAccess
         {
             try
             {
-                _db.UserGame.Add(Mapper.Map(userGame));
+                if(_db.Game.Find(userGame.Game.GameId) == null || _db.User.Find(userGame.User.UserName) == null)
+                {
+                    return false;
+                }
+                //had to make two maps since the IEnumerable Mapper was giving me error
+                _db.UserGame.Add(Map2(userGame));
                 _db.SaveChanges();
                 return true;
             }
@@ -138,13 +146,42 @@ namespace VaporAPI.DataAccess
                 return false;
             }
         }
+        //had to make two maps since the IEnumerable Mapper was giving me error
+        public DataAccess.UserGame Map2(Library.UserGame userGame) => new DataAccess.UserGame
+        {
+            //GameId = userGame.Game.GameId,
+            //UserName = userGame.User.UserName,
+            Game = _db.Game.Find(userGame.Game.GameId),
+            UserNameNavigation = _db.User.Find(userGame.User.UserName),
+            Review = userGame.Review,
+            Score = userGame.Score,
+            DatePurchased = userGame.PurchaseDate,
+        };
+        //had to make two maps since the IEnumerable Mapper was giving me error
+        public static DataAccess.UserGame Map(Library.UserGame userGame) => new DataAccess.UserGame
+        {
+            //GameId = userGame.Game.GameId,
+            //UserName = userGame.User.UserName,
+            Game = Mapper.Map(userGame.Game),
+            UserNameNavigation = Mapper.Map(userGame.User),
+            Review = userGame.Review,
+            Score = userGame.Score,
+            DatePurchased = userGame.PurchaseDate,
+        };
 
         public bool UpdateUserGame(Library.UserGame userGame)
         {
             try
             {
                 //_db.UserGame.First(a => a.UserName == userGame.User.UserName && a.GameId == userGame.Game.GameId);
-                _db.UserGame.Update(Mapper.Map(userGame));
+                if (_db.Game.Find(userGame.Game.GameId) == null || _db.User.Find(userGame.User.UserName) == null)
+                {
+                    return false;
+                }
+                //had to make two maps since the IEnumerable Mapper was giving me error
+
+                _db.Entry(_db.UserGame.Find(userGame.Game.GameId, userGame.User.UserName))
+                        .CurrentValues.SetValues(Map2(userGame));
                 return true;
             }
             catch
@@ -206,6 +243,7 @@ namespace VaporAPI.DataAccess
             try
             {
                 _db.Remove(_db.Game.Where(d => d.GameId == id).First());
+                _db.Remove(_db.GameTag.Where(c => c.GameId == id));
                 _db.SaveChanges();
                 return success;
             }
@@ -229,7 +267,9 @@ namespace VaporAPI.DataAccess
             {
                 ug.Score = null;//review.Score;
                 ug.Review = null;//review.Review;
-                _db.UserGame.Update(ug);
+
+                _db.Entry(_db.UserGame.Find(ug.UserName, ug.GameId)).CurrentValues.SetValues(ug);
+               // _db.UserGame.Update(ug);
                 _db.SaveChanges();
                 return true;
             }
@@ -578,7 +618,8 @@ namespace VaporAPI.DataAccess
             try
             {
                 Game gameDB = Mapper.Map(game);
-                _db.Update(gameDB);
+                _db.Entry(_db.Game.Find(gameDB.GameId)).CurrentValues.SetValues(gameDB);
+               // _db.Update(gameDB);
                 _db.SaveChanges();
                 return success;
             }
@@ -603,7 +644,8 @@ namespace VaporAPI.DataAccess
             try
             {
                 User userDB = Mapper.Map(user);
-                _db.Update(userDB);
+                _db.Entry(_db.User.Find(userDB.UserName)).CurrentValues.SetValues(userDB);
+               // _db.Update(userDB);
                 _db.SaveChanges();
                 return success;
             }
