@@ -67,7 +67,8 @@ namespace VaporWebSite.App
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    //changed from controller=Home, action=Index
+                    template: "{controller=Account}/{action=Login}/{id?}");
             });
         }
     }
