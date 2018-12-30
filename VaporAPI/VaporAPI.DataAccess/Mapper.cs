@@ -22,7 +22,7 @@ namespace VaporAPI.DataAccess
         // mapping library class to DB entity
         public static DataAccess.Developer Map(Library.Developer developer) => new DataAccess.Developer
         {
-            DeveloperId = developer.DeveloperId,
+            //DeveloperId = developer.DeveloperId,
             Name = developer.Name,
             FoundingDate = developer.FoundingDate,
             Website = developer.Website
@@ -45,7 +45,7 @@ namespace VaporAPI.DataAccess
         // mapping library class to DB entity
         public static DataAccess.Dlc Map(Library.Dlc dlc) => new DataAccess.Dlc
         {
-            Dlcid = dlc.Dlcid,
+            //Dlcid = dlc.Dlcid,
             Name = dlc.Name,
             Price = dlc.Price,
             GameId = dlc.GameId
@@ -98,7 +98,7 @@ namespace VaporAPI.DataAccess
         // mapping library class to DB entity
         public static DataAccess.Game Map(Library.Game game) => new DataAccess.Game
         {
-            GameId = game.GameId,
+            //GameId = game.GameId,
             Name = game.Name,
             Price = game.Price,
             Description = game.Description,
