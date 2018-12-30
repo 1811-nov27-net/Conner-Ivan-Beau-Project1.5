@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using VaporWebSite.App.Models;
 
-namespace VaporAPI.Library
+namespace VaporWebSite.App.Models
 {
     public class UserGame
     {

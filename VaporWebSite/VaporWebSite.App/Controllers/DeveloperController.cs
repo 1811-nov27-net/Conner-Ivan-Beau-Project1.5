@@ -50,7 +50,7 @@ namespace VaporWebSite.App.Controllers
         public async Task<ActionResult> Create()
         {
             //might want some logic for security here
-            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/developer");
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Developer");
             HttpResponseMessage response = await Client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)

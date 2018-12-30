@@ -122,12 +122,20 @@ namespace VaporAPI.App.Controllers
 
 
         // POST: api/User/5/Library
-        [HttpPost("{UserName}/Library", Name = "Post")]
-        public ActionResult PostGame(string UserName,[FromBody] UserGame game)
+        [HttpPost("{UserName}/Library/{id}", Name = "Post")]
+        public ActionResult PostGame(string username,int id, DateTime purchaseDate)
         {
+            UserGame userGame;
             try
             {
-                bool check = Repo.AddUserGame(game);
+                User user = Repo.GetUser(username);
+                Game game = Repo.GetGame(id);
+                if(user == null || game == null)
+                {
+                    return StatusCode(400);
+                }
+                userGame = new UserGame { User = user, Game = game, PurchaseDate = purchaseDate };
+                bool check = Repo.AddUserGame(userGame);
                 //check is for checking if the username already exists, and if it does return status code 409
                 if (!check)
                 {
@@ -140,7 +148,7 @@ namespace VaporAPI.App.Controllers
                 return StatusCode(500);
             }
 
-            return CreatedAtRoute("GetLibrary", new { Game = game.Game.GameId }, game);
+            return CreatedAtRoute("GetUserGame", new { UserGame = userGame }, userGame);
         }
 
 
