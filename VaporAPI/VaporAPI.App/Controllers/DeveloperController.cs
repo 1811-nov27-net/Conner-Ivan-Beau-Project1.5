@@ -11,7 +11,6 @@ namespace VaporAPI.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class DeveloperController : ControllerBase
     {
 

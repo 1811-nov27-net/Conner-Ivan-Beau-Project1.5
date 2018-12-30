@@ -57,7 +57,12 @@ namespace VaporWebSite.App.Controllers
             }
         }
 
-        public async Task<IActionResult> Register(Account account)
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> RegisterInput(Account account)
         {
             try
             {
@@ -74,7 +79,7 @@ namespace VaporWebSite.App.Controllers
                     {
                         ModelState.AddModelError("Password", "User already exists or invalid character");
                     }
-                    return View();
+                    return View("Register");
                 }
 
                 var success = PassCookiesToClient(response);
