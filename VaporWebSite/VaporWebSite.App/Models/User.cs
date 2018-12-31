@@ -29,29 +29,7 @@ namespace VaporWebSite.App.Models
         public string Password { get; set; }
 
         [Range(0, 1000000)]
-        public decimal? Wallet
-        {
-            get => Wallet;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        Wallet = value;
-                    }
-                    else
-                    {
-                        throw new ValidationException();
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Insufficient funds");
-                }
-                
-            }
-        }
+        public decimal? Wallet { get; set; }
 
         //should this really be a string?
         //[RegularExpression(@"^[0-9\s]{16, 16}$",
@@ -63,10 +41,5 @@ namespace VaporWebSite.App.Models
         [Required]
         public bool Admin { get; set; }
 
-        public bool SuggestTags(List<Game> game)
-        {
-            return false;
-
-        }
     }
 }
