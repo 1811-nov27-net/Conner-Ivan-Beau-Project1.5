@@ -123,7 +123,7 @@ namespace VaporAPI.App.Controllers
 
         // POST: api/User/5/Library
         [HttpPost("{UserName}/Library/{id}", Name = "Post")]
-        public ActionResult PostGame(string username,int id, DateTime purchaseDate)
+        public ActionResult PostGame(string username,int id, [FromBody]DateTime purchaseDate)
         {
             UserGame userGame;
             try
