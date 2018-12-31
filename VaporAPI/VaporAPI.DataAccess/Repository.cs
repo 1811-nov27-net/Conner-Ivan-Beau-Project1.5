@@ -556,13 +556,29 @@ namespace VaporAPI.DataAccess
         {
             //shouldn't ever be multiple elements returned
             DataAccess.UserGame ug = _db.UserGame.Where(a => a.UserName == username && a.GameId == gameid).First();
-            return ug == null ? null : Mapper.Map(ug);
+            if(ug == null)
+            {
+                return null;
+            }
+            Library.UserGame lug = Mapper.Map(ug);
+            lug.Game.Tags = GetGameTags(lug.Game.GameId);
+            return lug;
         }
 
         public ICollection<Library.UserGame> GetUserGames(string username)
         {
             ICollection<DataAccess.UserGame> ugs = _db.UserGame.Include("Game").Include("UserNameNavigation").Where(a => a.UserName == username).ToList();
-            return ugs == null ? null : Mapper.Map(ugs).ToList();
+            if(ugs == null)
+            {
+                return null;
+            }
+            ICollection<Library.UserGame> libugs =  Mapper.Map(ugs).ToList();
+            
+            foreach (var ug in libugs)
+            {
+                ug.Game.Tags = GetGameTags(ug.Game.GameId);
+            }
+            return libugs;
         }
 
         public ICollection<Library.User> GetUsers(int sort = 0)
