@@ -83,6 +83,63 @@ namespace VaporAPI.Testing
             Assert.True(isnull);
         }
         [Fact]
+        public void AddGameTest()
+        {
+            var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("add_game_testing").Options;
+            Data.Developer newdeveloper = new Data.Developer
+            {
+                Name = "Ubisoft",
+                FoundingDate = DateTime.Now,
+                Website = "http://www.ubisoft.com/"
+            };
+            Data.Tag newtag1 = new Data.Tag
+            {
+                GenreName = "Shooter",
+            };
+            Data.Tag newtag2 = new Data.Tag
+            {
+                GenreName = "RPG",
+            };
+            Libra.Tag tag1 = new Libra.Tag();
+            Libra.Tag tag2 = new Libra.Tag();
+
+            using (var db = new Data.VaporDBContext(options))
+            {
+                db.Add(newdeveloper);
+                db.Add(newtag1);
+                db.Add(newtag2);
+                db.SaveChanges();
+                var repo = new Data.Repository(db);
+                tag1 = repo.GetTag(newtag1.TagId);
+                tag2 = repo.GetTag(newtag2.TagId);
+            }
+            List<Libra.Tag> taglist = new List<Libra.Tag>();
+            taglist.Add(tag1);
+            taglist.Add(tag2);
+            Libra.Game game = new Libra.Game()
+            {
+                Image = "Img",
+                Name = "Doom",
+                DeveloperId = newdeveloper.DeveloperId,
+                Price = 49.99m,
+                Trailer = "Trlr",
+                Description = "Good Game",
+                Tags = taglist,
+            };
+            bool isnull = false;
+
+            using (var db = new Data.VaporDBContext(options))
+            {
+                var repo = new Data.Repository(db);
+                isnull = repo.AddGame(game);
+                Libra.Game repogame = repo.GetGame(game.GameId);
+
+            }
+
+
+
+        }
+        [Fact]
         public void GrabAllUsersTest()
         {
             var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("get_all_user_testing").Options;
@@ -132,12 +189,14 @@ namespace VaporAPI.Testing
             Assert.Equal(100, allusers[1].Wallet);
 
         }
+
         [Fact]
         public void GrabSpecificUserTest()
         {
             var options = new DbContextOptionsBuilder<Data.VaporDBContext>().UseInMemoryDatabase("get_one_user_testing").Options;
             using (var db = new Data.VaporDBContext(options))
             {
+
                 db.User.Add(new Data.User
                 {
                     UserName = "User1",
