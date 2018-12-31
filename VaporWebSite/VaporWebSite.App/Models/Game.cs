@@ -10,7 +10,7 @@ namespace VaporWebSite.App.Models
         public int GameId { get; set; }
 
         [Required]
-        [RegularExpression(@"[^a-zA-Z | 0-9\s],{1,100}",
+        [RegularExpression(@"^[a-zA-Z | 0-9 | \s | -]{1,100}",
             ErrorMessage = "Only alphanumeric characters are allowed.")]
         public string Name { get; set; }
 
@@ -28,5 +28,7 @@ namespace VaporWebSite.App.Models
         public string Image { get; set; }
 
         public string Trailer { get; set; }
+
+        public List<Tag> Tags { get; set; }
     }
 }

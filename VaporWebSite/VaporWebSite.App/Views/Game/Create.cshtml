@@ -1,0 +1,84 @@
+﻿@model VaporWebSite.App.Models.FullGame
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Game</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Game.Name" class="control-label"></label>
+                <input asp-for="Game.Name" class="form-control" />
+                <span asp-validation-for="Game.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.Price" class="control-label"></label>
+                <input asp-for="Game.Price" class="form-control" />
+                <span asp-validation-for="Game.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.Description" class="control-label"></label>
+                <input asp-for="Game.Description" class="form-control" />
+                <span asp-validation-for="Game.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.DeveloperId" class="control-label"></label>
+
+
+
+                <label asp-for="Game.DeveloperId" class="control-label"></label>
+                @Html.DropDownListFor(model=>model.Game.DeveloperId,
+               new SelectList(Model.Developers,"DeveloperId","Name" ) , "Select Developer", "form-control")
+                <span asp-validation-for="Game.DeveloperId" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.Image" class="control-label"></label>
+                <input asp-for="Game.Image" class="form-control" />
+                <span asp-validation-for="Game.Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.Trailer" class="control-label"></label>
+                <input asp-for="Game.Trailer" class="form-control" />
+                <span asp-validation-for="Game.Trailer" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Game.Tags" class="control-label"></label>
+                <ul>
+                    @for (int i = 0; i < Model.Tags.Count; i++)
+                    {
+                        <li>
+                            <input type="checkbox" asp-for="@Model.Tags[i].Selected" />
+                            <label asp-for="@Model.Tags[i].Selected"> @Model.Tags[i].Tag.Name </label>
+                            <input type="hidden" asp-for="@Model.Tags[i].Tag.TagId" />
+                            <input type="hidden" asp-for="@Model.Tags[i].Tag.Name" />
+
+                        </li>
+                    }
+                </ul>
+                <span asp-validation-for="Game.Tags" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

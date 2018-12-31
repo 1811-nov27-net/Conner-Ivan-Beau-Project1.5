@@ -12,6 +12,6 @@ namespace VaporWebSite.App.Models
         [Required]
         [RegularExpression(@"^[a-zA-Z''-'\s]{1,100}$",
             ErrorMessage = "Only letters are allowed")]
-        public string GenreName { get; set; }
+        public string Name { get; set; }
     }
 }

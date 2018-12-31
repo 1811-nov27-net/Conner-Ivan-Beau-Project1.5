@@ -106,7 +106,7 @@ namespace VaporAPI.DataAccess
             Image = game.Image,
             Trailer = game.Trailer,
 
-            GameTag = MapTagstoGTs(game.TagsList, game.GameId),
+            GameTag = MapTagstoGTs(game.Tags, game.GameId),
         };
         public static IEnumerable<DataAccess.Game> Map(IEnumerable<Library.Game> game) => game.Select(Map);
 
@@ -115,7 +115,7 @@ namespace VaporAPI.DataAccess
         public static Library.Tag Map(DataAccess.Tag tag) => new Library.Tag
         {
             TagId = tag.TagId,
-            GenreName = tag.GenreName
+            Name = tag.GenreName
         };
         public static IEnumerable<Library.Tag> Map(IEnumerable<DataAccess.Tag> tag) => tag.Select(Map);
 
@@ -123,7 +123,7 @@ namespace VaporAPI.DataAccess
         public static DataAccess.Tag Map(Library.Tag tag) => new DataAccess.Tag
         {
             //TagId = tag.TagId,
-            GenreName = tag.GenreName
+            GenreName = tag.Name
         };
         public static IEnumerable<DataAccess.Tag> Map(IEnumerable<Library.Tag> tag) => tag.Select(Map);
 

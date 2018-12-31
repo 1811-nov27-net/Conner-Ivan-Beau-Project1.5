@@ -48,29 +48,68 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: Game/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            //potentail logic for security
-            return View(new Game());
+            //potential logic for security
+
+            //need to send over all the tags and developers to choose from
+
+            
+            HttpRequestMessage request1 = CreateRequest(HttpMethod.Get, "api/Developer");
+            HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, "api/Tag");
+            HttpResponseMessage response1 = await Client.SendAsync(request1);
+            HttpResponseMessage response2 = await Client.SendAsync(request2);
+
+
+            if (!response1.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
+            {
+                if (response1.StatusCode == HttpStatusCode.Unauthorized || response2.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return RedirectToAction("Error", "Home");
+            }
+            string responseBody1 = await response1.Content.ReadAsStringAsync();
+            string responseBody2 = await response2.Content.ReadAsStringAsync();
+
+
+            List<Developer> developers = JsonConvert.DeserializeObject<List<Developer>>(responseBody1);
+            List<Tag> tags = JsonConvert.DeserializeObject<List<Tag>>(responseBody2);
+
+
+            return View(new FullGame { Developers = developers, Tags = tags.Select(t => new FilterTag { Tag = t, Selected = false}).ToList()});
         }
 
         // POST: Game/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Game game)
+        public async Task<ActionResult> Create(FullGame rawgame)
         {
+            Game game = rawgame.Game;
             try
             {
-                HttpRequestMessage request = CreateRequest(HttpMethod.Post, "api/Game", game);
-                HttpResponseMessage response = await Client.SendAsync(request);
-
-                if (!response.IsSuccessStatusCode)
+                if (ModelState.IsValid)
                 {
-                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    List<Tag> addedTags = new List<Tag>();
+                    foreach(var t in rawgame.Tags)
                     {
-                        return RedirectToAction("Login", "Account");
+                        if(t.Selected)
+                        {
+                            addedTags.Add(t.Tag);
+                        }
                     }
-                    return RedirectToAction("Error", "Home");
+                    game.Tags = addedTags;
+                    HttpRequestMessage request = CreateRequest(HttpMethod.Post, "api/Game", game);
+                    HttpResponseMessage response = await Client.SendAsync(request);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        if (response.StatusCode == HttpStatusCode.Unauthorized)
+                        {
+                            return RedirectToAction("Login", "Account");
+                        }
+                        return RedirectToAction("Error", "Home");
+                    }
                 }
 
                 return RedirectToAction(nameof(Index));

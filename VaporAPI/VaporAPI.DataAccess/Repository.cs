@@ -58,7 +58,7 @@ namespace VaporAPI.DataAccess
             bool success = true;
             try
             {
-                if (game.TagsList == null) { return false; }
+                if (game.Tags == null) { return false; }
                 var gameDB = Mapper.Map(game);
                 _db.Add(gameDB);                //shit
                 _db.SaveChanges();

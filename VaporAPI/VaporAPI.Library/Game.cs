@@ -10,7 +10,7 @@ namespace VaporAPI.Library
         public int GameId { get; set; }
 
         [Required]
-        [RegularExpression(@"[^a-zA-Z | 0-9\s],{1,100}",
+        [RegularExpression(@"^[a-zA-Z | 0-9\s]{1,100}",
             ErrorMessage = "Only alphanumeric characters are allowed.")]
         public string Name { get; set; }
 
@@ -52,7 +52,7 @@ namespace VaporAPI.Library
 
         public string Trailer { get; set; }
 
-        public List<Tag> TagsList { get; set; }
+        public List<Tag> Tags { get; set; }
 
     }
 }
