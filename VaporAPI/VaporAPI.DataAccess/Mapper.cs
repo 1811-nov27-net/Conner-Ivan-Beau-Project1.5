@@ -75,13 +75,17 @@ namespace VaporAPI.DataAccess
             Description = game.Description,
             DeveloperId = game.DeveloperId,
             Image = game.Image,
-            Trailer = game.Trailer,
+            Trailer = game.Trailer
             
         };
         public static IEnumerable<Library.Game> Map(IEnumerable<DataAccess.Game> game) => game.Select(Map);
 
         public static List<DataAccess.GameTag> MapTagstoGTs(List<Library.Tag> tags, int gameid)
         {
+            if(tags == null)
+            {
+                return null;
+            }
             List<DataAccess.GameTag> newlist = new List<DataAccess.GameTag>();
             foreach(var item in tags)
             {

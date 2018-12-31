@@ -77,7 +77,7 @@ namespace VaporWebSite.App.Controllers
             List<Tag> tags = JsonConvert.DeserializeObject<List<Tag>>(responseBody2);
 
 
-            return View(new FullGame { Developers = developers, Tags = tags.Select(t => new FilterTag { Tag = t, Selected = false}).ToList()});
+            return View(new FullGame { Game = new Game(),Developers = developers, Tags = tags.Select(t => new FilterTag { Tag = t, Selected = false}).ToList()});
         }
 
         // POST: Game/Create

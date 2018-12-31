@@ -334,7 +334,19 @@ namespace VaporAPI.DataAccess
 
             Game game = _db.Game.Where(g => g.GameId == id).FirstOrDefault();
             Library.Game gameLib = Mapper.Map(game);
+            gameLib.Tags = GetGameTags(game.GameId);
             return gameLib;
+        }
+
+        public List<Library.Tag> GetGameTags(int id)
+        {
+            List<Library.Tag> tags = new List<Library.Tag>();
+            Game game = _db.Game.Include("GameTag.Tag").First(a => a.GameId == id);
+            foreach(var t in game.GameTag)
+            {
+                tags.Add(Mapper.Map(t.Tag));
+            }
+            return tags;
         }
 
         public ICollection<Library.Dlc> GetGameDlcs(int gameid)
@@ -397,31 +409,45 @@ namespace VaporAPI.DataAccess
         // retrievs all games, sorted as given
         public ICollection<Library.Game> GetGames(int sort = 0)
         {
-            return GetGamesHelper(Mapper.Map(_db.Game).ToList(), sort);
+            ICollection<Library.Game> games = GetGamesHelper(Mapper.Map(_db.Game).ToList(), sort);
+            foreach (var g in games)
+            {
+                g.Tags = GetGameTags(g.GameId);
+            }
+            return games;
         }
 
         public ICollection<Library.Game> GetGamesHelper(ICollection<Library.Game> oldGamesLib, int sort = 0)
         {
-            ICollection<Game> oldGames = Mapper.Map(oldGamesLib).ToList();
+            //ICollection<Game> oldGames = Mapper.Map(oldGamesLib).ToList();
+
+            ICollection<Library.Game> games = new List<Library.Game>();
+
             switch (sort)
             {
                 case 0:
-                    ICollection<Game> games0 = oldGames.OrderBy(g => g.GameId).ToList();
-                    return games0 == null ? null : Mapper.Map(games0).ToList();
+                    games = oldGamesLib.OrderBy(g => g.GameId).ToList();
+                    //return games0 == null ? null : Mapper.Map(games0).ToList();
+                    break;
                 case 1:
-                    ICollection<Game> games1 = oldGames.OrderBy(g => g.Name).ToList();
-                    return games1 == null ? null : Mapper.Map(games1).ToList();
+                    games = oldGamesLib.OrderBy(g => g.Name).ToList();
+                    //return games1 == null ? null : Mapper.Map(games1).ToList();
+                    break;
                 case 2:
-                    ICollection<Game> games2 = oldGames.OrderBy(g => g.Price).ToList();
-                    return games2 == null ? null : Mapper.Map(games2).ToList();
+                    games = oldGamesLib.OrderBy(g => g.Price).ToList();
+                    //return games2 == null ? null : Mapper.Map(games2).ToList();
+                    break;
 
                 case 3:
-                    ICollection<Game> games3 = oldGames.OrderByDescending(g => g.Price).ToList();
-                    return games3 == null ? null : Mapper.Map(games3).ToList();
+                    games = oldGamesLib.OrderByDescending(g => g.Price).ToList();
+                    //return games3 == null ? null : Mapper.Map(games3).ToList();
+                    break;
                 default:
-                    ICollection<Game> gamesD = oldGames.OrderBy(g => g.GameId).ToList();
-                    return gamesD == null ? null : Mapper.Map(gamesD).ToList();
+                    games = oldGamesLib.OrderBy(g => g.GameId).ToList();
+                    //return gamesD == null ? null : Mapper.Map(gamesD).ToList();
+                    break;
             }
+            return games;
         }
         //retrieves all UserGames, sorted as given
         public ICollection<Library.UserGame> GetReviews(int sort = 0)
