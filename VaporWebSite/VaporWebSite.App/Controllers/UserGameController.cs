@@ -38,8 +38,9 @@ namespace VaporWebSite.App.Controllers
 
             string responseBody = await response.Content.ReadAsStringAsync();
 
-            List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
 
+            List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
+            
             return View(games);
         }
 
@@ -50,7 +51,7 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: UserGame/Create
-        public ActionResult Create()
+        public ActionResult Purchase(int id)
         {
             //var cookies = Request.Cookies.Keys;
             //var request = Request.Cookies["ApiAuth"];
@@ -58,19 +59,22 @@ namespace VaporWebSite.App.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            return View();
+            return View(new UserGame { Game = new Game { GameId = id} });
         }
 
         // POST: UserGame/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(int gameid, DateTime purchaseDate)
+        public async Task<ActionResult> Purchase(UserGame userGame)
         {
+            int gameid = userGame.Game.GameId;
+            DateTime purchaseDate = userGame.PurchaseDate;
+
             try
             {
                 var username = ViewBag.LoggedInUser;
 
-                HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"api/User/{username}/{gameid}", purchaseDate);
+                HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"api/User/{username}/Library/{gameid}", purchaseDate);
                 HttpResponseMessage response = await Client.SendAsync(request);
 
                 if (!response.IsSuccessStatusCode)

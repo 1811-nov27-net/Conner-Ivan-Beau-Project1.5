@@ -175,9 +175,9 @@ namespace VaporAPI.DataAccess
 
         public static Library.UserGame Map(DataAccess.UserGame userGame) => new Library.UserGame
         {
-            Game = Mapper.Map(userGame.Game),
+            Game = userGame.Game == null ? null : Mapper.Map(userGame.Game),
             //dont know why the name is so weird here
-            User = Mapper.Map(userGame.UserNameNavigation),
+            User = userGame.UserNameNavigation == null ? null : Mapper.Map(userGame.UserNameNavigation),
             Review = userGame.Review,
             //if score is null then set score as -1?
             //TODO: decide what this case should be

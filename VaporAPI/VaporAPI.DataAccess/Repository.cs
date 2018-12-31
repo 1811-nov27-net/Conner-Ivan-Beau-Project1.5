@@ -561,7 +561,7 @@ namespace VaporAPI.DataAccess
 
         public ICollection<Library.UserGame> GetUserGames(string username)
         {
-            ICollection<DataAccess.UserGame> ugs = _db.UserGame.Where(a => a.UserName == username).ToList();
+            ICollection<DataAccess.UserGame> ugs = _db.UserGame.Include("Game").Include("UserNameNavigation").Where(a => a.UserName == username).ToList();
             return ugs == null ? null : Mapper.Map(ugs).ToList();
         }
 

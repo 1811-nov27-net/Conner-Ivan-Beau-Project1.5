@@ -42,7 +42,16 @@ namespace VaporWebSite.App.Controllers
 
             string responseBody = await response.Content.ReadAsStringAsync();
 
-            List<UserGame> userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody);
+            List<UserGame> userGames = new List<UserGame>();
+
+            try
+            {
+                userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
             return View(userGames);
         }
