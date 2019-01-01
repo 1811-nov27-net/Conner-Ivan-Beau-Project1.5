@@ -72,24 +72,24 @@ namespace VaporAPI.App.Controllers
             }
         }
 
-        [HttpGet(Name = "GetFilteredGames")]
-        public ActionResult<IEnumerable<Game>> GetFilteredGames(decimal lowPrice, decimal highPrice, int lowRating, int highRating, int[] devIds, int[] tagIds)
-        {
-            try
-            {
-                ICollection<Game> gamesPriceRange = Repo.GetBetweenPriceGames(lowPrice, highPrice);
-                ICollection<Game> gamesRatingRange = Repo.GetBetweenRatingsGames(lowRating, highRating);
-                ICollection<Game> gamesDevs = Repo.GetGamesByDeveloper(devIds);
-                ICollection<Game> gamesTags = Repo.GetGamesByTags(tagIds);
+        //[HttpGet(Name = "GetFilteredGames")]
+        //public ActionResult<IEnumerable<Game>> GetFilteredGames(decimal lowPrice, decimal highPrice, int lowRating, int highRating, int[] devIds, int[] tagIds)
+        //{
+        //    try
+        //    {
+        //        ICollection<Game> gamesPriceRange = Repo.GetBetweenPriceGames(lowPrice, highPrice);
+        //        ICollection<Game> gamesRatingRange = Repo.GetBetweenRatingsGames(lowRating, highRating);
+        //        ICollection<Game> gamesDevs = Repo.GetGamesByDeveloper(devIds);
+        //        ICollection<Game> gamesTags = Repo.GetGamesByTags(tagIds);
 
-                List<Game> gamesToReturn = Repo.FilterGames(gamesPriceRange, gamesRatingRange, gamesDevs, gamesTags).ToList();
-                return gamesToReturn;
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
-        }
+        //        List<Game> gamesToReturn = Repo.FilterGames(gamesPriceRange, gamesRatingRange, gamesDevs, gamesTags).ToList();
+        //        return gamesToReturn;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(500);
+        //    }
+        //}
 
 
         // POST: api/Game
