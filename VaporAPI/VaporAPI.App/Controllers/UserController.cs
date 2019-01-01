@@ -194,8 +194,8 @@ namespace VaporAPI.App.Controllers
         }
 
         // POST: api/User/5/Library
-        [HttpPost("{UserName}/Library/Dlc/{dlcid}", Name = "PostDlc")]
-        public ActionResult PostDlc(string username, int id)
+        [HttpPost("{UserName}/Library/Dlc", Name = "PostDlc")]
+        public ActionResult PostDlc(string username, [FromBody]int id)
         {
             UserDlc userDlc;
             try

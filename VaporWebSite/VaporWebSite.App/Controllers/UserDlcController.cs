@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using VaporWebSite.App.Models;
 
 namespace VaporWebSite.App.Controllers
@@ -32,19 +33,37 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: UserDlc/Create
-        public ActionResult Purchase(int id)
+        public async Task<ActionResult> Purchase(int id)
         {
             if (ViewBag.LoggedInUser == "")
             {
                 return RedirectToAction("Login", "Account");
             }
-            return View(new UserDlc { Dlc = new Dlc { Dlcid = id } });
+
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Dlc/{id}");
+            HttpResponseMessage response = await Client.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return RedirectToAction("Error", "Home");
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+
+            Dlc dlc = JsonConvert.DeserializeObject<Dlc>(responseBody);
+
+            return View(new UserDlc { Dlc = dlc });
         }
 
         // POST: UserDlc/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(UserDlc userdlc)
+        public async Task<ActionResult> Purchase(UserDlc userdlc)
         {
             int dlcid = userdlc.Dlc.Dlcid;
 
@@ -52,7 +71,7 @@ namespace VaporWebSite.App.Controllers
             {
                 var username = ViewBag.LoggedInUser;
 
-                HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"api/User/{username}/Library/Dlc/{dlcid}");
+                HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"api/User/{username}/Library/Dlc",dlcid);
                 HttpResponseMessage response = await Client.SendAsync(request);
 
                 if (!response.IsSuccessStatusCode)
