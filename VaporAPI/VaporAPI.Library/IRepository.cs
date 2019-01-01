@@ -46,6 +46,7 @@ namespace VaporAPI.Library
         //ICollection<Dlc> GetDlcbyGame(int id);
         bool AddDlc(Dlc dlc);
         bool DeleteDlc(int id);
+        List<Game> GetGameBySearchName(string searchString);
         bool UpdateDlcbyPrice(int id, decimal price);
 
         //bool CreateUser(User user);
