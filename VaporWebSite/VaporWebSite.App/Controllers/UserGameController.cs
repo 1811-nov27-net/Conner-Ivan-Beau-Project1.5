@@ -67,9 +67,30 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: UserGame/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            HttpRequestMessage request1 = CreateRequest(HttpMethod.Get, $"api/Game/{id}");
+            HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/Dlc/Game/{id}");
+            HttpResponseMessage response1 = await Client.SendAsync(request1);
+            HttpResponseMessage response2 = await Client.SendAsync(request2);
+
+
+            if (!response1.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
+            {
+                if (response1.StatusCode == HttpStatusCode.Unauthorized || response2.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return RedirectToAction("Error", "Home");
+            }
+            string responseBody1 = await response1.Content.ReadAsStringAsync();
+            string responseBody2 = await response2.Content.ReadAsStringAsync();
+
+
+            Game game = JsonConvert.DeserializeObject<Game>(responseBody1);
+            List<Dlc> dlcs = JsonConvert.DeserializeObject<List<Dlc>>(responseBody2);
+
+            return View(new FullUserGame { Game = game, Dlcs = dlcs })
         }
 
         // GET: UserGame/Create
