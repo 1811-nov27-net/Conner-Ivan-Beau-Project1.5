@@ -20,11 +20,11 @@ namespace VaporAPI.App.Controllers
         }
         //GET: api/Dlc
         [HttpGet]
-        public ActionResult<string> Get()
+        public ActionResult<IEnumerable<Dlc>> Get()
         {
             try
             {
-                return "nothing";//Repo.GetDlcs().ToList();
+                return Repo.GetDlcs().ToList();
             }
             catch (Exception)
             {

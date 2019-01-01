@@ -50,6 +50,7 @@ namespace VaporWebSite.App.Controllers
         public async Task<ActionResult> Create()
         {
             //might want some logic for security here
+            /*
             HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Developer");
             HttpResponseMessage response = await Client.SendAsync(request);
 
@@ -61,6 +62,7 @@ namespace VaporWebSite.App.Controllers
                 }
                 return View("Error");
             }
+            */
             return View(new Developer());
         }
 

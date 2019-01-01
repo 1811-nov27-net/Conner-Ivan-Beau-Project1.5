@@ -16,7 +16,7 @@ namespace VaporWebSite.App.Models
 
         [Required]
         [Range(0, 1000)]     
-        [RegularExpression(@"^[0-9 | '.']{0, 1000}$",
+        [RegularExpression(@"^[0-9]+(\.[0-9]{1,2})?",
             ErrorMessage = "Please type a decimal number from 0 to 1000")]
         public decimal Price { get; set; }
 

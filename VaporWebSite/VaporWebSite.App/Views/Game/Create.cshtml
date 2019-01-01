@@ -29,10 +29,6 @@
             </div>
             <div class="form-group">
                 <label asp-for="Game.DeveloperId" class="control-label"></label>
-
-
-
-                <label asp-for="Game.DeveloperId" class="control-label"></label>
                 @Html.DropDownListFor(model=>model.Game.DeveloperId,
                new SelectList(Model.Developers,"DeveloperId","Name" ) , "Select Developer", "form-control")
                 <span asp-validation-for="Game.DeveloperId" class="text-danger"></span>

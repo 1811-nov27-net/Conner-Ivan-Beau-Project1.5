@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using VaporWebSite.App.Models;
 
 namespace VaporWebSite.App.Controllers
 {
@@ -20,7 +22,23 @@ namespace VaporWebSite.App.Controllers
         // GET: Dlc
         public async Task<ActionResult> Index()
         {
-            return View();
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Dlc");
+            HttpResponseMessage response = await Client.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return RedirectToAction("Error", "Home");
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            List<Dlc> dlcs = JsonConvert.DeserializeObject<List<Dlc>>(responseBody);
+
+            return View(dlcs);
         }
 
         // GET: Dlc/Details/5
@@ -30,19 +48,49 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: Dlc/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game");
+            HttpResponseMessage response = await Client.SendAsync(request);
+
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return RedirectToAction("Error", "Home");
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
+
+
+            return View(new FullDlc { Game = new Game(), Dlc = new Dlc(), AllGames = games});
         }
 
         // POST: Dlc/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(FullDlc fulldlc)
         {
+            Dlc dlc = fulldlc.Dlc;
             try
             {
-                // TODO: Add insert logic here
+                HttpRequestMessage request = CreateRequest(HttpMethod.Post, "api/Dlc", dlc);
+                HttpResponseMessage response = await Client.SendAsync(request);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return RedirectToAction("Login", "Account");
+                    }
+                    return RedirectToAction("Error", "Home");
+
+                }
 
                 return RedirectToAction(nameof(Index));
             }
@@ -53,19 +101,40 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: Dlc/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Dlc/{id}");
+            HttpResponseMessage response = await Client.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return View("Error");
+            }
+            string resString = await response.Content.ReadAsStringAsync();
+            return View(JsonConvert.DeserializeObject<Dlc>(resString));
         }
 
         // POST: Dlc/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, Dlc dlc)
         {
             try
             {
-                // TODO: Add update logic here
+                HttpRequestMessage request = CreateRequest(HttpMethod.Put, $"api/Dlc/{id}", dlc);
+                HttpResponseMessage response = await Client.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return RedirectToAction("Login", "Account");
+                    }
+                    return View();
+                }
 
                 return RedirectToAction(nameof(Index));
             }
@@ -76,19 +145,40 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: Dlc/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Dlc/{id}");
+            HttpResponseMessage response = await Client.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return View("Error");
+            }
+            string resString = await response.Content.ReadAsStringAsync();
+            return View(JsonConvert.DeserializeObject<Dlc>(resString));
         }
 
         // POST: Dlc/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
             try
             {
-                // TODO: Add delete logic here
+                HttpRequestMessage request = CreateRequest(HttpMethod.Delete, $"api/Dlc/{id}");
+                HttpResponseMessage response = await Client.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return RedirectToAction("Login", "Account");
+                    }
+                    return View();
+                }
 
                 return RedirectToAction(nameof(Index));
             }

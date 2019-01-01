@@ -684,6 +684,12 @@ namespace VaporAPI.DataAccess
         }
         */
 
+        public ICollection<Library.Dlc> GetDlcs()
+        {
+            ICollection<DataAccess.Dlc> dlcs = _db.Dlc.ToList();
+            return dlcs == null ? null : Mapper.Map(dlcs).ToList();
+        }
+
         public bool UpdateUser(Library.User user)
         {
             bool success = true;

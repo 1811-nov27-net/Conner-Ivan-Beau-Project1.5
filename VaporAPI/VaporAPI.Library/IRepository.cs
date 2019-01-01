@@ -75,5 +75,7 @@ namespace VaporAPI.Library
         bool DeleteUserGame(string username, int gameid);
         bool UpdateUserGame(Library.UserGame userGame);
 
+        ICollection<Library.Dlc> GetDlcs();
+
     }
 }
