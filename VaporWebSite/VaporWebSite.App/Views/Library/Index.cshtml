@@ -28,24 +28,35 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
+        @foreach (var item in Model)
+        {
+        <tr id="modelitem" *onmouseover="PopUp()" *@>
+            <td id="modelitemname">
                 @Html.DisplayFor(modelItem => item.Game.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchaseDate)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Game.Image)
             </td>
 
             <td>
-                @Html.DisplayFor(modelItem => item.PurchaseDate)
-            </td>
-
-            <td>
                 @Html.DisplayFor(modelItem => item.Game.Trailer)
             </td>
-       
+            <td hidden id="gameid">
+                @Html.DisplayFor(modelItem => item.Game.GameId)
+            </td>
+            <td hidden id="price">
+                @Html.DisplayFor(modelItem => item.Game.Price)
+            </td>
+            <td hidden id="description">
+                @Html.DisplayFor(modelItem => item.Game.Description)
+            </td>
         </tr>
-}
+        }
     </tbody>
 </table>
+<script src="UserGameIndex.js">
+    var csmodel = model;
+</script>
