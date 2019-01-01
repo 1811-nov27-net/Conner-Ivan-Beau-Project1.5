@@ -49,7 +49,7 @@ namespace VaporWebSite.App.Controllers
                     return View("Error");
                 }
                 //succeeded
-                return RedirectToAction("Index", "Developer");
+                return RedirectToAction("Index", "UserGame");
 
             } catch (Exception)
             {
@@ -88,7 +88,7 @@ namespace VaporWebSite.App.Controllers
                     return View("Error");
                 }
                 //succeeded
-                return RedirectToAction("Index", "Developer");
+                return RedirectToAction("Index", "UserGame");
 
             }
             catch (Exception)

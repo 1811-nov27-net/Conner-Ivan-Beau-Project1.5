@@ -31,49 +31,55 @@
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeveloperId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Image)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Trailer)
-            </th>
+            @*
+        <th>
+            @Html.DisplayNameFor(model => model.DeveloperId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Image)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Trailer)
+        </th>
+            
+            *@
+
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GameId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DeveloperId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Image)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Trailer)
-                </td>
-                <td>
-                    @Html.ActionLink("Purchase", "Purchase", new { id = item.GameId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.GameId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.GameId })
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            @*
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.DeveloperId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Image)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Trailer)
+        </td>
+            *@
+            <td>
+                @Html.ActionLink("Purchase", "Purchase", new { id = item.GameId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.GameId })
+            </td>
+        </tr>
         }
     </tbody>
 </table>

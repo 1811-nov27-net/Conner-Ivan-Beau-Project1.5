@@ -52,6 +52,27 @@ namespace VaporAPI.App.Controllers
             }
         }
 
+
+
+        // GET: api/User/5/Library/Dlc
+        //getting all the users games
+        [HttpGet("{UserName}/Library/Dlc", Name = "GetLibraryDlc")]
+        public ActionResult<IEnumerable<UserDlc>> GetDlcs(string username)
+        {
+            try
+            {
+                return Repo.GetUserDlcs(username).ToList();
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500);
+            }
+        }
+
+
+
+
         // GET: api/User/5
         //getting the user with username
         [HttpGet("{UserName}", Name = "GetUser")]
@@ -97,6 +118,27 @@ namespace VaporAPI.App.Controllers
             return game;
         }
 
+        // GET: api/User/5/Library/5
+        [HttpGet("{UserName}/Library/Dlc/{id}", Name = "GetUserDlc")]
+        public ActionResult<UserDlc> GetDlc(string UserName, int id)
+        {
+            UserDlc dlc;
+            try
+            {
+                dlc = Repo.GetUserDlc(UserName, id);
+
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500);
+            }
+            if (dlc == null)
+            {
+                return NotFound();
+            }
+            return dlc;
+        }
 
         // POST: api/User
         [HttpPost]
@@ -122,7 +164,7 @@ namespace VaporAPI.App.Controllers
 
 
         // POST: api/User/5/Library
-        [HttpPost("{UserName}/Library/{id}", Name = "Post")]
+        [HttpPost("{UserName}/Library/{id}", Name = "PostGame")]
         public ActionResult PostGame(string username,int id, [FromBody]DateTime purchaseDate)
         {
             UserGame userGame;
@@ -151,6 +193,35 @@ namespace VaporAPI.App.Controllers
             return CreatedAtRoute("GetUserGame", new { username=userGame.User.UserName,id=userGame.Game.GameId }, userGame);
         }
 
+        // POST: api/User/5/Library
+        [HttpPost("{UserName}/Library/Dlc/{dlcid}", Name = "PostDlc")]
+        public ActionResult PostDlc(string username, int id)
+        {
+            UserDlc userDlc;
+            try
+            {
+                User user = Repo.GetUser(username);
+                Dlc dlc = Repo.GetDlc(id);
+                if (user == null || dlc == null)
+                {
+                    return StatusCode(400);
+                }
+                userDlc = new UserDlc { User = user, Dlc = dlc };
+                bool check = Repo.AddUserDlc(userDlc);
+                //check is for checking if the username already exists, and if it does return status code 409
+                if (!check)
+                {
+                    return StatusCode(409);
+                }
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500);
+            }
+
+            return CreatedAtRoute("GetUserDlc", new { username = userDlc.User.UserName, id = userDlc.Dlc.Dlcid }, userDlc);
+        }
 
 
 

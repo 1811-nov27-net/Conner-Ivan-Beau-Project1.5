@@ -53,6 +53,21 @@ namespace VaporAPI.DataAccess
             }
         }
 
+        public bool AddUserDlc(Library.UserDlc userdlc)
+        {
+            try
+            {
+                var udlc = Mapper.Map(userdlc);
+                _db.Add(udlc);
+                _db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool AddGame(Library.Game game)
         {
             bool success = true;
@@ -203,6 +218,20 @@ namespace VaporAPI.DataAccess
                 return true;
             }
             catch
+            {
+
+                return false;
+            }
+        }
+
+        public bool DeleteUserDlc(string username, int id)
+        {
+            try
+            {
+                _db.UserDlc.Remove(_db.UserDlc.First(a => a.UserName == username && a.Dlcid == id));
+                return true;
+            }
+            catch 
             {
 
                 return false;
@@ -593,6 +622,18 @@ namespace VaporAPI.DataAccess
             //sort not  implemented yet
             List<DataAccess.User> users = _db.User.AsNoTracking().ToList();
             return users == null ? null : Mapper.Map(users).ToList();
+        }
+
+        public ICollection<Library.UserDlc> GetUserDlcs(string username)
+        {
+            List<DataAccess.UserDlc> udlcs = _db.UserDlc.Where(a => a.UserName == username).Include("UserNameNavigation").Include("Dlc").AsNoTracking().ToList();
+            return udlcs == null ? null : udlcs.Select(a => Mapper.Map(a)).ToList();
+        }
+
+        public Library.UserDlc GetUserDlc(string username, int id)
+        {
+            DataAccess.UserDlc dlc = _db.UserDlc.Include("UserNameNavigation").Include("Dlc").First(a => a.UserName == username && a.Dlcid == id);
+            return dlc == null ? null : Mapper.Map(dlc);
         }
 
         //not sure we will need these

@@ -17,6 +17,15 @@ namespace VaporAPI.Library
         ICollection<UserGame> GetReviewsByGame(int id, int sort = 0);
         ICollection<UserGame> GetReviewsHelper(ICollection<UserGame> oldUserGamesLib, int sort = 0);
 
+        //crud for userdlc
+        bool AddUserDlc(UserDlc userDlc);
+        bool DeleteUserDlc(string username, int id);
+        ICollection<UserDlc> GetUserDlcs(string username);
+        UserDlc GetUserDlc(string username, int id);
+
+
+
+
         //crud for users
         bool AddUser(User user);
         bool DeleteUser(string username);

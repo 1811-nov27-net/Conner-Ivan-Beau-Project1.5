@@ -22,7 +22,7 @@ namespace VaporAPI.DataAccess
         // mapping library class to DB entity
         public static DataAccess.Developer Map(Library.Developer developer) => new DataAccess.Developer
         {
-            //DeveloperId = developer.DeveloperId,
+            DeveloperId = developer.DeveloperId,
             Name = developer.Name,
             FoundingDate = developer.FoundingDate,
             Website = developer.Website
@@ -45,7 +45,7 @@ namespace VaporAPI.DataAccess
         // mapping library class to DB entity
         public static DataAccess.Dlc Map(Library.Dlc dlc) => new DataAccess.Dlc
         {
-            //Dlcid = dlc.Dlcid,
+            Dlcid = dlc.Dlcid,
             Name = dlc.Name,
             Price = dlc.Price,
             GameId = dlc.GameId
@@ -76,18 +76,18 @@ namespace VaporAPI.DataAccess
             DeveloperId = game.DeveloperId,
             Image = game.Image,
             Trailer = game.Trailer
-            
+
         };
         public static IEnumerable<Library.Game> Map(IEnumerable<DataAccess.Game> game) => game.Select(Map);
 
         public static List<DataAccess.GameTag> MapTagstoGTs(List<Library.Tag> tags, int gameid)
         {
-            if(tags == null)
+            if (tags == null)
             {
                 return null;
             }
             List<DataAccess.GameTag> newlist = new List<DataAccess.GameTag>();
-            foreach(var item in tags)
+            foreach (var item in tags)
             {
                 DataAccess.GameTag tagitem = new GameTag
                 {
@@ -98,11 +98,11 @@ namespace VaporAPI.DataAccess
             }
             return newlist;
         }
-       
+
         // mapping library class to DB entity
         public static DataAccess.Game Map(Library.Game game) => new DataAccess.Game
         {
-            //GameId = game.GameId,
+            GameId = game.GameId,
             Name = game.Name,
             Price = game.Price,
             Description = game.Description,
@@ -183,6 +183,18 @@ namespace VaporAPI.DataAccess
             //TODO: decide what this case should be
             Score = userGame.Score ?? -1,
             PurchaseDate = userGame.DatePurchased,
+        };
+
+        public static Library.UserDlc Map(DataAccess.UserDlc userdlc) => new Library.UserDlc
+        {
+            User = Mapper.Map(userdlc.UserNameNavigation),
+            Dlc = Mapper.Map(userdlc.Dlc)
+        };
+
+        public static DataAccess.UserDlc Map(Library.UserDlc userdlc) => new DataAccess.UserDlc
+        {
+            UserNameNavigation = Mapper.Map(userdlc.User),
+            Dlc = Mapper.Map(userdlc.Dlc)
         };
 
         public static IEnumerable<Library.UserGame> Map(IEnumerable<DataAccess.UserGame> userGames) => userGames.Select(Map);
