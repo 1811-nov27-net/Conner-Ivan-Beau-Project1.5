@@ -9,9 +9,12 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<form action="Search">
-    <input type="text" placeholder="Search Games..." name="search-games">
-    <input type="submit" value="Search">
+
+<form asp-action="Search">
+    <p>
+        <input type="text" placeholder="Search games..." name="searchString">
+        <input type="submit" value="Search" />
+    </p>
 </form>
 <table class="table">
     <thead>
