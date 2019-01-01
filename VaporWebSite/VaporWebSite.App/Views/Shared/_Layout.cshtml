@@ -15,8 +15,8 @@
     </environment>
     <style>
         body {
-        margin-bottom: 60px;
-        background-image: linear-gradient(to bottom right, #e5e5e5,black);
+            margin-bottom: 60px;
+            background-image: linear-gradient(to bottom right, #e5e5e5,black);
         }
     </style>
 </head>
@@ -24,7 +24,9 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VaporWebSite.App</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Login">
+                    <img src="/../../Vapor.png" alt="Company Logo"/>
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -47,10 +49,10 @@
                         @if (ViewBag.IsAdmin == "true")
                         {
                             <!--
-        <li class="nav-item">
-            <a class="btn btn-outline-secondary text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-        </li>
-            -->
+                            <li class="nav-item">
+                                <a class="btn btn-outline-secondary text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                                -->
                             <li class="nav-item">
                                 <a class="btn btn-outline-secondary text-white" asp-area="" asp-controller="Game" asp-action="Index">Games</a>
                             </li>
