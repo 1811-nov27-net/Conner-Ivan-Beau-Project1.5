@@ -417,6 +417,13 @@ namespace VaporAPI.DataAccess
             return games;
         }
 
+        public List<Library.Game> GetGameBySearchName(string searchString)
+        {
+            List<Game> games = _db.Game.Where(g => g.Name.ToLower().Contains(searchString.ToLower())).ToList();
+            List<Library.Game> gamesLib = Mapper.Map(games).ToList();
+            return gamesLib;
+        }
+
         public ICollection<Library.Game> GetGamesHelper(ICollection<Library.Game> oldGamesLib, int sort = 0)
         {
             //ICollection<Game> oldGames = Mapper.Map(oldGamesLib).ToList();
