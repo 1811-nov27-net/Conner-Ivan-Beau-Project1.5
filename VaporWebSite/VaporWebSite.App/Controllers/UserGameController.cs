@@ -45,7 +45,7 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: UserGame by Searched Name
-        public async Task<ActionResult> Search([FromForm]string searchString)
+        public async Task<ActionResult> Search(string searchString)
         {
             HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game", searchString);
             HttpResponseMessage response = await Client.SendAsync(request);
