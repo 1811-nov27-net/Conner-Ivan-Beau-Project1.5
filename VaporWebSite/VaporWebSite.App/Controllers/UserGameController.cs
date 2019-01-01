@@ -44,6 +44,28 @@ namespace VaporWebSite.App.Controllers
             return View(games);
         }
 
+        // GET: UserGame by Searched Name
+        public async Task<ActionResult> Search(string searchString)
+        {
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game", searchString);
+            HttpResponseMessage response = await Client.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return RedirectToAction("Error", "Home");
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
+
+            return View(games);
+        }
+
         // GET: UserGame/Details/5
         public ActionResult Details(int id)
         {
