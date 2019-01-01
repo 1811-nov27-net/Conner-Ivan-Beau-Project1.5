@@ -57,6 +57,26 @@ namespace VaporAPI.App.Controllers
             return game;
         }
 
+        // GET: api/Game/searchString
+        [HttpGet("{searchString}", Name = "Get")]
+        public ActionResult<Game> Get(string searchString)
+        {
+            Game game;
+            try
+            {
+                game = Repo.GetGameBySearchName(searchString);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+            if (game == null)
+            {
+                return NotFound();
+            }
+        }
+
+
         // POST: api/Game
         [HttpPost]
         public ActionResult Post([FromBody] Game game)
