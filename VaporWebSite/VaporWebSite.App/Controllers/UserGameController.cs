@@ -47,7 +47,7 @@ namespace VaporWebSite.App.Controllers
         // GET: UserGame by Searched Name
         public async Task<ActionResult> Search(string searchString)
         {
-            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game", searchString);
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game/Search", searchString);
             HttpResponseMessage response = await Client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
@@ -65,6 +65,36 @@ namespace VaporWebSite.App.Controllers
 
             return View("Index", games);
         }
+
+        // GET: UserGame by Filtered Results
+        public async Task<ActionResult> Filter(int[] price, int[] rating, int[] devId, int[] tagId)
+        {
+            int[][] storageArray = new int[4][];
+            storageArray[0] = price;
+            storageArray[1] = rating;
+            storageArray[2] = devId;
+            storageArray[3] = tagId;
+
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game/Filter", storageArray);
+            HttpResponseMessage response = await Client.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return RedirectToAction("Error", "Home");
+            }
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
+
+            return View("Index", games);
+        }
+
+
 
         // GET: UserGame/Details/5
         public async Task<ActionResult> Details(int id)
