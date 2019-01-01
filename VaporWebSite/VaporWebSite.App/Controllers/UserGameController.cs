@@ -71,6 +71,8 @@ namespace VaporWebSite.App.Controllers
         {
             HttpRequestMessage request1 = CreateRequest(HttpMethod.Get, $"api/Game/{id}");
             HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/Dlc/Game/{id}");
+
+
             HttpResponseMessage response1 = await Client.SendAsync(request1);
             HttpResponseMessage response2 = await Client.SendAsync(request2);
 

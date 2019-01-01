@@ -59,7 +59,7 @@ namespace VaporAPI.App.Controllers
 
         // GET: api/Game/searchString
         [Route("GetGameSearch")]
-        [HttpGet("{searchString}", Name = "GetGameSearch")]
+        [HttpGet("search/{searchString}", Name = "GetGameSearch")]
         public ActionResult<IEnumerable<Game>> GetGameSearch(string searchString)
         {
             try
