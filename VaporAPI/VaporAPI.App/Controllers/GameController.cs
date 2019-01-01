@@ -59,20 +59,15 @@ namespace VaporAPI.App.Controllers
 
         // GET: api/Game/searchString
         [HttpGet("{searchString}", Name = "Get")]
-        public ActionResult<Game> Get(string searchString)
+        public ActionResult<IEnumerable<Game>> Get(string searchString)
         {
-            Game game;
             try
             {
-                game = Repo.GetGameBySearchName(searchString);
+                return Repo.GetGameBySearchName(searchString);
             }
             catch (Exception)
             {
                 return StatusCode(500);
-            }
-            if (game == null)
-            {
-                return NotFound();
             }
         }
 
