@@ -44,6 +44,9 @@ namespace VaporAPI.Library
         ICollection<Game> GetGames(int sort = 0);
         ICollection<Game> GetBetweenPriceGames(decimal lowPrice, decimal highPrice);
         ICollection<Library.Game> GetBetweenRatingsGames(int lowRating, int highRating);
+        ICollection<Library.Game> GetGamesByDeveloper(params int[] devIds);
+        ICollection<Library.Game> GetGamesByTags(params int[] tagIds);
+        ICollection<Library.Game> FilterGames(params ICollection<Library.Game>[] gamesToFilter);
         ICollection<Library.Game> GetGamesHelper(ICollection<Game> oldGames, int sort = 0);
         decimal AverageScoreGame(Library.Game game);
 
