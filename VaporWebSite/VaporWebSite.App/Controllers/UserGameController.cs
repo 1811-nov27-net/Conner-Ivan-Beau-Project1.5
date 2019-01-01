@@ -45,7 +45,7 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: UserGame by Searched Name
-        public async Task<ActionResult> Search(string searchString)
+        public async Task<ActionResult> Search([FromForm]string searchString)
         {
             HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game", searchString);
             HttpResponseMessage response = await Client.SendAsync(request);
@@ -63,7 +63,7 @@ namespace VaporWebSite.App.Controllers
 
             List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
 
-            return View(games);
+            return View("Index", games);
         }
 
         // GET: UserGame/Details/5
@@ -90,7 +90,7 @@ namespace VaporWebSite.App.Controllers
             Game game = JsonConvert.DeserializeObject<Game>(responseBody1);
             List<Dlc> dlcs = JsonConvert.DeserializeObject<List<Dlc>>(responseBody2);
 
-            return View(new FullUserGame { Game = game, Dlcs = dlcs })
+            return View(new FullUserGame { Game = game, Dlcs = dlcs });
         }
 
         // GET: UserGame/Create
