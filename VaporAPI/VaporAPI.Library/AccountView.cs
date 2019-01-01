@@ -12,5 +12,7 @@ namespace VaporAPI.Library
 
         [Required]
         public string Password { get; set; }
+
+        public bool admin { get; set; }
     }
 }

@@ -23,6 +23,14 @@ namespace VaporWebSite.App.Filters
                     controller.ViewBag.LoggedInUser = "";
                 }
                 controller.ViewBag.LoggedInUser = await response.Content.ReadAsStringAsync();
+                HttpRequestMessage request2 = controller.CreateRequest(HttpMethod.Get, "api/account/userisadmin");
+                HttpResponseMessage response2 = await controller.Client.SendAsync(request2);
+
+                if (!response2.IsSuccessStatusCode)
+                {
+                    controller.ViewBag.IsAdmin = "";
+                }
+                controller.ViewBag.IsAdmin = await response2.Content.ReadAsStringAsync();
             }
             var resultContext = await next();
         }

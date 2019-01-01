@@ -49,8 +49,10 @@ namespace VaporAPI.App.Controllers
         [HttpPost]
         public async Task<ActionResult> Register(AccountView account,
             [FromServices] UserManager<IdentityUser> userManager,
-            [FromServices] RoleManager<IdentityRole> roleManager, bool admin = false)
+            [FromServices] RoleManager<IdentityRole> roleManager)
         {
+
+            bool admin = account.admin;
 
             //TODO:insert logic for our repo here - An AddUser statement
             var user = new IdentityUser(account.UserName);
@@ -106,6 +108,12 @@ namespace VaporAPI.App.Controllers
             return User.Identity.Name;
         }
 
+        [HttpGet]
+        [Authorize]
+        public bool UserIsAdmin()
+        {
+            return User.IsInRole("admin");
+        }
 
     }
 }

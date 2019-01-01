@@ -22,6 +22,14 @@
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+
+            <label asp-for="Admin" class="control-label"></label>
+                        <input type="checkbox" asp-for="Admin" />
+                        <label asp-for="Admin"> Admin </label>
+            <span asp-validation-for="Admin" class="text-danger"></span>
+
+
+
             <div class="form-group">
                 <input type="submit" value="RegisterInput" class="btn btn-primary" />
             </div>

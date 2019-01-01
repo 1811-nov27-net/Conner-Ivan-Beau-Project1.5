@@ -15,5 +15,7 @@ namespace VaporWebSite.App.Models
         [DataType(DataType.Password)]
         [StringLength(100, MinimumLength = 6)]
         public string Password { get; set; }
+
+        public bool Admin { get; set; }
     }
 }
