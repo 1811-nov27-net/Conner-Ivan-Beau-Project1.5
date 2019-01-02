@@ -9,7 +9,31 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+
+
+@foreach (var item in Model)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md bg-dark text-white text-xl-center">
+                @Html.DisplayNameFor(model => model.TagId) : @Html.DisplayFor(modelItem => item.TagId)
+          
+            </div>
+            <div class="col-md bg-dark text-white text-xl-center">
+                @Html.DisplayFor(modelItem => item.Name)
+            </div>
+            <div class="col-md bg-dark text-white text-xl-center">
+                @Html.ActionLink("Edit", "Edit", new { id = item.TagId })
+                &emsp;
+                @Html.ActionLink("Details", "Details", new { id = item.TagId })
+                &emsp;
+                @Html.ActionLink("Delete", "Delete", new { id = item.TagId })
+            </div>
+        </div>
+    </div>
+}
+
+@*<table class="table">
     <thead>
         <tr>
             <th>
@@ -38,4 +62,4 @@
         </tr>
 }
     </tbody>
-</table>
+</table>*@

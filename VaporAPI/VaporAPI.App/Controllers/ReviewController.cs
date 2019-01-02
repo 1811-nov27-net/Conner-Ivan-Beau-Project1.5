@@ -28,7 +28,7 @@ namespace VaporAPI.App.Controllers
         //}
 
         // GET: api/Review/5
-        [HttpGet("User/{UserName}", Name = "GetReviews")]
+        [HttpGet("{UserName}", Name = "GetReviews")]
         public ActionResult<ICollection<UserGame>> GetUser(string username)
         {
             ICollection<UserGame> review;
