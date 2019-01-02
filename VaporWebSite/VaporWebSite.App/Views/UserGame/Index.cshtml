@@ -18,7 +18,7 @@
     </p>
 </form>
 
-<form asp-action="Filter" method="get" name="Filter" onsubmit="return(validateFilterForm());">
+<form asp-action="Filter" >
     <table class="table" cellspacing="2" cellpadding="2" border="1">
         <thead>
             <tr>
@@ -39,7 +39,7 @@
         <tbody>
             <tr>
                 <td>
-                    Minimum Price: <select name="lowPrice" form="Filter">
+                    Minimum Price: <select name="lowPrice" >
                         <option value="0" selected="selected">$0</option>
                         <option value="10">$10</option>
                         <option value="20">$20</option>
@@ -52,7 +52,7 @@
                         <option value="90">$90</option>
                     </select>
                     <br />
-                    Maximum Price: <select name="highPrice" form="Filter">
+                    Maximum Price: <select name="highPrice" >
                         <option value="10">$10</option>
                         <option value="20">$20</option>
                         <option value="30">$30</option>
@@ -67,7 +67,7 @@
                 </td>
 
                 <td>
-                    Minimum Rating: <select name="lowRating" form="Filter">
+                    Minimum Rating: <select name="lowRating" >
                         <option value="0" selected="selected">0 stars</option>
                         <option value="1">1 star</option>
                         <option value="2">2 stars</option>
@@ -80,7 +80,7 @@
                         <option value="9">9 stars</option>
                     </select>
                     <br />
-                    Maximum Rating: <select name="highRating" form="Filter">
+                    Maximum Rating: <select name="highRating" >
                         <option value="1">1 star</option>
                         <option value="2">2 stars</option>
                         <option value="3">3 stars </option>
@@ -94,23 +94,23 @@
                     </select>
                 </td>
                 <td>
-                    <input type="checkbox" form="Filter" id="bethesda" name="devId" value="2" />Bethesda<br>
-                    <input type="checkbox" form="Filter" id="bioware" name="devId" value="3" />Bioware<br>
-                    <input type="checkbox" form="Filter" id="fromsoftware" name="devId" value="4" />FromSoftware<br>
-                    <input type="checkbox" form="Filter" id="rockstar" name="devId" value="5" />Rockstar<br>
+                    <input type="checkbox"  id="bethesda" name="devId" value="2" />Bethesda<br>
+                    <input type="checkbox"  id="bioware" name="devId" value="3" />Bioware<br>
+                    <input type="checkbox"  id="fromsoftware" name="devId" value="4" />FromSoftware<br>
+                    <input type="checkbox"  id="rockstar" name="devId" value="5" />Rockstar<br>
                 </td>
 
                 <td>
-                    <input type="checkbox" form="Filter" id="action" name="tagId" value="1" />Action<br>
-                    <input type="checkbox" form="Filter" id="rpg" name="tagId" value="2" />Role-Playing<br>
-                    <input type="checkbox" form="Filter" id="twodimensional" name="tagId" value="3" />2-Dimensional<br>
-                    <input type="checkbox" form="Filter" id="roguelike" name="tagId" value="4" />Roguelike<br>
-                    <input type="checkbox" form="Filter" id="adventure" name="tagId" value="5" />Adventure<br>
-                    <input type="checkbox" form="Filter" id="fantasy" name="tagId" value="6" />Fantasy<br>
-                    <input type="checkbox" form="Filter" id="sports" name="tagId" value="7" />Sports<br>
-                    <input type="checkbox" form="Filter" id="simulation" name="tagId" value="8" />Simulation<br>
-                    <input type="checkbox" form="Filter" id="horror" name="tagId" value="9" />Horror<br>
-                    <input type="checkbox" form="Filter" id="alien" name="tagId" value="10" />Alien<br>
+                    <input type="checkbox"  id="action" name="tagId" value="1" />Action<br>
+                    <input type="checkbox"  id="rpg" name="tagId" value="2" />Role-Playing<br>
+                    <input type="checkbox"  id="twodimensional" name="tagId" value="3" />2-Dimensional<br>
+                    <input type="checkbox"  id="roguelike" name="tagId" value="4" />Roguelike<br>
+                    <input type="checkbox"  id="adventure" name="tagId" value="5" />Adventure<br>
+                    <input type="checkbox"  id="fantasy" name="tagId" value="6" />Fantasy<br>
+                    <input type="checkbox"  id="sports" name="tagId" value="7" />Sports<br>
+                    <input type="checkbox"  id="simulation" name="tagId" value="8" />Simulation<br>
+                    <input type="checkbox"  id="horror" name="tagId" value="9" />Horror<br>
+                    <input type="checkbox"  id="alien" name="tagId" value="10" />Alien<br>
                 </td>
             </tr>
         </tbody>

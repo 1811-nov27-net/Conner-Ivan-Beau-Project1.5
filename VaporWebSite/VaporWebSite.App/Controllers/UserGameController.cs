@@ -40,7 +40,7 @@ namespace VaporWebSite.App.Controllers
 
 
             List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
-            
+
             return View(games);
         }
 
@@ -67,7 +67,7 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: UserGame by Filtered Results
-        public async Task<ActionResult> Filter(string lowPrice, string highPrice, string lowRating, string highRating, int[] devId, int[] tagId)
+        public async Task<ActionResult> Filter([FromForm]string lowPrice, [FromForm]string highPrice, [FromForm]string lowRating, [FromForm]string highRating, [FromForm]int[] devId, [FromForm]int[] tagId)
         {
             bool parseLP = int.TryParse(lowPrice, out int lowPriceInt);
             bool parseHP = int.TryParse(highPrice, out int highPriceInt);
