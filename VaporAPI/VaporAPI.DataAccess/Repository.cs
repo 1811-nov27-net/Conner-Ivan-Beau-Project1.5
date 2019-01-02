@@ -99,7 +99,7 @@ namespace VaporAPI.DataAccess
                 usergame.Score = review.Score;
                 usergame.Review = review.Review;
                 _db.Entry(_db.UserGame.Find(usergame.GameId, usergame.UserName)).CurrentValues.SetValues(usergame);
-               // _db.UserGame.Update(usergame);
+                // _db.UserGame.Update(usergame);
                 _db.SaveChanges();
                 return success;
             }
@@ -150,7 +150,7 @@ namespace VaporAPI.DataAccess
         {
             try
             {
-                if(_db.Game.Find(userGame.Game.GameId) == null || _db.User.Find(userGame.User.UserName) == null)
+                if (_db.Game.Find(userGame.Game.GameId) == null || _db.User.Find(userGame.User.UserName) == null)
                 {
                     return false;
                 }
@@ -231,7 +231,7 @@ namespace VaporAPI.DataAccess
                 _db.UserDlc.Remove(_db.UserDlc.First(a => a.UserName == username && a.Dlcid == id));
                 return true;
             }
-            catch 
+            catch
             {
 
                 return false;
@@ -292,7 +292,7 @@ namespace VaporAPI.DataAccess
         /// </summary>
         /// <param name="review"></param>
         /// <returns></returns>
-         
+
         public bool DeleteReview(Library.UserGame review)
         {
             DataAccess.UserGame ug = _db.UserGame.Where(a => a.UserName == review.User.UserName && a.GameId == review.Game.GameId).First();
@@ -302,7 +302,7 @@ namespace VaporAPI.DataAccess
                 ug.Review = null;//review.Review;
 
                 _db.Entry(_db.UserGame.Find(ug.UserName, ug.GameId)).CurrentValues.SetValues(ug);
-               // _db.UserGame.Update(ug);
+                // _db.UserGame.Update(ug);
                 _db.SaveChanges();
                 return true;
             }
@@ -371,7 +371,7 @@ namespace VaporAPI.DataAccess
         {
             List<Library.Tag> tags = new List<Library.Tag>();
             Game game = _db.Game.Include("GameTag.Tag").First(a => a.GameId == id);
-            foreach(var t in game.GameTag)
+            foreach (var t in game.GameTag)
             {
                 tags.Add(Mapper.Map(t.Tag));
             }
@@ -382,21 +382,6 @@ namespace VaporAPI.DataAccess
         {
             ICollection<DataAccess.Dlc> dlcs = _db.Dlc.Where(a => a.GameId == gameid).ToList();
             return dlcs == null ? null : Mapper.Map(dlcs).ToList();
-        }
-
-        public ICollection<Library.Game> GetBetweenPriceGames(int[] price)
-        {
-            List<Library.Game> games = new List<Library.Game>();
-            foreach (var item in price)
-            {
-                List<Game> gamesToAdd = _db.Game.Where(g => g.Price >= item && g.Price < (item + 10)).ToList();
-                IEnumerable<Library.Game> gamesToAddLib = Mapper.Map(gamesToAdd);
-                foreach (var ele in gamesToAddLib)
-                {
-                    games.Add(ele);
-                }
-            }
-            return games;
         }
 
         public decimal AverageScoreGame(Library.Game game)
@@ -422,19 +407,27 @@ namespace VaporAPI.DataAccess
             return (sum / scores.Length);
         }
 
+        public ICollection<Library.Game> GetBetweenPriceGames(int[] price)
+        {
+            int lowPrice = price[0];
+            int highPrice = price[1];
+            List<Game> gamesToAdd = _db.Game.Where(g => g.Price >= lowPrice && g.Price <= highPrice).ToList();
+            List<Library.Game> games = Mapper.Map(gamesToAdd).ToList();
+            return games;
+        }
+
         public ICollection<Library.Game> GetBetweenRatingsGames(int[] rating)
         {
+            int lowRating = rating[0];
+            int highRating = rating[1];
+            List<IGrouping<int, UserGame>> Scores = _db.UserGame.GroupBy(ug => ug.GameId).Where(ug => ug.Average(x => x.Score) >= lowRating && ug.Average(x => x.Score) <= highRating).ToList();
+            List<UserGame> userGamesToAdd = Scores.SelectMany(g => g).ToList(); // parses out the UserGames from the grouping
             List<Library.Game> games = new List<Library.Game>();
-            foreach (var item in rating)
+            foreach (var ele in userGamesToAdd)
             {
-                List<IGrouping<int, UserGame>> Scores = _db.UserGame.GroupBy(ug => ug.GameId).Where(ug => ug.Average(x => x.Score) >= item && ug.Average(x => x.Score) < (item + 1)).ToList();
-                List<UserGame> userGamesToAdd = Scores.SelectMany(g => g).ToList(); // parses out the UserGames from the grouping
-                foreach (var ele in userGamesToAdd)
-                {
-                    Game gameToAdd = _db.Game.Where(g => g.GameId == ele.GameId).FirstOrDefault();
-                    Library.Game gameToAddLib = Mapper.Map(gameToAdd);
-                    games.Add(gameToAddLib);
-                }
+                Game gameToAdd = _db.Game.Where(g => g.GameId == ele.GameId).FirstOrDefault();
+                Library.Game gameToAddLib = Mapper.Map(gameToAdd);
+                games.Add(gameToAddLib);
             }
             return games;
         }
@@ -562,24 +555,24 @@ namespace VaporAPI.DataAccess
 
         public ICollection<Library.UserGame> GetReviewsHelper(ICollection<Library.UserGame> oldUserGamesLib, int sort = 0)
         {
-            ICollection<UserGame> oldUserGames = (ICollection<UserGame>) Mapper.Map(oldUserGamesLib);
+            ICollection<UserGame> oldUserGames = (ICollection<UserGame>)Mapper.Map(oldUserGamesLib);
             switch (sort)
             {
                 // case 0 sorts by gameID
                 case 0:
                     ICollection<UserGame> userGames0 = oldUserGames.OrderBy(ug => ug.GameId).ToList();
                     return userGames0 == null ? null : Mapper.Map(userGames0).ToList();
-                
+
                 // case 1 sorts by username
                 case 1:
                     ICollection<UserGame> userGames1 = oldUserGames.OrderBy(ug => ug.UserName).ToList();
                     return userGames1 == null ? null : Mapper.Map(userGames1).ToList();
-               
+
                 // case 2 sprts by username descending
                 case 2:
                     ICollection<UserGame> userGames2 = oldUserGames.OrderByDescending(ug => ug.UserName).ToList();
                     return userGames2 == null ? null : Mapper.Map(userGames2).ToList();
-                
+
                 // case 3 sorts by score
                 case 3:
                     ICollection<UserGame> userGames3 = oldUserGames.OrderBy(ug => ug.Score).ToList();
@@ -647,7 +640,7 @@ namespace VaporAPI.DataAccess
         {
             //shouldn't ever be multiple elements returned
             DataAccess.UserGame ug = _db.UserGame.Where(a => a.UserName == username && a.GameId == gameid).First();
-            if(ug == null)
+            if (ug == null)
             {
                 return null;
             }
@@ -659,12 +652,12 @@ namespace VaporAPI.DataAccess
         public ICollection<Library.UserGame> GetUserGames(string username)
         {
             ICollection<DataAccess.UserGame> ugs = _db.UserGame.Include("Game").Include("UserNameNavigation").Where(a => a.UserName == username).ToList();
-            if(ugs == null)
+            if (ugs == null)
             {
                 return null;
             }
-            ICollection<Library.UserGame> libugs =  Mapper.Map(ugs).ToList();
-            
+            ICollection<Library.UserGame> libugs = Mapper.Map(ugs).ToList();
+
             foreach (var ug in libugs)
             {
                 ug.Game.Tags = GetGameTags(ug.Game.GameId);
@@ -768,7 +761,7 @@ namespace VaporAPI.DataAccess
             {
                 Game gameDB = Mapper.Map(game);
                 _db.Entry(_db.Game.Find(gameDB.GameId)).CurrentValues.SetValues(gameDB);
-               // _db.Update(gameDB);
+                // _db.Update(gameDB);
                 _db.SaveChanges();
                 return success;
             }
@@ -800,7 +793,7 @@ namespace VaporAPI.DataAccess
             {
                 User userDB = Mapper.Map(user);
                 _db.Entry(_db.User.Find(userDB.UserName)).CurrentValues.SetValues(userDB);
-               // _db.Update(userDB);
+                // _db.Update(userDB);
                 _db.SaveChanges();
                 return success;
             }
