@@ -126,15 +126,34 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: UserGame/Create
-        public ActionResult Purchase(int id)
+        public async Task<ActionResult> Purchase(int id)
         {
             //var cookies = Request.Cookies.Keys;
             //var request = Request.Cookies["ApiAuth"];
-            if(ViewBag.LoggedInUser == "")
+            string username = ViewBag.LoggedInUser;
+            if(username == "")
             {
                 return RedirectToAction("Login", "Account");
             }
-            return View(new UserGame { Game = new Game { GameId = id} });
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Game/{id}");
+            HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/User/{username}");
+
+            HttpResponseMessage response = await Client.SendAsync(request);
+            HttpResponseMessage response2 = await Client.SendAsync(request2);
+
+            if (!response.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized || response2.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return RedirectToAction("Error", "Home");
+
+            }
+            string resString = await response.Content.ReadAsStringAsync();
+            string resString2 = await response2.Content.ReadAsStringAsync();
+
+            return View(new UserGame { PurchaseDate = DateTime.Now,Game = JsonConvert.DeserializeObject<Game>(resString), User = JsonConvert.DeserializeObject<User>(resString2) });
         }
 
         // POST: UserGame/Create
@@ -150,9 +169,13 @@ namespace VaporWebSite.App.Controllers
                 var username = ViewBag.LoggedInUser;
 
                 HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"api/User/{username}/Library/{gameid}", purchaseDate);
-                HttpResponseMessage response = await Client.SendAsync(request);
+                HttpRequestMessage request2 = CreateRequest(HttpMethod.Patch, $"api/User/{username}/Wallet", userGame.User.Wallet);
 
-                if (!response.IsSuccessStatusCode)
+                HttpResponseMessage response = await Client.SendAsync(request);
+                HttpResponseMessage response2 = await Client.SendAsync(request2);
+
+
+                if (!response.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
                 {
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {

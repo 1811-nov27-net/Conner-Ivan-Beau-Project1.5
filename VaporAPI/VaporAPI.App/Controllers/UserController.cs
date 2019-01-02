@@ -262,6 +262,35 @@ namespace VaporAPI.App.Controllers
 
             return NoContent();
         }
+        [HttpPatch("{username}/Wallet")]
+        public ActionResult Patch(string username, [FromBody]decimal wallet)
+        {
+            User user;
+            try
+            {
+                user = Repo.GetUser(username);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+            if (user == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                user.Wallet = wallet;
+                Repo.UpdateUser(user);
+            }
+            catch (Exception ex)
+            {
+                // internal server error
+                return StatusCode(500);
+            }
+
+            return NoContent();
+        }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{UserName}")]
