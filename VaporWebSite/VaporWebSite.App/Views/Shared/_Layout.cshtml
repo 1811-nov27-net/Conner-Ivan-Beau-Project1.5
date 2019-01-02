@@ -25,7 +25,7 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Login">
-                    <img src="/../../Vapor.png" alt="Company Logo"/>
+                    <img src="/../../Vapor.png" alt="Company Logo" />
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,9 @@
                         @if (ViewBag.IsAdmin != null && ViewBag.IsAdmin != "")
                         {
                             <li class="nav-item">
+                                <a class="btn btn-outline-secondary text-white" asp-area="" asp-controller="User" asp-action="Edit">@ViewBag.LoggedInUser</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="btn btn-outline-secondary text-white" asp-area="" asp-controller="Library" asp-action="Index">Library</a>
                             </li>
                             <li class="nav-item">
@@ -49,10 +52,10 @@
                         @if (ViewBag.IsAdmin == "true")
                         {
                             <!--
-                            <li class="nav-item">
-                                <a class="btn btn-outline-secondary text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                                -->
+        <li class="nav-item">
+            <a class="btn btn-outline-secondary text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+            -->
                             <li class="nav-item">
                                 <a class="btn btn-outline-secondary text-white" asp-area="" asp-controller="Game" asp-action="Index">Games</a>
                             </li>
@@ -80,11 +83,13 @@
         </main>
     </div>
 
-    <footer class="border-bottom footer text-muted bg-dark">
-        <div class="container">
-            &copy; 2018 - VaporWebSite.App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    @*
+        <footer class="border-bottom footer text-muted bg-dark">
+            <div class="container">
+                &copy; 2018 - VaporWebSite.App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+    *@
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using VaporWebSite.App.Models;
 
 namespace VaporWebSite.App.Controllers
 {
-    public class UserController : Controller
+    public class UserController : ARequestController
     {
-        // GET: User
-        public ActionResult Index()
+
+        public UserController(HttpClient client) : base(client)
         {
-            return View();
+            //nothing to do
         }
 
-        // GET: User/Details/5
-        public ActionResult Details(int id)
+        // GET: User
+        public ActionResult Index()
         {
             return View();
         }
@@ -45,21 +49,47 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: User/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit()
         {
-            return View();
+            string username = ViewBag.LoggedInUser;
+            if (username == "")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/User/{username}");
+            HttpResponseMessage response = await Client.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return RedirectToAction("Error", "Home");
+
+            }
+            string resString = await response.Content.ReadAsStringAsync();
+            return View(JsonConvert.DeserializeObject<User>(resString));
         }
 
         // POST: User/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(string username, User user)
         {
             try
             {
-                // TODO: Add update logic here
+                HttpRequestMessage request = CreateRequest(HttpMethod.Put, $"api/User/{username}", user);
+                HttpResponseMessage response = await Client.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return RedirectToAction("Login", "Account");
+                    }
+                    return View();
+                }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit));
             }
             catch
             {

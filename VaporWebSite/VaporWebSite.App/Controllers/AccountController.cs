@@ -114,7 +114,7 @@ namespace VaporWebSite.App.Controllers
                     return View("Error");
                 }
                 //succeeded
-                return RedirectToAction("Account", "Login");
+                return RedirectToAction("Login");
 
             }
             catch (Exception)
