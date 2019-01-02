@@ -47,7 +47,7 @@ namespace VaporWebSite.App.Controllers
         // GET: UserGame by Searched Name
         public async Task<ActionResult> Search(string searchString)
         {
-            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game", searchString);
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Game/Search/{searchString}");
             HttpResponseMessage response = await Client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
@@ -65,6 +65,58 @@ namespace VaporWebSite.App.Controllers
 
             return View("Index", games);
         }
+
+        // GET: UserGame by Filtered Results
+        public async Task<ActionResult> Filter(string lowPrice, string highPrice, string lowRating, string highRating, int[] devId, int[] tagId)
+        {
+            bool parseLP = int.TryParse(lowPrice, out int lowPriceInt);
+            bool parseHP = int.TryParse(highPrice, out int highPriceInt);
+            bool parseLR = int.TryParse(lowRating, out int lowRatingInt);
+            bool parseHR = int.TryParse(highRating, out int highRatingInt);
+
+            if (parseLP == false || parseHP == false || parseLR == false || parseHR == false)
+            {
+                return RedirectToAction("Index");
+            }
+            else // all TryParse methods worked
+            {
+                // building one object that can transport data to API
+                int[] priceArray = new int[2];
+                priceArray[0] = lowPriceInt;
+                priceArray[1] = highPriceInt;
+
+                int[] ratingArray = new int[2];
+                ratingArray[0] = lowRatingInt;
+                ratingArray[1] = highRatingInt;
+
+                int[][] storageArray = new int[4][];
+                storageArray[0] = priceArray;
+                storageArray[1] = ratingArray;
+                storageArray[2] = devId;
+                storageArray[3] = tagId;
+
+                // building request to send to API
+                HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game/Filter", storageArray);
+                HttpResponseMessage response = await Client.SendAsync(request);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return RedirectToAction("Login", "Account");
+                    }
+                    return RedirectToAction("Error", "Home");
+                }
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
+
+                return View("Index", games);
+            }
+        }
+
+
 
         // GET: UserGame/Details/5
         public async Task<ActionResult> Details(int id)

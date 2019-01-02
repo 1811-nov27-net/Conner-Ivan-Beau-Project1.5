@@ -22,17 +22,20 @@
                 <input asp-for="Password" class="form-control bg-secondary text-white" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <div>
-                dont have an account:
-            </div>
+            
             <div class="form-group">
-             
-                    <a class="btn btn-outline-light" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
-                    @*don't have an account @Html.ActionLink("Register here", "Register")*@
-                </div>
+
+
                 <div class="form-group">
                     <input type="submit" value="Login" class="btn btn-outline-light" />
                 </div>
+
+                <div>
+                    dont have an account:
+                </div>
+                <a class="btn btn-outline-light" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                @*don't have an account @Html.ActionLink("Register here", "Register")*@
+            </div>
 </form>
     </div>
 </div>

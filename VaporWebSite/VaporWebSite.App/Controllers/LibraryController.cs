@@ -57,9 +57,35 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: Library/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(string username)
         {
-            return View();
+            if (username == "")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Review/{username}");
+            HttpResponseMessage response = await Client.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                return RedirectToAction("Error", "Home");
+            }
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            List<UserGame> userGames = new List<UserGame>();
+            try
+            {
+                userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return View(userGames);
         }
 
         // GET: Library/Create
