@@ -384,11 +384,19 @@ namespace VaporAPI.DataAccess
             return dlcs == null ? null : Mapper.Map(dlcs).ToList();
         }
 
-        public ICollection<Library.Game> GetBetweenPriceGames(decimal lowPrice = 0, decimal highPrice = 1000)
+        public ICollection<Library.Game> GetBetweenPriceGames(int[] price)
         {
-            ICollection<Game> games = _db.Game.Where(a => a.Price >= lowPrice && a.Price <= highPrice).ToList();
-            ICollection<Library.Game> gamesLib = (ICollection<Library.Game>)Mapper.Map(games);
-            return GetGamesHelper(gamesLib, 2);
+            List<Library.Game> games = new List<Library.Game>();
+            foreach (var item in price)
+            {
+                List<Game> gamesToAdd = _db.Game.Where(g => g.Price >= item && g.Price < (item + 10)).ToList();
+                IEnumerable<Library.Game> gamesToAddLib = Mapper.Map(gamesToAdd);
+                foreach (var ele in gamesToAddLib)
+                {
+                    games.Add(ele);
+                }
+            }
+            return games;
         }
 
         public decimal AverageScoreGame(Library.Game game)
@@ -414,19 +422,21 @@ namespace VaporAPI.DataAccess
             return (sum / scores.Length);
         }
 
-        // If you know a better way, let me know and we can fix
-        public ICollection<Library.Game> GetBetweenRatingsGames(int lowRating = 0, int highRating = 10)
+        public ICollection<Library.Game> GetBetweenRatingsGames(int[] rating)
         {
-            List<IGrouping<int, UserGame>> Scores = _db.UserGame.GroupBy(ug => ug.GameId).Where(ug => ug.Average(x => x.Score) <= highRating && ug.Average(x => x.Score) >= lowRating).ToList();
-            List<UserGame> userGames = Scores.SelectMany(g => g).ToList();
-            List<Library.Game> gamesLib = new List<Library.Game>();
-            foreach (var item in userGames)
+            List<Library.Game> games = new List<Library.Game>();
+            foreach (var item in rating)
             {
-                Game game = _db.Game.Where(g => g.GameId == item.GameId).FirstOrDefault();
-                Library.Game gameLib = Mapper.Map(game);
-                gamesLib.Add(gameLib);
+                List<IGrouping<int, UserGame>> Scores = _db.UserGame.GroupBy(ug => ug.GameId).Where(ug => ug.Average(x => x.Score) >= item && ug.Average(x => x.Score) < (item + 1)).ToList();
+                List<UserGame> userGamesToAdd = Scores.SelectMany(g => g).ToList(); // parses out the UserGames from the grouping
+                foreach (var ele in userGamesToAdd)
+                {
+                    Game gameToAdd = _db.Game.Where(g => g.GameId == ele.GameId).FirstOrDefault();
+                    Library.Game gameToAddLib = Mapper.Map(gameToAdd);
+                    games.Add(gameToAddLib);
+                }
             }
-            return gamesLib;
+            return games;
         }
 
         public ICollection<Library.Game> GetGamesByDeveloper(params int[] devIds)
