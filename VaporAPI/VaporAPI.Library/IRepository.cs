@@ -43,7 +43,7 @@ namespace VaporAPI.Library
         Game GetGame(int id);
         ICollection<Game> GetGames(int sort = 0);
         ICollection<Game> GetBetweenPriceGames(int[] price);
-        ICollection<Library.Game> GetBetweenRatingsGames(int lowRating, int highRating);
+        ICollection<Library.Game> GetBetweenRatingsGames(int[] rating);
         ICollection<Library.Game> GetGamesByDeveloper(params int[] devIds);
         ICollection<Library.Game> GetGamesByTags(params int[] tagIds);
         ICollection<Library.Game> FilterGames(params ICollection<Library.Game>[] gamesToFilter);
