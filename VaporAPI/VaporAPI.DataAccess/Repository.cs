@@ -606,12 +606,15 @@ namespace VaporAPI.DataAccess
         }
         public Library.UserGame GetReviewByUserGame(string username, int id)
         {
-            UserGame usergame = _db.UserGame.Include("Game").Include("UserNameNavigation").Where(ug => ug.UserName == username && ug.GameId == id).First();
+            //var tags = _db.Tag.Include(t => t.TagId).ThenInclude(t => t.)
+            var usergame = _db.UserGame.Include(g => g.Game).Include("UserNameNavigation").Where(ug => ug.UserName == username && ug.GameId == id).First();
             if(usergame == null)
             {
                 return null;
             }
+            
             Library.UserGame libusergame = Mapper.Map(usergame);
+            libusergame.Game.Tags = GetGameTags(libusergame.Game.GameId);
             return libusergame;
         }
     
