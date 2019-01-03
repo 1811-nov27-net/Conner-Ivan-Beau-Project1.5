@@ -10,7 +10,7 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-<table class="table">
+<table class="table table-striped table-dark">
     <thead>
         <tr>
             <th>
@@ -40,34 +40,59 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GameId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DeveloperId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Image)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Trailer)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.GameId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.GameId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.GameId })
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeveloperId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Image)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Trailer)
+            </td>
+            <td>
+                <table>
+                    <thead>
+                        <tr>
+
+                            <form asp-action="Edit">
+                                <input type="hidden" name="id" value="@item.GameId" />
+                                <input type="submit" class="btn btn-outline-secondary text-white" value="Edit" />
+                            </form>
+                        </tr>
+                        <tr>
+                            <form asp-action="Details">
+                                <input type="hidden" name="id" value="@item.GameId" />
+                                <input type="submit" class="btn btn-outline-secondary text-white" value="Details" />
+                            </form>
+                        </tr>
+                        <tr>
+                            <form asp-action="Delete">
+                                <input type="hidden" name="id" value="@item.GameId" />
+                                <input type="submit" class="btn btn-outline-secondary text-white" value="Delete" />
+                            </form>
+                        </tr>
+                    </thead>
+                </table>
+            </td>
+            @*<td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.GameId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.GameId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.GameId })
+            </td>*@
+        </tr>
         }
     </tbody>
 </table>
