@@ -43,28 +43,9 @@
                 @Html.DisplayFor(modelItem => item.Website)
             </td>
             <td>
-                <table>
-                    <thead>
-                        <tr>
-
-                            <form asp-action="Edit">
-                                <input type="hidden" name="id" value="@item.DeveloperId" />
-                                <input type="submit" class="btn btn-outline-secondary text-white" value="Edit" />
-                            </form>
-                        </tr>
-                        <tr>
-                            <form asp-action="Delete">
-                                <input type="hidden" name="id" value="@item.DeveloperId" />
-                                <input type="submit" class="btn btn-outline-secondary text-white" value="Delete" />
-                            </form>
-                        </tr>
-                    </thead>
-                </table>
-            </td>
-            @*<td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.DeveloperId }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.DeveloperId })
-            </td>*@
+            </td>
         </tr>
 }
     </tbody>
