@@ -17,13 +17,18 @@
         <form asp-action="Purchase">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Dlc" class="control-label"></label>
-                <input asp-for="Dlc.Dlcid" class="form-control" readonly="readonly" />
+                <input asp-for="Dlc.Dlcid" class="form-control" hidden />
                 <span asp-validation-for="Dlc.Dlcid" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Dlc" class="control-label"></label>
+                <label asp-for="Dlc.Name" class="control-label"></label>
+                <input asp-for="Dlc.Name" class="form-control" readonly="readonly" />
+                <span asp-validation-for="Dlc.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Dlc.Price" class="control-label"></label>
                 <input asp-for="Dlc.Price" class="form-control" id="game-price" readonly="readonly" />
                 <span asp-validation-for="Dlc.Price" class="text-danger"></span>
             </div>
