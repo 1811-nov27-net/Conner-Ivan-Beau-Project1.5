@@ -449,12 +449,16 @@ namespace VaporAPI.DataAccess
             int highRating = rating[1];
             List<IGrouping<int, UserGame>> Scores = _db.UserGame.GroupBy(ug => ug.GameId).Where(ug => ug.Average(x => x.Score) >= lowRating && ug.Average(x => x.Score) <= highRating).ToList();
             List<UserGame> userGamesToAdd = Scores.SelectMany(g => g).ToList(); // parses out the UserGames from the grouping
-            List<Library.Game> games = new List<Library.Game>();
+            HashSet<int> gameIds = new HashSet<int>();
             foreach (var ele in userGamesToAdd)
             {
-                Game gameToAdd = _db.Game.Where(g => g.GameId == ele.GameId).FirstOrDefault();
-                Library.Game gameToAddLib = Mapper.Map(gameToAdd);
-                games.Add(gameToAddLib);
+                gameIds.Add(ele.GameId);
+            }
+            List<int> gameIdsList = gameIds.ToList();
+            List<Library.Game> games = new List<Library.Game>();
+            foreach (var unit in gameIdsList)
+            {
+                games.Add(Mapper.Map(_db.Game.Where(g => g.GameId == unit).FirstOrDefault()));
             }
             return games;
         }
@@ -477,40 +481,71 @@ namespace VaporAPI.DataAccess
 
         public ICollection<Library.Game> GetGamesByTags(params int[] tagIds)
         {
-            List<Library.Game> games = new List<Library.Game>();
+            HashSet<Game> gamesSet = new HashSet<Game>();
             foreach (var item in tagIds)
             {
-                List<int> gameIds = _db.GameTag.Where(gt => gt.TagId == item).Select(gt => gt.GameId).ToList();
-                foreach (var integer in gameIds)
+                List<Game> games = _db.GameTag.Include(gt => gt.Game).Where(gt => gt.TagId == item).Select(gt => gt.Game).ToList();
+                foreach (var game in games)
                 {
-                    Game game = _db.Game.Where(g => g.GameId == integer).FirstOrDefault();
-                    Library.Game gameLib = Mapper.Map(game);
-                    if (!games.Contains(gameLib))
-                    {
-                        games.Add(gameLib);
-                    }
+                    gamesSet.Add(game);
                 }
             }
-            return games;
+
+            return Mapper.Map(gamesSet).ToList();
         }
 
+        // Bizarre double mapping to combat the fact that the framework is unable to recognize that
+        // two identical Library.Game intances are the same. It is, however, able to do so with DB entites
         public ICollection<Library.Game> FilterGames(params ICollection<Library.Game>[] gamesToFilter)
         {
-            List<Library.Game> games = new List<Library.Game>();
-            foreach (ICollection<Library.Game> collectionOfGames in gamesToFilter)
+            var priceGames = gamesToFilter[0].ToList();
+            var ratingGames = gamesToFilter[1].ToList();
+            var devGames = gamesToFilter[2].ToList();
+            var tagGames = gamesToFilter[3].ToList();
+
+            int[] gameIdsPrice = new int[priceGames.Count];
+            for (int i = 0; i < gameIdsPrice.Length; i ++)
             {
-                foreach (Library.Game game in collectionOfGames)
-                {
-                    if (!games.Contains(game))
-                    {
-                        games.Add(game);
-                    }
-                }
+                Library.Game gamei = priceGames[i];
+                int gameId = gamei.GameId;
+                gameIdsPrice[i] = gameId;
             }
-            return games;
+
+            int[] gameIdsRating = new int[ratingGames.Count];
+            for (int i = 0; i < gameIdsRating.Length; i++)
+            {
+                Library.Game gamei = ratingGames[i];
+                int gameId = gamei.GameId;
+                gameIdsRating[i] = gameId;
+            }
+
+            int[] gameIdsDev = new int[devGames.Count];
+            for (int i = 0; i < gameIdsDev.Length; i++)
+            {
+                Library.Game gamei = devGames[i];
+                int gameId = gamei.GameId;
+                gameIdsDev[i] = gameId;
+            }
+
+            int[] gameIdsTag = new int[tagGames.Count];
+            for (int i = 0; i < gameIdsTag.Length; i++)
+            {
+                Library.Game gamei = tagGames[i];
+                int gameId = gamei.GameId;
+                gameIdsTag[i] = gameId;
+            }
+
+            List<int> gameIds = gameIdsPrice.Intersect(gameIdsRating.Intersect(gameIdsDev.Intersect(gameIdsTag))).ToList();
+            List<Game> games = new List<Game>();
+            foreach (int number in gameIds)
+            {
+                Game gameToAdd = _db.Game.Where(g => g.GameId == number).FirstOrDefault();
+                games.Add(gameToAdd);
+            }
+            return Mapper.Map(games).ToList();
         }
 
-        // retrievs all games, sorted as given
+        // retrieves all games, sorted as given
         public ICollection<Library.Game> GetGames(int sort = 0)
         {
             ICollection<Library.Game> games = GetGamesHelper(Mapper.Map(_db.Game).ToList(), sort);
@@ -523,6 +558,10 @@ namespace VaporAPI.DataAccess
 
         public List<Library.Game> GetGameBySearchName(string searchString)
         {
+            if (searchString == "")
+            {
+                return Mapper.Map(_db.Game).ToList();
+            }
             List<Game> games = _db.Game.Where(g => g.Name.ToLower().Contains(searchString.ToLower())).ToList();
             List<Library.Game> gamesLib = Mapper.Map(games).ToList();
             return gamesLib;
