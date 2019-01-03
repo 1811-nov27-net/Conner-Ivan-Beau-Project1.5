@@ -67,12 +67,21 @@ namespace VaporWebSite.App.Controllers
                 return RedirectToAction("Index");
             }
 
-            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Game/Search/{searchString}");
-            HttpResponseMessage response = await Client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
+            var username = ViewBag.LoggedInUser;
+            if (username == "")
             {
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                return RedirectToAction("Login", "Account");
+            }
+
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Game/Search/{searchString}");
+            HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/User/{username}/Library");
+
+            HttpResponseMessage response = await Client.SendAsync(request);
+            HttpResponseMessage response2 = await Client.SendAsync(request2);
+
+            if (!response.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized || response2.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Login", "Account");
                 }
@@ -80,10 +89,12 @@ namespace VaporWebSite.App.Controllers
             }
 
             string responseBody = await response.Content.ReadAsStringAsync();
+            string responseBody2 = await response2.Content.ReadAsStringAsync();
 
             List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
+            List<UserGame> userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody2);
 
-            return View("Index", games);
+            return View("Index", games.Select(g => new FullGame { Game = g, Selected = userGames.Any(a => a.Game.GameId == g.GameId) }).ToList());
         }
 
         // GET: UserGame by Filtered Results
@@ -94,11 +105,11 @@ namespace VaporWebSite.App.Controllers
             bool parseLR = int.TryParse(lowRating, out int lowRatingInt);
             bool parseHR = int.TryParse(highRating, out int highRatingInt);
 
-            if (parseLP == false || parseHP == false || parseLR == false || parseHR == false)
-            {
-                return RedirectToAction("Index");
-            }
-            else // all TryParse methods worked
+            //if (parseLP == false || parseHP == false || parseLR == false || parseHR == false)
+            //{
+            //    return RedirectToAction("Index");
+            //}
+            //else // all TryParse methods worked
             {
                 // building one object that can transport data to API
                 int[] priceArray = new int[2];
@@ -116,12 +127,21 @@ namespace VaporWebSite.App.Controllers
                 storageArray[3] = tagId;
 
                 // building request to send to API
-                HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game/Filter", storageArray);
-                HttpResponseMessage response = await Client.SendAsync(request);
-
-                if (!response.IsSuccessStatusCode)
+                var username = ViewBag.LoggedInUser;
+                if (username == "")
                 {
-                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    return RedirectToAction("Login", "Account");
+                }
+                
+                HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game/Filter", storageArray);
+                HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/User/{username}/Library");
+
+                HttpResponseMessage response = await Client.SendAsync(request);
+                HttpResponseMessage response2 = await Client.SendAsync(request2);
+
+                if (!response.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized || response2.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         return RedirectToAction("Login", "Account");
                     }
@@ -129,10 +149,12 @@ namespace VaporWebSite.App.Controllers
                 }
 
                 string responseBody = await response.Content.ReadAsStringAsync();
+                string responseBody2 = await response2.Content.ReadAsStringAsync();
 
                 List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
+                List<UserGame> userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody2);
 
-                return View("Index", games);
+                return View("Index", games.Select(g => new FullGame { Game = g, Selected = userGames.Any(a => a.Game.GameId == g.GameId) }).ToList());
             }
         }
 
