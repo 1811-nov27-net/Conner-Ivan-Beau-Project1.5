@@ -1,5 +1,9 @@
 ﻿@model VaporWebSite.App.Models.UserDlc
 
+<script src="@Url.Content("~/Scripts/Purchase.js")">
+        var csmodel = model;
+</script>
+
 @{
     ViewData["Title"] = "Purchase";
 }
@@ -13,15 +17,59 @@
         <form asp-action="Purchase">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Dlc.Dlcid" class="control-label"></label>
+                <label asp-for="Dlc" class="control-label"></label>
                 <input asp-for="Dlc.Dlcid" class="form-control" readonly="readonly" />
                 <span asp-validation-for="Dlc.Dlcid" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Dlc.Name" class="control-label"></label>
-                <input asp-for="Dlc.Name" class="form-control" readonly="readonly" />
-                <span asp-validation-for="Dlc.Name" class="text-danger"></span>
+                <label asp-for="Dlc" class="control-label"></label>
+                <input asp-for="Dlc.Price" class="form-control" id="game-price" readonly="readonly" />
+                <span asp-validation-for="Dlc.Price" class="text-danger"></span>
             </div>
+
+            @*
+        <div class="form-group">
+            <input asp-for="User.Wallet" class="form-control" id="initial-wallet" hidden />
+        </div>
+            *@
+            <div id="initial-wallet" hidden>
+                @Html.DisplayFor(model => model.User.Wallet)
+            </div>
+
+            <div class="form-group">
+                <label> State </label>
+                @{ decimal tax = 0.0m;}
+                <span id="state-dropdown">
+                    @Html.DropDownListFor(model => tax, new SelectList(new List<StateTax> { new StateTax { State = "WA", SalesTax = 0.065m }, new StateTax { State = "NY", SalesTax = 0.045m }, new StateTax { State = "OR", SalesTax = 0.0m } }, "SalesTax", "State"), "Select State", "form-control")
+                </span>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-10">
+                    Your Wallet:
+                </div>
+                <div class="col-sm-10">
+                    @(" ") @Html.DisplayFor(model => model.User.Wallet)
+                </div>
+                <div class="col-sm-10" id="total-price">
+                    - @Html.DisplayFor(model => model.Dlc.Price)
+                </div>
+                <div class="col-sm-10" id="remaining">
+                    ???
+                </div>
+
+            </div>
+
+            @Html.HiddenFor(model => model.User.Wallet)
+            @*
+        <div class="form-group">
+            <input id="output-wallet" asp-for="User.Wallet" class="form-control" readonly="readonly" />
+            <span asp-validation-for="User.Wallet" class="text-danger"></span>
+        </div>
+            *@
+
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

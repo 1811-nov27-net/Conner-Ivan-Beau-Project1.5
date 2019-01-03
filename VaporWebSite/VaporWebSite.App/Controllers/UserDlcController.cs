@@ -35,29 +35,36 @@ namespace VaporWebSite.App.Controllers
         // GET: UserDlc/Create
         public async Task<ActionResult> Purchase(int id)
         {
-            if (ViewBag.LoggedInUser == "")
+
+            string username = ViewBag.LoggedInUser;
+            if (username == "")
             {
                 return RedirectToAction("Login", "Account");
             }
 
             HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Dlc/{id}");
-            HttpResponseMessage response = await Client.SendAsync(request);
+            HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/User/{username}");
 
-            if (!response.IsSuccessStatusCode)
+            HttpResponseMessage response = await Client.SendAsync(request);
+            HttpResponseMessage response2 = await Client.SendAsync(request2);
+
+            if (!response.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
             {
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                if (response.StatusCode == HttpStatusCode.Unauthorized || response2.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Login", "Account");
                 }
                 return RedirectToAction("Error", "Home");
+
             }
+            string resString = await response.Content.ReadAsStringAsync();
+            string resString2 = await response2.Content.ReadAsStringAsync();
 
-            string responseBody = await response.Content.ReadAsStringAsync();
 
+            Dlc dlc = JsonConvert.DeserializeObject<Dlc>(resString);
+            User user = JsonConvert.DeserializeObject<User>(resString2);
 
-            Dlc dlc = JsonConvert.DeserializeObject<Dlc>(responseBody);
-
-            return View(new UserDlc { Dlc = dlc });
+            return View(new UserDlc { Dlc = dlc, User = user });
         }
 
         // POST: UserDlc/Create
@@ -72,9 +79,12 @@ namespace VaporWebSite.App.Controllers
                 var username = ViewBag.LoggedInUser;
 
                 HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"api/User/{username}/Library/Dlc",dlcid);
-                HttpResponseMessage response = await Client.SendAsync(request);
+                HttpRequestMessage request2 = CreateRequest(HttpMethod.Patch, $"api/User/{username}/Wallet", userdlc.User.Wallet);
 
-                if (!response.IsSuccessStatusCode)
+                HttpResponseMessage response = await Client.SendAsync(request);
+                HttpResponseMessage response2 = await Client.SendAsync(request2);
+
+                if (!response.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
                 {
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
