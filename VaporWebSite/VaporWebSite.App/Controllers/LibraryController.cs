@@ -75,10 +75,10 @@ namespace VaporWebSite.App.Controllers
             }
             string responseBody = await response.Content.ReadAsStringAsync();
 
-            UserGame userGames = new UserGame();
+            FullUserGame userGames = new FullUserGame();
             try
             {
-                userGames = JsonConvert.DeserializeObject<UserGame>(responseBody);
+                userGames = JsonConvert.DeserializeObject<FullUserGame>(responseBody);
             }
             catch (Exception e)
             {

@@ -24,6 +24,7 @@ namespace VaporAPI.Library
         ICollection<UserDlc> GetUserDlcs(string username);
         UserDlc GetUserDlc(string username, int id);
 
+        Library.FullUserGame GetFullUserGame(string username, int id);
 
 
 

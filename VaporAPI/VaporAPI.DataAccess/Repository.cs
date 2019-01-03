@@ -617,8 +617,40 @@ namespace VaporAPI.DataAccess
             libusergame.Game.Tags = GetGameTags(libusergame.Game.GameId);
             return libusergame;
         }
-    
 
+        public Library.FullUserGame GetFullUserGame(string username, int id)
+        {
+            Library.UserGame titanug = new Library.UserGame();
+            Library.Game titangame = new Library.Game();
+            Library.Developer titandev = new Library.Developer();
+            List<Library.Dlc> titandlc = new List<Library.Dlc>();
+
+            titanug = GetUserGame(username, id);
+            titangame = GetGame(id);
+            int n = (int)titangame.DeveloperId;
+            titandev = GetDeveloper(n);
+            titandlc = GetDlcbyUserGame(username, id).ToList();
+
+            Library.FullUserGame titan = new Library.FullUserGame
+            {
+                Developer = titandev,
+                Game = titangame,
+                Dlcs = titandlc,
+                UserGame = titanug,
+            };
+
+            return titan;
+        }
+
+        public ICollection<Library.Dlc> GetDlcbyUserGame(string username, int id)
+        {
+            ICollection<Library.UserDlc> userdlc = GetUserDlcs(username);
+            ICollection<Library.Dlc> gameDlc = GetGameDlcs(id);
+            ICollection<Library.Dlc> result = gameDlc.Where(g => userdlc.Any(a => g.Dlcid == a.Dlc.Dlcid)).ToList();
+
+            return result;
+        }
+       
         public ICollection<Library.UserGame> GetReviewsbyUser(string username, int sort = 0)
         {
             IEnumerable<UserGame> userGames = _db.UserGame.Where(ug => ug.UserName == username).ToList();
@@ -719,13 +751,13 @@ namespace VaporAPI.DataAccess
         public Library.UserGame GetUserGame(string username, int gameid)
         {
             //shouldn't ever be multiple elements returned
-            DataAccess.UserGame ug = _db.UserGame.Where(a => a.UserName == username && a.GameId == gameid).First();
+            DataAccess.UserGame ug = _db.UserGame.Include("Game").Include("UserNameNavigation").Where(a => a.UserName == username && a.GameId == gameid).First();
             if (ug == null)
             {
                 return null;
             }
             Library.UserGame lug = Mapper.Map(ug);
-            lug.Game.Tags = GetGameTags(lug.Game.GameId);
+            lug.Game.Tags = GetGameTags(gameid);
             return lug;
         }
 

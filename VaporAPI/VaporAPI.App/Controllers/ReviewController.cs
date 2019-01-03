@@ -74,12 +74,12 @@ namespace VaporAPI.App.Controllers
         }
 
         [HttpGet("{username}/{id}", Name = "GetReview")]
-        public ActionResult<UserGame> GetUserReview(string username, int id)
+        public ActionResult<FullUserGame> GetUserReview(string username, int id)
         {
-            UserGame review;
+            FullUserGame review;
             try
             {
-                review = Repo.GetReviewByUserGame(username, id);
+                review = Repo.GetFullUserGame(username, id);
 
             }
             catch (Exception)
