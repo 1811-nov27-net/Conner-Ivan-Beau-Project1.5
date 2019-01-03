@@ -86,16 +86,16 @@ namespace VaporAPI.App.Controllers
 
         // GET: api/Game/5
         [HttpGet("Reviews", Name = "GetGameReviews")]
-        public ActionResult<Dictionary<Game,decimal>> GetReviews()
+        public ActionResult<List<GameScore>> GetReviews()
         {
-            Dictionary<Game, decimal> result = new Dictionary<Game, decimal>();
+            List<GameScore> result = new List<GameScore>();
             
             try
             {
                 ICollection<Library.Game> games = Repo.GetGames();
                 foreach (var g in games)
                 {
-                    result[g] = Repo.AverageScoreGame(g);
+                    result.Add(new GameScore { Game = g, Score = Repo.AverageScoreGame(g) });
                 }
 
             }
