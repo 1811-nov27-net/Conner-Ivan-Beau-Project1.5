@@ -88,6 +88,24 @@ namespace VaporAPI.DataAccess
             }
         }
 
+        public bool AddReview(string username, int id, ScoreReview review)
+        {
+            try
+            {
+                DataAccess.UserGame usergame = _db.UserGame.First(a => a.UserName == username && a.GameId == id);
+                usergame.Score = review.Score;
+                usergame.Review = review.Review;
+                //_db.Entry(_db.UserGame.Find(usergame.GameId, usergame.UserName)).CurrentValues.SetValues(usergame);
+                _db.UserGame.Update(usergame);
+                _db.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool AddReview(Library.UserGame review)
         {
             bool success = true;
@@ -95,11 +113,12 @@ namespace VaporAPI.DataAccess
             {
                 //this wouldn't work unless we .Include the UserGame along with the user
                 //User user = _db.User.Find(review.User.UserName);
-                DataAccess.UserGame usergame = Map3(review);
+                //DataAccess.UserGame usergame = Map3(review);
+                DataAccess.UserGame usergame = _db.UserGame.First(a => a.UserName == review.User.UserName && a.GameId == review.Game.GameId);
                 usergame.Score = review.Score;
                 usergame.Review = review.Review;
-                _db.Entry(_db.UserGame.Find(usergame.GameId, usergame.UserName)).CurrentValues.SetValues(usergame);
-                // _db.UserGame.Update(usergame);
+                //_db.Entry(_db.UserGame.Find(usergame.GameId, usergame.UserName)).CurrentValues.SetValues(usergame);
+                _db.UserGame.Update(usergame);
                 _db.SaveChanges();
                 return success;
             }

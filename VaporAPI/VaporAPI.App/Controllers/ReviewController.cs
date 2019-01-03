@@ -28,6 +28,7 @@ namespace VaporAPI.App.Controllers
         //}
 
         // GET: api/Review/5
+        /*
         [HttpGet("{UserName}/{id}", Name = "GetReviews")]
         public ActionResult<UserGame> GetUser(string username, int id)
         {
@@ -48,6 +49,7 @@ namespace VaporAPI.App.Controllers
             }
             return Ok(review);
         }
+        */
 
         // GET: api/Review/5
         [HttpGet("Game/{id}", Name = "GetGames")]
@@ -71,7 +73,7 @@ namespace VaporAPI.App.Controllers
             return reviews.ToList();
         }
 
-        [HttpGet("api/Review/{username}/{id}", Name = "GetReview")]
+        [HttpGet("{username}/{id}", Name = "GetReview")]
         public ActionResult<UserGame> GetUserReview(string username, int id)
         {
             UserGame review;
@@ -114,6 +116,30 @@ namespace VaporAPI.App.Controllers
 
             return CreatedAtRoute("GetReview", new { UserName = review.User.UserName }, review);
         }
+
+
+        [HttpPost("{username}/{id}")]
+        public ActionResult PostScoreReview(string username, int id, [FromBody] ScoreReview review)
+        {
+            try
+            {
+                bool check = Repo.AddReview(username,id,review);
+                //check is for checking if a review already exists, ideally this will never be the case
+                //and if it does return status code 409
+                if (!check)
+                {
+                    return StatusCode(409);
+                }
+            }
+            catch (Exception)
+            {
+                //internal server serror
+                return StatusCode(500);
+            }
+
+            return CreatedAtRoute("GetReview", new { UserName = username }, review);
+        }
+
 
         // PUT: api/Review/5
         [HttpPut("{username}/{id}")]

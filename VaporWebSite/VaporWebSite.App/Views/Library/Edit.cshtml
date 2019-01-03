@@ -22,6 +22,12 @@
                 <input asp-for="Score" class="form-control" />
                 <span asp-validation-for="Score" class="text-danger"></span>
             </div>
+
+            @Html.HiddenFor(model => model.User.UserName)
+
+            @Html.HiddenFor(model => model.Game.GameId)
+
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
