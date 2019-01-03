@@ -5,21 +5,22 @@
 }
 
 <script src="~/Scripts/ValidateFilter.js"></script>
+<script src="~/Scripts/UserGameIndex.js"></script>
 <h1>Store Catalog</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@*<p>
+        <a asp-action="Create">Create New</a>
+    </p>*@
 
 <form asp-action="Search">
     <p>
-        <input type="text" placeholder="Search games..." name="searchString" id="searchString">
-        <input type="submit" value="Search" />
+        <input type="text" placeholder="Search games..." name="searchString" id="searchString" required>
+        <input type="submit" value="Search" class="btn btn-dark text-white" />
     </p>
 </form>
 
-<form asp-action="Filter" >
-    <table class="table" cellspacing="2" cellpadding="2" border="1">
+<form asp-action="Filter">
+    <table class="table table-striped table-dark" cellspacing="2" cellpadding="2" border="1" onsubmit="validateFilterForm()">
         <thead>
             <tr>
                 <th>
@@ -39,7 +40,7 @@
         <tbody>
             <tr>
                 <td>
-                    Minimum Price: <select name="lowPrice" >
+                    Minimum Price: <select name="lowPrice" style="color:white; background-color:rgb(56, 51, 51)">
                         <option value="0" selected="selected">$0</option>
                         <option value="10">$10</option>
                         <option value="20">$20</option>
@@ -49,10 +50,10 @@
                         <option value="60">$60</option>
                         <option value="70">$70</option>
                         <option value="80">$80</option>
-                        <option value="90">$90</option>
+                        <option value="90">$90</option> 
                     </select>
                     <br />
-                    Maximum Price: <select name="highPrice" >
+                    Maximum Price: <select name="highPrice" style="color:white; background-color: rgb(56, 51, 51)">
                         <option value="10">$10</option>
                         <option value="20">$20</option>
                         <option value="30">$30</option>
@@ -67,7 +68,7 @@
                 </td>
 
                 <td>
-                    Minimum Rating: <select name="lowRating" >
+                    Minimum Rating: <select name="lowRating" style="color:white; background-color:rgb(56, 51, 51)">
                         <option value="1" selected="selected">1 star</option>
                         <option value="2">2 stars</option>
                         <option value="3">3 stars </option>
@@ -79,7 +80,7 @@
                         <option value="9">9 stars</option>
                     </select>
                     <br />
-                    Maximum Rating: <select name="highRating" >
+                    Maximum Rating: <select name="highRating" style="color:white; background-color:rgb(56, 51, 51)">
                         <option value="1">1 star</option>
                         <option value="2">2 stars</option>
                         <option value="3">3 stars </option>
@@ -93,31 +94,31 @@
                     </select>
                 </td>
                 <td>
-                    <input type="checkbox"  id="bethesda" name="devId" value="2" checked/>Bethesda<br>
-                    <input type="checkbox"  id="bioware" name="devId" value="3" checked/>Bioware<br>
-                    <input type="checkbox"  id="fromsoftware" name="devId" value="4" checked/>FromSoftware<br>
-                    <input type="checkbox"  id="rockstar" name="devId" value="5" checked/>Rockstar<br>
+                    <input type="checkbox" id="bethesda" name="devId" value="2" checked />Bethesda<br>
+                    <input type="checkbox" id="bioware" name="devId" value="3" checked />Bioware<br>
+                    <input type="checkbox" id="fromsoftware" name="devId" value="4" checked />FromSoftware<br>
+                    <input type="checkbox" id="rockstar" name="devId" value="5" checked />Rockstar<br>
                 </td>
 
                 <td>
-                    <input type="checkbox"  id="action" name="tagId" value="1" checked/>Action<br>
-                    <input type="checkbox"  id="rpg" name="tagId" value="2" checked/>Role-Playing<br>
-                    <input type="checkbox"  id="twodimensional" name="tagId" value="3" checked/>2-Dimensional<br>
-                    <input type="checkbox"  id="roguelike" name="tagId" value="4" checked/>Roguelike<br>
-                    <input type="checkbox"  id="adventure" name="tagId" value="5" checked/>Adventure<br>
-                    <input type="checkbox"  id="fantasy" name="tagId" value="6" checked/>Fantasy<br>
-                    <input type="checkbox"  id="sports" name="tagId" value="7" checked/>Sports<br>
-                    <input type="checkbox"  id="simulation" name="tagId" value="8" checked/>Simulation<br>
-                    <input type="checkbox"  id="horror" name="tagId" value="9" checked/>Horror<br>
-                    <input type="checkbox"  id="alien" name="tagId" value="10" checked/>Alien<br>
+                    <input type="checkbox" id="action" name="tagId" value="1" checked />Action<br>
+                    <input type="checkbox" id="rpg" name="tagId" value="2" checked />Role-Playing<br>
+                    <input type="checkbox" id="twodimensional" name="tagId" value="3" checked />2-Dimensional<br>
+                    <input type="checkbox" id="roguelike" name="tagId" value="4" checked />Roguelike<br>
+                    <input type="checkbox" id="adventure" name="tagId" value="5" checked />Adventure<br>
+                    <input type="checkbox" id="fantasy" name="tagId" value="6" checked />Fantasy<br>
+                    <input type="checkbox" id="sports" name="tagId" value="7" checked />Sports<br>
+                    <input type="checkbox" id="simulation" name="tagId" value="8" checked />Simulation<br>
+                    <input type="checkbox" id="horror" name="tagId" value="9" checked />Horror<br>
+                    <input type="checkbox" id="alien" name="tagId" value="10" checked />Alien<br>
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <input type="submit" value="Filter Games" />
+    <input type="submit" value="Filter Games" class="btn btn-dark text-white" />
 </form>
-<table class="table">
+<table class="table table-striped table-dark">
     <thead>
         <tr>
             <th>
@@ -129,9 +130,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.Description)
-            </th>
+            </th>*@
             @*
                 <th>
                     @Html.DisplayNameFor(model => model.DeveloperId)
@@ -151,6 +152,9 @@
     <tbody>
         @foreach (var item in Model)
         {
+        
+
+
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.GameId)
@@ -162,25 +166,42 @@
                     @Html.DisplayFor(modelItem => item.Price)
                 </td>
                 @*
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
 
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DeveloperId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Image)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Trailer)
-                    </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeveloperId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Image)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Trailer)
+            </td>
                 *@
                 <td>
-                    @Html.ActionLink("Purchase", "Purchase", new { id = item.GameId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.GameId })
+                    
+                        <table>
+                            <thead>
+                                <tr>
+                                    <form asp-action="Purchase">
+                                        <input type="hidden" name="id" value="@item.GameId" />
+                                        <input type="submit" class="btn btn-outline-secondary text-white" value="Purchase" />
+                                    </form>
+                                </tr>
+                                <tr>
+                                    <form asp-action="Details">
+                                        <input type="hidden" name="id" value="@item.GameId" />
+                                        <input type="submit" class="btn btn-outline-secondary text-white" value="Details" />
+                                    </form>
+                                </tr>
+                            </thead>
+                        </table>
                 </td>
             </tr>
-        }
-    </tbody>
-</table>
+        
+                }
+        </tbody>
+    </table>
+    
