@@ -31,8 +31,10 @@ namespace VaporWebSite.App.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game");
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game/Reviews");
             HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/User/{username}/Library");
+            //HttpRequestMessage request3 = CreateRequest(HttpMethod.Get, $"api/User/{id}/Reviews");
+
 
             HttpResponseMessage response = await Client.SendAsync(request);
             HttpResponseMessage response2 = await Client.SendAsync(request2);
@@ -52,11 +54,17 @@ namespace VaporWebSite.App.Controllers
 
 
 
-            List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
+            Dictionary<Game,decimal> games = JsonConvert.DeserializeObject<Dictionary<Game,decimal>>(responseBody);
             List<UserGame> userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody2);
 
+            List<FullGame> fullGames = new List<FullGame>();
+            foreach(var g in games)
+            {
+                fullGames.Add(new FullGame { Game = g.Key, Score = g.Value, Selected = userGames.Any(a => a.Game.GameId == g.Key.GameId)});
+            }
+            return View(fullGames);
 
-            return View(games.Select(g => new FullGame{Game = g, Selected = userGames.Any(a => a.Game.GameId == g.GameId) }).ToList());
+            //return View(games.Select(g => new FullGame{Game = g, Selected = userGames.Any(a => a.Game.GameId == g.GameId) }).ToList());
         }
 
         // GET: UserGame by Searched Name
