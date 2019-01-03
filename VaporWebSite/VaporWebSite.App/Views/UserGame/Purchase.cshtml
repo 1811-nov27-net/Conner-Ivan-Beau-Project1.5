@@ -1,5 +1,10 @@
 ﻿@model VaporWebSite.App.Models.UserGame
 
+
+<script src="@Url.Content("~/Scripts/Purchase.js")">
+        var csmodel = model;
+</script>
+
 @{
     ViewData["Title"] = "Purchase";
 }
@@ -19,9 +24,53 @@
             </div>
             <div class="form-group">
                 <label asp-for="PurchaseDate" class="control-label"></label>
-                <input asp-for="PurchaseDate" class="form-control" />
+                <input asp-for="PurchaseDate" class="form-control" readonly="readonly" />
                 <span asp-validation-for="PurchaseDate" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Game" class="control-label"></label>
+                <input asp-for="Game.Price" class="form-control" id="game-price" readonly="readonly" />
+                <span asp-validation-for="Game.Price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input asp-for="User.Wallet" class="form-control" id="wallet" hidden />
+            </div>
+
+            <div class="form-group">
+                <label> State </label>
+                @{ decimal tax = 0.0m;}
+                <span id="state-dropdown">
+                    @Html.DropDownListFor(model => tax, new SelectList(new List<StateTax> { new StateTax { State = "WA", SalesTax = 0.065m }, new StateTax { State = "NY", SalesTax = 0.045m }, new StateTax { State = "OR", SalesTax = 0.0m } }, "SalesTax", "State"), "Select State", "form-control")
+                </span>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-10">
+                    Your Wallet:
+                </div>
+                <div class="col-sm-10">
+                    @(" ") @Html.DisplayFor(model => model.User.Wallet)
+                </div>
+                <div class="col-sm-10" id="total-price">
+                    - @Html.DisplayFor(model => model.Game.Price)
+                </div>
+                <div class="col-sm-10" id="remaining">
+                    @{decimal total = (Model.User.Wallet ?? 0) - Model.Game.Price;
+                        @Html.DisplayFor(model => total)}
+                </div>
+
+            </div>
+
+            @*
+        <div class="form-group">
+            @{ Model.User.Wallet = total;}
+            <input asp-for="User.Wallet" class="form-control" hidden />
+            <span asp-validation-for="User.Wallet" class="text-danger"></span>
+        </div>
+            *@
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
