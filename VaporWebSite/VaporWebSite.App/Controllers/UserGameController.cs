@@ -24,12 +24,23 @@ namespace VaporWebSite.App.Controllers
         // GET: UserGame
         public async Task<ActionResult> Index()
         {
-            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game");
-            HttpResponseMessage response = await Client.SendAsync(request);
 
-            if (!response.IsSuccessStatusCode)
+            var username = ViewBag.LoggedInUser;
+            if (username == "")
             {
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                return RedirectToAction("Login", "Account");
+            }
+
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game");
+            HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/User/{username}/Library");
+
+            HttpResponseMessage response = await Client.SendAsync(request);
+            HttpResponseMessage response2 = await Client.SendAsync(request2);
+
+
+            if (!response.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized || response2.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Login", "Account");
                 }
@@ -37,22 +48,40 @@ namespace VaporWebSite.App.Controllers
             }
 
             string responseBody = await response.Content.ReadAsStringAsync();
+            string responseBody2 = await response2.Content.ReadAsStringAsync();
+
 
 
             List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
+            List<UserGame> userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody2);
 
-            return View(games);
+
+            return View(games.Select(g => new FullGame{Game = g, Selected = userGames.Any(a => a.Game.GameId == g.GameId) }).ToList());
         }
 
         // GET: UserGame by Searched Name
         public async Task<ActionResult> Search(string searchString)
         {
-            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Game/Search/{searchString}");
-            HttpResponseMessage response = await Client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
+            if (searchString == null)
             {
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                return RedirectToAction("Index");
+            }
+
+            var username = ViewBag.LoggedInUser;
+            if (username == "")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Game/Search/{searchString}");
+            HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/User/{username}/Library");
+
+            HttpResponseMessage response = await Client.SendAsync(request);
+            HttpResponseMessage response2 = await Client.SendAsync(request2);
+
+            if (!response.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Unauthorized || response2.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Login", "Account");
                 }
@@ -60,10 +89,12 @@ namespace VaporWebSite.App.Controllers
             }
 
             string responseBody = await response.Content.ReadAsStringAsync();
+            string responseBody2 = await response2.Content.ReadAsStringAsync();
 
             List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
+            List<UserGame> userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody2);
 
-            return View("Index", games);
+            return View("Index", games.Select(g => new FullGame { Game = g, Selected = userGames.Any(a => a.Game.GameId == g.GameId) }).ToList());
         }
 
         // GET: UserGame by Filtered Results
@@ -74,11 +105,11 @@ namespace VaporWebSite.App.Controllers
             bool parseLR = int.TryParse(lowRating, out int lowRatingInt);
             bool parseHR = int.TryParse(highRating, out int highRatingInt);
 
-            if (parseLP == false || parseHP == false || parseLR == false || parseHR == false)
-            {
-                return RedirectToAction("Index");
-            }
-            else // all TryParse methods worked
+            //if (parseLP == false || parseHP == false || parseLR == false || parseHR == false)
+            //{
+            //    return RedirectToAction("Index");
+            //}
+            //else // all TryParse methods worked
             {
                 // building one object that can transport data to API
                 int[] priceArray = new int[2];
@@ -96,12 +127,21 @@ namespace VaporWebSite.App.Controllers
                 storageArray[3] = tagId;
 
                 // building request to send to API
-                HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game/Filter", storageArray);
-                HttpResponseMessage response = await Client.SendAsync(request);
-
-                if (!response.IsSuccessStatusCode)
+                var username = ViewBag.LoggedInUser;
+                if (username == "")
                 {
-                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    return RedirectToAction("Login", "Account");
+                }
+                
+                HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game/Filter", storageArray);
+                HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/User/{username}/Library");
+
+                HttpResponseMessage response = await Client.SendAsync(request);
+                HttpResponseMessage response2 = await Client.SendAsync(request2);
+
+                if (!response.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized || response2.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         return RedirectToAction("Login", "Account");
                     }
@@ -109,24 +149,37 @@ namespace VaporWebSite.App.Controllers
                 }
 
                 string responseBody = await response.Content.ReadAsStringAsync();
+                string responseBody2 = await response2.Content.ReadAsStringAsync();
 
                 List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
+                List<UserGame> userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody2);
 
-                return View("Index", games);
+                return View("Index", games.Select(g => new FullGame { Game = g, Selected = userGames.Any(a => a.Game.GameId == g.GameId) }).ToList());
             }
         }
 
 
 
         // GET: UserGame/Details/5
-        public async Task<ActionResult> Details(int id)
+        public async Task<ActionResult> Details(int id, bool selected)
         {
+
+            var username = ViewBag.LoggedInUser;
+            if (username == "")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             HttpRequestMessage request1 = CreateRequest(HttpMethod.Get, $"api/Game/{id}");
             HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/Dlc/Game/{id}");
+            HttpRequestMessage request3 = CreateRequest(HttpMethod.Get, $"api/User/{username}/Library/Dlc");
+
 
 
             HttpResponseMessage response1 = await Client.SendAsync(request1);
             HttpResponseMessage response2 = await Client.SendAsync(request2);
+            HttpResponseMessage response3 = await Client.SendAsync(request3);
+
 
 
             if (!response1.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
@@ -139,12 +192,16 @@ namespace VaporWebSite.App.Controllers
             }
             string responseBody1 = await response1.Content.ReadAsStringAsync();
             string responseBody2 = await response2.Content.ReadAsStringAsync();
+            string responseBody3 = await response3.Content.ReadAsStringAsync();
+
 
 
             Game game = JsonConvert.DeserializeObject<Game>(responseBody1);
             List<Dlc> dlcs = JsonConvert.DeserializeObject<List<Dlc>>(responseBody2);
+            List<UserDlc> userDlcs = JsonConvert.DeserializeObject<List<UserDlc>>(responseBody3);
 
-            return View(new FullUserGame { Game = game, Dlcs = dlcs });
+
+            return View(new FullUserGame { Game = game, SelectDlcs = dlcs.Select(d => new FullDlc { Dlc = d,Selected=userDlcs.Any(a => a.Dlc.Dlcid == d.Dlcid)}).ToList(), Selected = selected });
         }
 
         // GET: UserGame/Create

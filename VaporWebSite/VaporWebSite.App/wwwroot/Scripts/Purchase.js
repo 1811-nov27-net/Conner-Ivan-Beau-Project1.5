@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let totalprice = document.getElementById("total-price");
     let remaining = document.getElementById("remaining");
     let output = document.getElementById("User_Wallet");
+    let submit = document.getElementsByClassName("btn btn-primary")[0]
 
     calculate();
 
@@ -18,6 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let rem = Number(wallet.innerHTML) - total;
         remaining.innerHTML = rem;
         output.value = rem;
+        if (rem < 0) {
+            submit.disabled = true;
+        } else {
+            submit.disabled = false;
+        }
     }
 
 

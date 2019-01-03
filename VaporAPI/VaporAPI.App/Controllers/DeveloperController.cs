@@ -11,6 +11,7 @@ namespace VaporAPI.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DeveloperController : ControllerBase
     {
 
@@ -61,6 +62,7 @@ namespace VaporAPI.App.Controllers
 
         // POST: api/Developer
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult Post([FromBody] Developer developer)
         {
             try
@@ -83,6 +85,7 @@ namespace VaporAPI.App.Controllers
 
         // PUT: api/Developer/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public ActionResult Put(int id, [FromBody] Developer value)
         {
             Developer developer;
@@ -117,6 +120,7 @@ namespace VaporAPI.App.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
             try

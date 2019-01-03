@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VaporAPI.Library;
@@ -10,6 +11,7 @@ namespace VaporAPI.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TagController : ControllerBase
     {
 
@@ -59,6 +61,7 @@ namespace VaporAPI.App.Controllers
 
         // POST: api/Tag
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult Post([FromBody] Tag tag)
         {
             try
