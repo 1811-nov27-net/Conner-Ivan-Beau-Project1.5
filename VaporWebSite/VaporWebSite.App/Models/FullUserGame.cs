@@ -14,5 +14,9 @@ namespace VaporWebSite.App.Models
         public List<Dlc> Dlcs { get; set; }
 
         public Developer Developer { get; set; }
+
+        public bool Selected { get; set; }
+
+        public List<FullDlc> SelectDlcs { get; set; }
     }
 }

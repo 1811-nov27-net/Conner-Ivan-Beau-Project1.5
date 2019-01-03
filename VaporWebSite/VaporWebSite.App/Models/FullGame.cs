@@ -12,5 +12,7 @@ namespace VaporWebSite.App.Models
         public List<FilterTag> Tags { get; set; }
 
         public Game Game { get; set; }
+
+        public Boolean Selected { get; set; }
     }
 }

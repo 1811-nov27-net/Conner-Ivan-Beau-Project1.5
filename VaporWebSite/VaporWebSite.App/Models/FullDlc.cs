@@ -12,5 +12,7 @@ namespace VaporWebSite.App.Models
         public Game Game { get; set; }
 
         public List<Game> AllGames { get; set; }
+
+        public bool Selected { get; set; }
     }
 }

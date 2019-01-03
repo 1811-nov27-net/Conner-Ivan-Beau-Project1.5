@@ -1,4 +1,4 @@
-﻿@model IEnumerable<VaporWebSite.App.Models.Game>
+﻿@model IEnumerable<VaporWebSite.App.Models.FullGame>
 
 @{
     ViewData["Title"] = "Index";
@@ -121,16 +121,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.GameId)
+                @Html.DisplayNameFor(model => model.Game.GameId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Game.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model.Game.Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Game.Description)
             </th>
             @*
                 <th>
@@ -153,13 +153,13 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.GameId)
+                    @Html.DisplayFor(modelItem => item.Game.GameId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => item.Game.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price)
+                    @Html.DisplayFor(modelItem => item.Game.Price)
                 </td>
                 @*
                         <td>
@@ -177,8 +177,11 @@
                     </td>
                 *@
                 <td>
-                    @Html.ActionLink("Purchase", "Purchase", new { id = item.GameId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.GameId })
+                    @if (!item.Selected) { 
+                        @Html.ActionLink("Purchase", "Purchase", new { id = item.Game.GameId })
+                        @(" | ")
+                     }
+                    @Html.ActionLink("Details", "Details", new { id = item.Game.GameId,item.Selected })
                 </td>
             </tr>
         }
