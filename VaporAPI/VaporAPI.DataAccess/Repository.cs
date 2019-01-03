@@ -417,13 +417,14 @@ namespace VaporAPI.DataAccess
             List<int> gameInts = new List<int>();
             foreach (var item in gameScores)
             {
-                if (item.Score != null)
+                if (item.Score != null && item.Score != 0)
                 {
                     // had to explicitly cast from int? to int to avoid compile error
                     var score = (int)item.Score;
                     gameInts.Add(score);
                 }
             }
+
             var scores = gameInts.ToArray();
 
             int sum = 0;
@@ -431,7 +432,7 @@ namespace VaporAPI.DataAccess
             {
                 sum += item;
             }
-            return (sum / scores.Length);
+            return ((decimal)sum / (decimal)scores.Length);
         }
 
         public ICollection<Library.Game> GetBetweenPriceGames(int[] price)

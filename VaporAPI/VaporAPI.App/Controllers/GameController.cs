@@ -59,6 +59,57 @@ namespace VaporAPI.App.Controllers
             return game;
         }
 
+        // GET: api/Game/5
+        [HttpGet("{id}/Review", Name = "GetGameReview")]
+        public ActionResult<decimal> GetReview(int id)
+        {
+            Game game = Repo.GetGame(id);
+            if (game == null)
+            {
+                return NotFound();
+            }
+            decimal score = -1;
+            try
+            {
+                score = Repo.AverageScoreGame(game);
+
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500);
+            }
+            
+            return score;
+        }
+
+
+        // GET: api/Game/5
+        [HttpGet("Reviews", Name = "GetGameReviews")]
+        public ActionResult<Dictionary<Game,decimal>> GetReviews()
+        {
+            Dictionary<Game, decimal> result = new Dictionary<Game, decimal>();
+            
+            try
+            {
+                ICollection<Library.Game> games = Repo.GetGames();
+                foreach (var g in games)
+                {
+                    result[g] = Repo.AverageScoreGame(g);
+                }
+
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500);
+            }
+
+            return result;
+        }
+
+
+
         // GET: api/Game/searchString
         [Route("Search")]
         [HttpGet("Search/{searchString}", Name = "Search")]
