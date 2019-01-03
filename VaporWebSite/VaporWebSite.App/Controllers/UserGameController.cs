@@ -54,11 +54,11 @@ namespace VaporWebSite.App.Controllers
 
 
 
-            Dictionary<Game,decimal> games = JsonConvert.DeserializeObject<Dictionary<Game,decimal>>(responseBody);
+            List<GameScore> gameScores = JsonConvert.DeserializeObject<List<GameScore>>(responseBody);
             List<UserGame> userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody2);
 
             List<FullGame> fullGames = new List<FullGame>();
-            foreach(var g in games)
+            foreach(var g in gameScores)
             {
                 fullGames.Add(new FullGame { Game = g.Key, Score = g.Value, Selected = userGames.Any(a => a.Game.GameId == g.Key.GameId)});
             }
