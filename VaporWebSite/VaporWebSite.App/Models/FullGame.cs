@@ -13,7 +13,7 @@ namespace VaporWebSite.App.Models
 
         public Game Game { get; set; }
 
-        public decimal Score { get; set; }
+        public GameScore GameScore { get; set; }
 
         public Boolean Selected { get; set; }
     }
