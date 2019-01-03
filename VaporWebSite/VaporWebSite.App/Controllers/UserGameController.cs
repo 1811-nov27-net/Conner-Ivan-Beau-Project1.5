@@ -47,6 +47,10 @@ namespace VaporWebSite.App.Controllers
         // GET: UserGame by Searched Name
         public async Task<ActionResult> Search(string searchString)
         {
+            if (searchString == null)
+            {
+                return RedirectToAction("Index");
+            }
             HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Game/Search/{searchString}");
             HttpResponseMessage response = await Client.SendAsync(request);
 

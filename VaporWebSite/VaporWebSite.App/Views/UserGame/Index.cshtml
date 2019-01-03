@@ -7,13 +7,13 @@
 <script src="~/Scripts/ValidateFilter.js"></script>
 <h1>Store Catalog</h1>
 
-<p>
+@*<p>
     <a asp-action="Create">Create New</a>
-</p>
+</p>*@
 
 <form asp-action="Search">
     <p>
-        <input type="text" placeholder="Search games..." name="searchString" id="searchString">
+        <input type="text" placeholder="Search games..." name="searchString" id="searchString" required>
         <input type="submit" value="Search" />
     </p>
 </form>
