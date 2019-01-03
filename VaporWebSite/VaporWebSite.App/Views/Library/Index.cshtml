@@ -74,6 +74,10 @@
                 <td style="visibility:hidden" class="extra-game-info">
                     @Html.DisplayFor(modelItem => item.Game.Description)
                 </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { username = item.User.UserName, id = item.Game.GameId })
+
+                </td>
             </tr>
         }
     </tbody>

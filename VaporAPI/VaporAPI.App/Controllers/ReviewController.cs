@@ -28,13 +28,13 @@ namespace VaporAPI.App.Controllers
         //}
 
         // GET: api/Review/5
-        [HttpGet("{UserName}", Name = "GetReviews")]
-        public ActionResult<ICollection<UserGame>> GetUser(string username)
+        [HttpGet("{UserName}/{id}", Name = "GetReviews")]
+        public ActionResult<UserGame> GetUser(string username, int id)
         {
-            ICollection<UserGame> review;
+            UserGame review;
             try
             {
-                review = Repo.GetReviewsbyUser(username);
+                review = Repo.GetReviewByUserGame(username, id);
 
             }
             catch (Exception)
@@ -69,6 +69,27 @@ namespace VaporAPI.App.Controllers
                 return NotFound();
             }
             return reviews.ToList();
+        }
+
+        [HttpGet("api/Review/{username}/{id}", Name = "GetReview")]
+        public ActionResult<UserGame> GetUserReview(string username, int id)
+        {
+            UserGame review;
+            try
+            {
+                review = Repo.GetReviewByUserGame(username, id);
+
+            }
+            catch (Exception)
+            {
+                //internal server exception
+                return StatusCode(500);
+            }
+            if (review == null)
+            {
+                return NotFound();
+            }
+            return Ok(review);
         }
 
         // POST: api/Review

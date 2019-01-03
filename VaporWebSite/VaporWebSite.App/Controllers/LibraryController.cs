@@ -57,13 +57,13 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: Library/Details/5
-        public async Task<ActionResult> Details(string username)
+        public async Task<ActionResult> Details(string username, int id)
         {
             if (username == "")
             {
                 return RedirectToAction("Login", "Account");
             }
-            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Review/{username}");
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Review/{username}/{id}");
             HttpResponseMessage response = await Client.SendAsync(request);
             if (!response.IsSuccessStatusCode)
             {
@@ -75,10 +75,10 @@ namespace VaporWebSite.App.Controllers
             }
             string responseBody = await response.Content.ReadAsStringAsync();
 
-            List<UserGame> userGames = new List<UserGame>();
+            UserGame userGames = new UserGame();
             try
             {
-                userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody);
+                userGames = JsonConvert.DeserializeObject<UserGame>(responseBody);
             }
             catch (Exception e)
             {
@@ -112,19 +112,31 @@ namespace VaporWebSite.App.Controllers
         }
 
         // GET: Library/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(string username, int id)
         {
-            return View();
+            HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Review/{username}/{id}");
+            HttpResponseMessage response = await Client.SendAsync(request);
+            string resString = await response.Content.ReadAsStringAsync();
+            return View(JsonConvert.DeserializeObject<UserGame>(resString));
         }
 
         // POST: Library/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(UserGame usergame)
         {
             try
             {
-                // TODO: Add update logic here
+                HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"api/Review", usergame);
+                HttpResponseMessage response = await Client.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return RedirectToAction("Login", "Account");
+                    }
+                    return View();
+                }
 
                 return RedirectToAction(nameof(Index));
             }
@@ -132,6 +144,7 @@ namespace VaporWebSite.App.Controllers
             {
                 return View();
             }
+
         }
 
         // GET: Library/Delete/5
