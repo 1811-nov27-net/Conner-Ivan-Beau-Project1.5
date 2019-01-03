@@ -23,11 +23,15 @@ namespace VaporWebSite.App.Controllers
         public async Task<ActionResult> Index()
         {
             HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Dlc");
-            HttpResponseMessage response = await Client.SendAsync(request);
+            HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, "api/Game");
 
-            if (!response.IsSuccessStatusCode)
+            HttpResponseMessage response = await Client.SendAsync(request);
+            HttpResponseMessage response2 = await Client.SendAsync(request2);
+
+
+            if (!response.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
             {
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                if (response.StatusCode == HttpStatusCode.Unauthorized || response2.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Login", "Account");
                 }
@@ -36,9 +40,22 @@ namespace VaporWebSite.App.Controllers
 
             string responseBody = await response.Content.ReadAsStringAsync();
 
+            string responseBody2 = await response2.Content.ReadAsStringAsync();
+
+
             List<Dlc> dlcs = JsonConvert.DeserializeObject<List<Dlc>>(responseBody);
 
-            return View(dlcs);
+            List<Game> rawGames = JsonConvert.DeserializeObject<List<Game>>(responseBody2).OrderBy(a => a.GameId).ToList();
+
+            List<FullDlc> fullDlcs = new List<FullDlc>();
+            foreach(var dlc in dlcs)
+            {
+                Game temp = rawGames.First(a => a.GameId == dlc.GameId);
+                fullDlcs.Add(new FullDlc { Dlc = dlc, Game = temp });
+            }
+
+
+            return View(fullDlcs);
         }
 
         // GET: Dlc/Details/5

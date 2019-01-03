@@ -14,32 +14,28 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
+                <input asp-for="UserName" class="form-control bg-secondary text-white" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
+                <input asp-for="Password" class="form-control bg-secondary text-white" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
             <label asp-for="Admin" class="control-label"></label>
-                        <input type="checkbox" asp-for="Admin" />
-                        <label asp-for="Admin"> Admin </label>
+            <input type="checkbox" asp-for="Admin" />
             <span asp-validation-for="Admin" class="text-danger"></span>
 
 
 
             <div class="form-group">
-                <input type="submit" value="RegisterInput" class="btn btn-primary" />
+                <input type="submit" value="Register" class="btn btn-outline-light" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

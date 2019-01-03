@@ -98,7 +98,7 @@ namespace VaporWebSite.App.Controllers
             HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Tag/{id}");
             HttpResponseMessage response = await Client.SendAsync(request);
             string resString = await response.Content.ReadAsStringAsync();
-            return View(JsonConvert.DeserializeObject<Developer>(resString));
+            return View(JsonConvert.DeserializeObject<Tag>(resString));
         }
 
         // POST: Tag/Edit/5
@@ -133,7 +133,7 @@ namespace VaporWebSite.App.Controllers
             HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Tag/{id}");
             HttpResponseMessage response = await Client.SendAsync(request);
             string resString = await response.Content.ReadAsStringAsync();
-            return View(JsonConvert.DeserializeObject<Developer>(resString));
+            return View(JsonConvert.DeserializeObject<Tag>(resString));
         }
 
         // POST: Tag/Delete/5

@@ -1,10 +1,10 @@
-﻿@model IEnumerable<VaporWebSite.App.Models.Dlc>
+﻿@model IEnumerable<VaporWebSite.App.Models.FullDlc>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Dlcs</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,16 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Dlcid)
+                @Html.DisplayNameFor(model => model.Dlc.Dlcid)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Dlc.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model.Dlc.Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.GameId)
+                Game
             </th>
             <th></th>
         </tr>
@@ -31,21 +31,23 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Dlcid)
+                @Html.DisplayFor(modelItem => item.Dlc.Dlcid)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Dlc.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @Html.DisplayFor(modelItem => item.Dlc.Price)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.GameId)
+                @Html.DisplayFor(modelItem => item.Game.Name)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Dlcid }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Dlcid }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Dlcid })
+                @*
+        @Html.ActionLink("Edit", "Edit", new { id=item.Dlcid }) |
+        @Html.ActionLink("Details", "Details", new { id = item.Dlcid }) |
+                *@
+                @Html.ActionLink("Delete", "Delete", new { id = item.Dlc.Dlcid })
             </td>
         </tr>
 }

@@ -4,62 +4,77 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Tags</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
 
 
-@foreach (var item in Model)
-{
+@*
     <div class="container">
         <div class="row">
             <div class="col-md bg-dark text-white text-xl-center">
-                @Html.DisplayNameFor(model => model.TagId) : @Html.DisplayFor(modelItem => item.TagId)
-          
+                @Html.DisplayNameFor(model => model.TagId) :
+
             </div>
             <div class="col-md bg-dark text-white text-xl-center">
-                @Html.DisplayFor(modelItem => item.Name)
-            </div>
-            <div class="col-md bg-dark text-white text-xl-center">
-                @Html.ActionLink("Edit", "Edit", new { id = item.TagId })
-                &emsp;
-                @Html.ActionLink("Details", "Details", new { id = item.TagId })
-                &emsp;
-                @Html.ActionLink("Delete", "Delete", new { id = item.TagId })
+                @Html.DisplayNameFor(model => model.Name)
             </div>
         </div>
     </div>
-}
 
-@*<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TagId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TagId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.TagId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.TagId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.TagId })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>*@
+
+    @foreach (var item in Model)
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-md bg-dark text-white text-xl-center">
+                    @Html.DisplayNameFor(model => model.TagId) : @Html.DisplayFor(modelItem => item.TagId)
+
+                </div>
+                <div class="col-md bg-dark text-white text-xl-center">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </div>
+                <div class="col-md bg-dark text-white text-xl-center">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.TagId })
+                    @Html.ActionLink("Details", "Details", new { id = item.TagId })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.TagId })
+                </div>
+            </div>
+        </div>
+    }
+*@
+
+<table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.TagId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TagId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                @*
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.TagId }) |
+            @Html.ActionLink("Details", "Details", new { id = item.TagId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.TagId })
+        </td>
+                *@
+            </tr>
+    }
+        </tbody>
+    </table>
