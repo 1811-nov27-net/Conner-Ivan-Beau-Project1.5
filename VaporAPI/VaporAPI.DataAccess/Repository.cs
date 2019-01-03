@@ -95,7 +95,7 @@ namespace VaporAPI.DataAccess
             {
                 //this wouldn't work unless we .Include the UserGame along with the user
                 //User user = _db.User.Find(review.User.UserName);
-                UserGame usergame = _db.UserGame.First(g => g.GameId == review.Game.GameId && g.UserName == review.User.UserName);
+                DataAccess.UserGame usergame = Map3(review);
                 usergame.Score = review.Score;
                 usergame.Review = review.Review;
                 _db.Entry(_db.UserGame.Find(usergame.GameId, usergame.UserName)).CurrentValues.SetValues(usergame);
@@ -175,6 +175,14 @@ namespace VaporAPI.DataAccess
             Review = userGame.Review,
             Score = userGame.Score,
             DatePurchased = userGame.PurchaseDate,
+        };
+        public DataAccess.UserGame Map3(Library.UserGame userGame) => new DataAccess.UserGame
+        {
+            Review = userGame.Review,
+            Score = userGame.Score,
+            DatePurchased = userGame.PurchaseDate,
+            GameId = userGame.Game.GameId,
+            UserName = userGame.User.UserName,
         };
         //had to make two maps since the IEnumerable Mapper was giving me error
         public static DataAccess.UserGame Map(Library.UserGame userGame) => new DataAccess.UserGame

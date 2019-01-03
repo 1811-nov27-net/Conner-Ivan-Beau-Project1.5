@@ -117,6 +117,7 @@ namespace VaporWebSite.App.Controllers
             HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Review/{username}/{id}");
             HttpResponseMessage response = await Client.SendAsync(request);
             string resString = await response.Content.ReadAsStringAsync();
+            var o = JsonConvert.DeserializeObject<UserGame>(resString);
             return View(JsonConvert.DeserializeObject<UserGame>(resString));
         }
 
