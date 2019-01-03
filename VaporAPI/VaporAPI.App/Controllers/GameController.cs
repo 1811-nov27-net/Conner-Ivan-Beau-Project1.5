@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VaporAPI.Library;
@@ -10,6 +11,7 @@ namespace VaporAPI.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class GameController : ControllerBase
     {
 
@@ -108,6 +110,7 @@ namespace VaporAPI.App.Controllers
 
         // POST: api/Game
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult Post([FromBody] Game game)
         {
             try
@@ -130,6 +133,7 @@ namespace VaporAPI.App.Controllers
 
         // PUT: api/Game/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public ActionResult Put(int id, [FromBody] Game value)
         {
             Game game;
@@ -164,6 +168,7 @@ namespace VaporAPI.App.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
             try

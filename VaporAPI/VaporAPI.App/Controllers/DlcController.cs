@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VaporAPI.Library;
@@ -10,6 +11,7 @@ namespace VaporAPI.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DlcController : ControllerBase
     {
         public IRepository Repo;
@@ -78,6 +80,7 @@ namespace VaporAPI.App.Controllers
 
         // POST: api/Dlc
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult Post([FromBody] Dlc dlc)
         {
             try
@@ -100,6 +103,7 @@ namespace VaporAPI.App.Controllers
 
         // PUT: api/Dlc/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public ActionResult Put(int id, [FromBody] Dlc value)
         {
             Dlc dlc;
@@ -134,6 +138,7 @@ namespace VaporAPI.App.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
             try
