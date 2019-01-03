@@ -128,7 +128,8 @@ namespace VaporWebSite.App.Controllers
         {
             try
             {
-                HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"api/Review/{usergame.User.UserName}/{usergame.Game.GameId}", new ScoreReview { Review=usergame.Review, Score=usergame.Score});
+                string username = ViewBag.LoggedInUser;
+                HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"api/Review/{username}/{usergame.Game.GameId}", new ScoreReview { Review=usergame.Review, Score=usergame.Score});
                 HttpResponseMessage response = await Client.SendAsync(request);
                 if (!response.IsSuccessStatusCode)
                 {

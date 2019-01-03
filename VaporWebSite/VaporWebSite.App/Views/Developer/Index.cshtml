@@ -9,7 +9,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table table-striped table-dark">
     <thead>
         <tr>
             <th>
@@ -43,7 +43,7 @@
                 @Html.DisplayFor(modelItem => item.Website)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.DeveloperId }) |
+                @Html.ActionLink("Edit", "Edit", new { id = item.DeveloperId }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.DeveloperId })
             </td>
         </tr>
