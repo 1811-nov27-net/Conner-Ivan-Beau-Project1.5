@@ -432,7 +432,14 @@ namespace VaporAPI.DataAccess
             {
                 sum += item;
             }
-            return ((decimal)sum / (decimal)scores.Length);
+            try
+            {
+                return ((decimal)sum / (decimal)scores.Length);
+            }
+            catch (DivideByZeroException)
+            {
+                return 0;
+            }
         }
 
         public ICollection<Library.Game> GetBetweenPriceGames(int[] price)
