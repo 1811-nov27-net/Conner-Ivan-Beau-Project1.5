@@ -152,7 +152,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-        
+
 
 
             <tr>
@@ -166,30 +166,55 @@
                     @Html.DisplayFor(modelItem => item.Game.Price)
                 </td>
                 @*
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.DeveloperId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Image)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Trailer)
-            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeveloperId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Image)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Trailer)
+                </td>
                 *@
                 <td>
-                    @if (!item.Selected) { 
-                        @Html.ActionLink("Purchase", "Purchase", new { id = item.Game.GameId })
-                        @(" | ")
-                     }
-                    @Html.ActionLink("Details", "Details", new { id = item.Game.GameId,item.Selected })
+
+
+                    <table>
+                        <thead>
+                            <tr>
+                                @if (!item.Selected)
+                                {
+                                    <form asp-action="Purchase">
+                                        <input type="hidden" name="id" value="@item.Game.GameId" />
+                                        <input type="submit" class="btn btn-outline-secondary text-white" value="Purchase" />
+                                    </form>
+                                }
+                            </tr>
+                            <tr>
+                                <form asp-action="Details">
+                                    <input type="hidden" name="id" value="@item.Game.GameId" />
+                                    <input type="submit" class="btn btn-outline-secondary text-white" value="Details" />
+                                </form>
+                            </tr>
+                        </thead>
+                    </table>
                 </td>
+                    @*<td>
+                        @if (!item.Selected)
+                        {
+                            @Html.ActionLink("Purchase", "Purchase", new { id = item.Game.GameId })
+                            @(" | ")
+                        }
+                        @Html.ActionLink("Details", "Details", new { id = item.Game.GameId, item.Selected })
+                    </td>*@
             </tr>
-        
-                }
-        </tbody>
+            
+
+        }
+    </tbody>
     </table>
     
