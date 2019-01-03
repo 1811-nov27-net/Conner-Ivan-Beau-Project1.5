@@ -35,7 +35,6 @@ namespace VaporWebSite.App.Models
         //[RegularExpression(@"^[0-9\s]{16, 16}$",
         //    ErrorMessage ="Not a valid Credit Card Number")]
         // could make it an integer?
-        [CreditCard]
         public string CreditCard { get; set; }
 
         [Required]

@@ -58,9 +58,9 @@ namespace VaporAPI.App.Controllers
         }
 
         // GET: api/Game/searchString
-        [Route("GetGameSearch")]
-        [HttpGet("search/{searchString}", Name = "GetGameSearch")]
-        public ActionResult<IEnumerable<Game>> GetGameSearch(string searchString)
+        [Route("Search")]
+        [HttpGet("Search/{searchString}", Name = "Search")]
+        public ActionResult<IEnumerable<Game>> Search(string searchString)
         {
             try
             {
@@ -72,24 +72,38 @@ namespace VaporAPI.App.Controllers
             }
         }
 
-        //[HttpGet(Name = "GetFilteredGames")]
-        //public ActionResult<IEnumerable<Game>> GetFilteredGames(decimal lowPrice, decimal highPrice, int lowRating, int highRating, int[] devIds, int[] tagIds)
-        //{
-        //    try
-        //    {
-        //        ICollection<Game> gamesPriceRange = Repo.GetBetweenPriceGames(lowPrice, highPrice);
-        //        ICollection<Game> gamesRatingRange = Repo.GetBetweenRatingsGames(lowRating, highRating);
-        //        ICollection<Game> gamesDevs = Repo.GetGamesByDeveloper(devIds);
-        //        ICollection<Game> gamesTags = Repo.GetGamesByTags(tagIds);
+        [Route("Filter")]
+        [HttpGet("storageArray", Name = "Filter")]
+        public ActionResult<IEnumerable<Game>> Filter(int[][] storageArray)
+        {
+            try
+            {
+                int[] price = storageArray[0];
+                int[] rating = storageArray[1];
+                int[] devId = storageArray[2];
+                int[] tagId = storageArray[3];
 
-        //        List<Game> gamesToReturn = Repo.FilterGames(gamesPriceRange, gamesRatingRange, gamesDevs, gamesTags).ToList();
-        //        return gamesToReturn;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(500);
-        //    }
-        //}
+                ICollection<Game> gamesPrice = Repo.GetBetweenPriceGames(price);
+                ICollection<Game> gamesRating = Repo.GetBetweenRatingsGames(rating);
+                ICollection<Game> gamesDev = Repo.GetGamesByDeveloper(devId);
+                ICollection<Game> gamesTag = Repo.GetGamesByTags(tagId);
+
+                ICollection<Library.Game>[] gamesArray = new ICollection<Game>[4];
+                gamesArray[0] = gamesPrice;
+                gamesArray[1] = gamesRating;
+                gamesArray[2] = gamesDev;
+                gamesArray[3] = gamesTag;
+
+                var games = Repo.FilterGames(gamesArray).ToList();
+                return games;
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+
+        }
+
 
 
         // POST: api/Game
