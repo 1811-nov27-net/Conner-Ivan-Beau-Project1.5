@@ -60,7 +60,7 @@ namespace VaporWebSite.App.Controllers
             List<FullGame> fullGames = new List<FullGame>();
             foreach(var g in gameScores)
             {
-                fullGames.Add(new FullGame { Game = g.Key, Score = g.Value, Selected = userGames.Any(a => a.Game.GameId == g.Key.GameId)});
+                fullGames.Add(new FullGame { Game = g.Game, Score = g.Score, Selected = userGames.Any(a => a.Game.GameId == g.Game.GameId)});
             }
             return View(fullGames);
 
@@ -83,9 +83,13 @@ namespace VaporWebSite.App.Controllers
 
             HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"api/Game/Search/{searchString}");
             HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/User/{username}/Library");
+            HttpRequestMessage request3 = CreateRequest(HttpMethod.Get, "api/Game/Reviews");
+
 
             HttpResponseMessage response = await Client.SendAsync(request);
             HttpResponseMessage response2 = await Client.SendAsync(request2);
+            HttpResponseMessage response3 = await Client.SendAsync(request3);
+
 
             if (!response.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
             {
@@ -98,11 +102,16 @@ namespace VaporWebSite.App.Controllers
 
             string responseBody = await response.Content.ReadAsStringAsync();
             string responseBody2 = await response2.Content.ReadAsStringAsync();
+            string responseBody3 = await response3.Content.ReadAsStringAsync();
+
 
             List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
             List<UserGame> userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody2);
+            List<GameScore> gameScores = JsonConvert.DeserializeObject<List<GameScore>>(responseBody3);
 
-            return View("Index", games.Select(g => new FullGame { Game = g, Selected = userGames.Any(a => a.Game.GameId == g.GameId) }).ToList());
+            List<GameScore> result = gameScores.Where(g => games.Any(a => a.GameId == g.Game.GameId)).ToList();
+
+            return View("Index", result.Select(g => new FullGame { Game = g.Game, Score= g.Score, Selected = userGames.Any(a => a.Game.GameId == g.Game.GameId) }).ToList());
         }
 
         // GET: UserGame by Filtered Results
@@ -143,9 +152,13 @@ namespace VaporWebSite.App.Controllers
                 
                 HttpRequestMessage request = CreateRequest(HttpMethod.Get, "api/Game/Filter", storageArray);
                 HttpRequestMessage request2 = CreateRequest(HttpMethod.Get, $"api/User/{username}/Library");
+                HttpRequestMessage request3 = CreateRequest(HttpMethod.Get, "api/Game/Reviews");
+
 
                 HttpResponseMessage response = await Client.SendAsync(request);
                 HttpResponseMessage response2 = await Client.SendAsync(request2);
+                HttpResponseMessage response3 = await Client.SendAsync(request3);
+
 
                 if (!response.IsSuccessStatusCode || !response2.IsSuccessStatusCode)
                 {
@@ -158,11 +171,20 @@ namespace VaporWebSite.App.Controllers
 
                 string responseBody = await response.Content.ReadAsStringAsync();
                 string responseBody2 = await response2.Content.ReadAsStringAsync();
+                string responseBody3 = await response3.Content.ReadAsStringAsync();
+
 
                 List<Game> games = JsonConvert.DeserializeObject<List<Game>>(responseBody);
                 List<UserGame> userGames = JsonConvert.DeserializeObject<List<UserGame>>(responseBody2);
 
-                return View("Index", games.Select(g => new FullGame { Game = g, Selected = userGames.Any(a => a.Game.GameId == g.GameId) }).ToList());
+                List<GameScore> gameScores = JsonConvert.DeserializeObject<List<GameScore>>(responseBody3);
+
+                List<GameScore> result = gameScores.Where(g => games.Any(a => a.GameId == g.Game.GameId)).ToList();
+
+                return View("Index", result.Select(g => new FullGame { Game = g.Game, Score = g.Score, Selected = userGames.Any(a => a.Game.GameId == g.Game.GameId) }).ToList());
+
+
+                //return View("Index", games.Select(g => new FullGame { Game = g, Selected = userGames.Any(a => a.Game.GameId == g.GameId) }).ToList());
             }
         }
 
