@@ -538,6 +538,17 @@ namespace VaporAPI.DataAccess
         {
             return GetReviewsHelper(Mapper.Map(_db.UserGame).ToList(), sort);
         }
+        public Library.UserGame GetReviewByUserGame(string username, int id)
+        {
+            UserGame usergame = _db.UserGame.Include("Game").Include("UserNameNavigation").Where(ug => ug.UserName == username && ug.GameId == id).First();
+            if(usergame == null)
+            {
+                return null;
+            }
+            Library.UserGame libusergame = Mapper.Map(usergame);
+            return libusergame;
+        }
+    
 
         public ICollection<Library.UserGame> GetReviewsbyUser(string username, int sort = 0)
         {

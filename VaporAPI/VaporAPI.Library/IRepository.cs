@@ -48,6 +48,7 @@ namespace VaporAPI.Library
         ICollection<Library.Game> GetGamesByTags(params int[] tagIds);
         ICollection<Library.Game> FilterGames(params ICollection<Library.Game>[] gamesToFilter);
         ICollection<Library.Game> GetGamesHelper(ICollection<Game> oldGames, int sort = 0);
+        Library.UserGame GetReviewByUserGame(string username, int id);
         decimal AverageScoreGame(Library.Game game);
 
         //CRUD for developer
